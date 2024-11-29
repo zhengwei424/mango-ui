@@ -1,6 +1,6 @@
 <template>
   <el-table-column :prop="prop" v-bind="$attrs">
-    <template slot-scope="scope">
+    <template #default="scope">
       <span @click.prevent="toggleHandle(scope.$index, scope.row)" :style="childStyles(scope.row)">
         <i :class="iconClasses(scope.row)" :style="iconStyles(scope.row)"></i>
         {{ scope.row[prop] }}
@@ -9,75 +9,79 @@
   </el-table-column>
 </template>
 
-<script>
-  import isArray from 'lodash/isArray'
-  export default {
-    name: 'table-tree-column',
-    props: {
-      prop: {
-        type: String
-      },
-      treeKey: {
-        type: String,
-        default: 'id'
-      },
-      parentKey: {
-        type: String,
-        default: 'parentId'
-      },
-      levelKey: {
-        type: String,
-        default: 'level'
-      },
-      childKey: {
-        type: String,
-        default: 'children'
-      }
-    },
-    methods: {
-      childStyles (row) {
-        return { 'padding-left': (row[this.levelKey] * 25) + 'px' }
-      },
-      iconClasses (row) {
-        return [ !row._expanded ? 'el-icon-caret-right' : 'el-icon-caret-bottom' ]
-      },
-      iconStyles (row) {
-        return { 'visibility': this.hasChild(row) ? 'visible' : 'hidden' }
-      },
-      hasChild (row) {
-        return (isArray(row[this.childKey]) && row[this.childKey].length >= 1) || false
-      },
-      // 切换处理
-      toggleHandle (index, row) {
-        if (this.hasChild(row)) {
-          var data = this.$parent.store.states.data.slice(0)
-          data[index]._expanded = !data[index]._expanded
-          if (data[index]._expanded) {
-            data = data.splice(0, index + 1).concat(row[this.childKey]).concat(data)
-          } else {
-            data = this.removeChildNode(data, row[this.treeKey])
-          }
-          this.$parent.store.commit('setData', data)
-          this.$nextTick(() => {
-            this.$parent.doLayout()
-          })
-        }
-      },
-      // 移除子节点
-      removeChildNode (data, parentId) {
-        var parentIds = isArray(parentId) ? parentId : [parentId]
-        if (parentId.length <= 0) {
-          return data
-        }
-        var ids = []
-        for (var i = 0; i < data.length; i++) {
-          if (parentIds.indexOf(data[i][this.parentKey]) !== -1 && parentIds.indexOf(data[i][this.treeKey]) === -1) {
-            ids.push(data.splice(i, 1)[0][this.treeKey])
-            i--
-          }
-        }
-        return this.removeChildNode(data, ids)
-      }
+<script lang="ts">
+import {defineComponent} from "vue";
+
+export default defineComponent({
+  name: "table-tree-column"
+})
+</script>
+
+<script setup lang="ts">
+import {isArray} from 'lodash'
+import {defineProps, withDefaults, nextTick } from 'vue';
+
+let props = withDefaults(defineProps<{
+  prop: string,
+  treeKey: string,
+  parentKey: string,
+  levelKey: string,
+  childKey: string
+}>(), {
+  prop: '',
+  treeKey: 'id',
+  parentKey: 'parentId',
+  levelKey: 'level',
+  childKey: 'children'
+})
+
+function childStyles(row: any) {
+  return {'padding-left': (row[props.levelKey] * 25) + 'px'}
+}
+
+function iconClasses(row: any) {
+  return [!row._expanded ? 'el-icon-caret-right' : 'el-icon-caret-bottom']
+}
+
+function iconStyles(row: any) {
+  return JSON.stringify({'visibility': hasChild(row) ? 'visible' : 'hidden'})
+}
+
+function hasChild(row: any): boolean {
+  return (isArray(row[props.childKey]) && row[props.childKey].length >= 1) || false
+}
+
+// 切换处理
+function toggleHandle(index: number, row: any) {
+  if (hasChild(row)) {
+    let data = this.$parent.store.states.data.slice(0)
+    data[index]._expanded = !data[index]._expanded
+    if (data[index]._expanded) {
+      data = data.splice(0, index + 1).concat(row[props.childKey]).concat(data)
+    } else {
+      data = removeChildNode(data, row[props.treeKey])
+    }
+    this.$parent.store.commit('setData', data)
+    nextTick(() => {
+      this.$parent.doLayout()
+    })
+  }
+}
+
+// 移除子节点
+function removeChildNode(data: any, parentId: any) {
+  let parentIds = isArray(parentId) ? parentId : [parentId]
+  if (parentId.length <= 0) {
+    return data
+  }
+  let ids = []
+  for (let i = 0; i < data.length; i++) {
+    if (parentIds.indexOf(data[i][props.parentKey]) !== -1 && parentIds.indexOf(data[i][props.treeKey]) === -1) {
+      ids.push(data.splice(i, 1)[0][props.treeKey])
+      i--
     }
   }
+  return removeChildNode(data, ids)
+}
+
 </script>

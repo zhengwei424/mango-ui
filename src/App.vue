@@ -1,19 +1,9 @@
 <template>
-
+  <div :style="{ visibility: 'hidden' }">
+    <h1>hello</h1>
+  </div>
 </template>
 
-<script lang="ts">
-import {defineComponent} from "vue";
+<script setup lang="ts"></script>
 
-export default defineComponent({
-  name: "App",
-})
-</script>
-
-<script setup lang="ts">
-
-</script>
-
-<style scoped>
-
-</style>
+<style scoped></style>

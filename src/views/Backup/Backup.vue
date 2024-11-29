@@ -24,6 +24,7 @@
 
 <script lang="ts">
 import {defineComponent} from "vue";
+
 export default defineComponent({
   name: 'Backup'
 })
@@ -83,38 +84,44 @@ function handleBackup() {
 
 // 数据还原
 function handleRestore(data: any) {
-            tableLoading.value = true
-            axios.get(global.backupBaseUrl + '/backup/restore', {params : {name : data.name }}).then((res) => {
-                let resData = res.data
-                if(resData.code == 200) {
-                    ElMessage({ message: '操作成功', type: 'success' })
-                    // this.$emit('afterRestore', {}) ?????????????????????????????
-                } else {
-                    ElMessage({message: '操作失败, ' + resData.msg, type: 'error'})
-                }
-                tableLoading.value = false
-			})
+  tableLoading.value = true
+  axios.get(global.backupBaseUrl + '/backup/restore', {params: {name: data.name}}).then((res) => {
+    let resData = res.data
+    if (resData.code == 200) {
+      ElMessage({message: '操作成功', type: 'success'})
+      // this.$emit('afterRestore', {}) ?????????????????????????????
+    } else {
+      ElMessage({message: '操作失败, ' + resData.msg, type: 'error'})
+    }
+    tableLoading.value = false
+  })
 }
 
 // 删除备份
-function handleDelete(data:any) {
-            tableLoading.value = true
-            axios.get(global.backupBaseUrl + '/backup/delete', {params : {name : data.name }}).then((res) => {
-                let resData = res.data
-                if(resData.code == 200) {
-                    ElMessage({ message: '操作成功', type: 'success' })
-                } else {
-                    ElMessage({message: '操作失败, ' + resData.msg, type: 'error'})
-                }
-                findRecords()
-                tableLoading.value = false
-            })
+function handleDelete(data: any) {
+  tableLoading.value = true
+  axios.get(global.backupBaseUrl + '/backup/delete', {params: {name: data.name}}).then((res) => {
+    let resData = res.data
+    if (resData.code == 200) {
+      ElMessage({message: '操作成功', type: 'success'})
+    } else {
+      ElMessage({message: '操作失败, ' + resData.msg, type: 'error'})
+    }
+    findRecords()
+    tableLoading.value = false
+  })
+}
+
+function setBackupVisible(val: boolean) {
+  backupVisible.value = val
 }
 
 /* 生命周期钩子 */
 onMounted(() => {
   findRecords()
 })
+
+defineExpose(['setBackupVisible'])
 
 </script>
 

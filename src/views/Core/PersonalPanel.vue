@@ -1,6 +1,6 @@
 <template>
   <div class="personal-panel">
-    <div class="personal-desc" :style="{'background':this.$store.state.app.themeColor}">
+    <div class="personal-desc" :style="{'background':store.state.app.themeColor}">
       <div class="avatar-container">
         <img class="avatar" :src="require('@/assets/user.png')"/>
       </div>
@@ -10,7 +10,7 @@
       <div class="registe-info">
           <span class="registe-info">
             <li class="fa fa-clock-o"></li>
-            {{ this.dateFormat(user.createTime) }}
+            {{ dateFormat(user.createTime) }}
           </span>
       </div>
     </div>
@@ -52,7 +52,7 @@
     <!--修改密码界面-->
     <el-dialog title="修改密码" width="40%" :visible.sync="updatePwdDialogVisible" :close-on-click-modal="false"
                :modal="false">
-      <el-form :model="updatePwdDataForm" label-width="100px" :rules="updatePwdDataFormRules" ref="updatePwdDataForm"
+      <el-form :model="updatePwdDataForm" label-width="100px" :rules="updatePwdDataFormRules" ref="updatePwdDataFormRef"
                :size="size">
         <el-form-item label="原密码" prop="password">
           <el-input v-model="updatePwdDataForm.password" type="password" auto-complete="off"></el-input>
@@ -60,19 +60,19 @@
         <el-form-item label="新密码" prop="newPassword">
           <el-input v-model="updatePwdDataForm.newPassword" type="password" auto-complete="off"></el-input>
         </el-form-item>
-        <el-form-item label="确认新密码" prop="comfirmPassword">
-          <el-input v-model="updatePwdDataForm.comfirmPassword" type="password" auto-complete="off"></el-input>
+        <el-form-item label="确认新密码" prop="confirmPassword">
+          <el-input v-model="updatePwdDataForm.confirmPassword" type="password" auto-complete="off"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button :size="size" @click.native="updatePwdDialogVisible = false">{{ $t('action.cancel') }}</el-button>
         <el-button :size="size" type="primary" @click.native="updatePassword" :loading="updatePwdLoading">
-          {{ $t('action.comfirm') }}
+          {{ $t('action.confirm') }}
         </el-button>
       </div>
     </el-dialog>
     <!--备份还原界面-->
-    <backup ref="backupDialog" @afterRestore="afterRestore"></backup>
+    <backup ref="backupDialogRef" @afterRestore="afterRestore"></backup>
   </div>
 </template>
 
@@ -84,12 +84,17 @@ export default defineComponent({
 })
 </script>
 
-
 <script setup lang="ts">
 import Backup from "@/views/Backup/Backup"
 import {format} from "@/utils/datetime"
 import {withDefaults, defineEmits, defineProps, ref, reactive, onMounted} from 'vue'
-import {ElMessageBox, ElMessage} from "element-plus";
+import {ElMessageBox, ElMessage, FormInstance} from "element-plus";
+import api from "@/http/api.ts";
+import {useRouter} from "vue-router";
+import {useStore} from "vuex/types/index.d.ts";
+
+const router = useRouter()
+const store = useStore()
 
 withDefaults(defineProps<{ user: any }>(), {
   user: () => {
@@ -102,7 +107,8 @@ withDefaults(defineProps<{ user: any }>(), {
   }
 })
 
-
+const backupDialogRef = ref()
+const updatePwdDataFormRef = ref<FormInstance>()
 let onlineUser = ref(0)
 let accessTimes = ref(0)
 let size = ref('small')
@@ -132,30 +138,30 @@ function openPersonCenter() {
 
 // 打开修改密码对话框
 function openupdatePasswordDialog() {
-  this.updatePwdDialogVisible = true
+  updatePwdDialogVisible.value = true
 }
 
 // 修改密码
 function updatePassword() {
-  this.$refs.updatePwdDataForm.validate((valid) => {
+  updatePwdDataFormRef.value?.validate((valid) => {
     if (valid) {
-      if (this.updatePwdDataForm.newPassword != this.updatePwdDataForm.comfirmPassword) {
-        this.$message({message: '新密码与确认新密码不一致', type: 'error'})
+      if (updatePwdDataForm.newPassword != updatePwdDataForm.confirmPassword) {
+        ElMessage({message: '新密码与确认新密码不一致', type: 'error'})
         return
       }
-      this.$confirm('确认提交吗？', '提示', {}).then(() => {
-        this.updatePwdLoading = true
-        let params = {password: this.updatePwdDataForm.password, newPassword: this.updatePwdDataForm.newPassword}
-        this.$api.user.updatePassword(params).then((res) => {
-          this.updatePwdLoading = false
+      ElMessageBox.confirm('确认提交吗？', '提示', {}).then(() => {
+        updatePwdLoading.value = true
+        let params = {password: updatePwdDataForm.password, newPassword: updatePwdDataForm.newPassword}
+        api.user.updatePassword(params).then((res: any) => {
+          updatePwdLoading.value = false
           if (res.code == 200) {
-            this.$message({message: '操作成功', type: 'success'})
-            this.$refs['updatePwdDataForm'].resetFields()
-            this.logoutApi()
+            ElMessage({message: '操作成功', type: 'success'})
+            updatePwdDataFormRef.value?.resetFields()
+            logoutApi()
           } else {
-            this.$message({message: '操作失败, ' + res.msg, type: 'error'})
+            ElMessage({message: '操作失败, ' + res.msg, type: 'error'})
           }
-          this.updatePwdDialogVisible = false
+          updatePwdDialogVisible.value = false
         })
       })
     }
@@ -164,11 +170,11 @@ function updatePassword() {
 
 // 退出登录
 function logout() {
-  this.$confirm("确认退出吗?", "提示", {
+  ElMessageBox.confirm("确认退出吗?", "提示", {
     type: "warning"
   })
       .then(() => {
-        this.logoutApi()
+        logoutApi()
       })
       .catch(() => {
       })
@@ -176,12 +182,12 @@ function logout() {
 
 // 清除缓存并退出登录
 function clearCache() {
-  this.$confirm("确认清除缓存并退出登录吗?", "提示", {
+  ElMessageBox.confirm("确认清除缓存并退出登录吗?", "提示", {
     type: "warning"
   })
       .then(() => {
-        this.deleteCookie('token')// 清空Cookie里的token
-        this.logoutApi()
+        deleteCookie('token')// 清空Cookie里的token
+        logoutApi()
       })
       .catch(() => {
       })
@@ -189,65 +195,65 @@ function clearCache() {
 
 function logoutApi() {
   sessionStorage.removeItem("user")
-  this.$router.push("/login")
-  this.$api.login.logout().then((res) => {
-  }).catch(function (res) {
+  router.push("/login")
+  api.login.logout().then(() => {
+  }).catch(function () {
   })
 }
 
 // 清除Cookie
-function deleteCookie(name) {
-  var myDate = new Date()
+function deleteCookie(name: string) {
+  let myDate = new Date()
   myDate.setTime(-1000) // 设置过期时间
-  document.cookie = name + "=''; expires=" + myDate.toGMTString();
+  document.cookie = name + "=''; expires=" + myDate.toUTCString();
 }
 
 // 获取在线用户数
 function countOnlineUser() {
-  let pageRequest = {pageNum: 1, pageSize: 10000000}
+  let pageRequest = {pageNum: 1, pageSize: 10000000, params: [{}]}
   pageRequest.params = [{name: 'status', value: 'online'}]
-  this.$api.loginlog.findPage(pageRequest).then((res) => {
-    this.onlineUser = res.data.content.length
+  api.loginlog.findPage(pageRequest).then((res: any) => {
+    onlineUser.value = res.data.content.length
   })
 }
 
 // 获取访问次数
 function countAccessTimes() {
-  let pageRequest = {pageNum: 1, pageSize: 10000000}
+  let pageRequest = {pageNum: 1, pageSize: 10000000, params: [{}]}
   pageRequest.params = [{name: 'status', value: 'login'}]
-  this.$api.loginlog.findPage(pageRequest).then((res) => {
-    this.accessTimes = res.data.content.length + 1
+  api.loginlog.findPage(pageRequest).then((res: any) => {
+    accessTimes.value = res.data.content.length + 1
   })
 }
 
 function openOnlinePage() {
   // 通过菜单URL跳转至指定路由
-  this.$router.push('/sys/online')
+  router.push('/sys/online')
 }
 
 // 时间格式化
-function dateFormat(date) {
+function dateFormat(date: string) {
   return format(date)
 }
 
 // 打开备份还原界面
 function showBackupDialog() {
-  this.$refs.backupDialog.setBackupVisible(true)
+  backupDialogRef.value.setBackupVisible(true)
 }
 
 // 成功还原之后，重新登录
 function afterRestore() {
-  this.$refs.backupDialog.setBackupVisible(false)
+  backupDialogRef.value.setBackupVisible(false)
   sessionStorage.removeItem("user")
-  this.$router.push("/login")
-  this.$api.login.logout().then((res) => {
+  router.push("/login")
+  api.login.logout().then((res) => {
   }).catch(function (res) {
   })
 }
 
 onMounted(() => {
-  this.countOnlineUser()
-  this.countAccessTimes()
+  countOnlineUser()
+  countAccessTimes()
 })
 
 </script>

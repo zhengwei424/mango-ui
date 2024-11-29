@@ -50,13 +50,15 @@
   </div>
 </template>
 
-<script>
-  export default {
-    components:{
-    },
-    methods :{
-    }
-  }
+<script lang="ts">
+import {defineComponent} from "vue";
+export default defineComponent({
+  name: 'Intro'
+})
+</script>
+
+<script setup lang="ts">
+
 </script>
 
 <style>
