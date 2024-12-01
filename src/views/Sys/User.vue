@@ -12,7 +12,7 @@
         <el-form-item>
           <kt-button
             icon="fa fa-search"
-            :label="$t('action.search')"
+            :label="t('action.search')"
             perms="sys:role:view"
             type="primary"
             @click="findPage(null)"
@@ -21,7 +21,7 @@
         <el-form-item>
           <kt-button
             icon="fa fa-plus"
-            :label="$t('action.add')"
+            :label="t('action.add')"
             perms="sys:user:add"
             type="primary"
             @click="handleAdd"
@@ -80,7 +80,7 @@
     <el-dialog
       :title="operation ? '新增' : '编辑'"
       width="40%"
-      :visible.sync="dialogVisible"
+      v-model:visible="dialogVisible"
       :close-on-click-modal="false"
     >
       <el-form
@@ -144,33 +144,37 @@
           </el-select>
         </el-form-item>
       </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button :size="size" @click.native="dialogVisible = false"
-          >{{ $t("action.cancel") }}
-        </el-button>
-        <el-button
-          :size="size"
-          type="primary"
-          @click.native="submitForm"
-          :loading="editLoading"
-        >
-          {{ $t("action.submit") }}
-        </el-button>
-      </div>
+      <template v-slot:footer>
+        <div class="dialog-footer">
+          <el-button :size="size" @click.native="dialogVisible = false"
+            >{{ t("action.cancel") }}
+          </el-button>
+          <el-button
+            :size="size"
+            type="primary"
+            @click.native="submitForm"
+            :loading="editLoading"
+          >
+            {{ t("action.submit") }}
+          </el-button>
+        </div>
+      </template>
     </el-dialog>
   </div>
 </template>
 
 <script setup lang="ts">
-import PopupTreeInput from "@/components/PopupTreeInput";
-import api from "@/http/api.ts";
-import KtTable from "@/views/Core/KtTable";
-import KtButton from "@/views/Core/KtButton";
+import PopupTreeInput from "@/components/PopupTreeInput/index.vue";
+import KtTable from "@/views/Core/KtTable.vue";
+import KtButton from "@/views/Core/KtButton.vue";
 import TableColumnFilterDialog from "@/views/Core/TableColumnFilterDialog";
 import { format } from "@/utils/datetime";
 import { ElMessage, ElMessageBox, FormInstance } from "element-plus";
-import { onMounted, reactive, ref } from "vue";
+import {inject, onMounted, reactive, ref} from "vue";
+import { useI18n } from "vue-i18n";
 
+const api = inject('api')
+const { t } = useI18n();
 const dataFormRef = ref<FormInstance>();
 const tableColumnFilterDialogRef = ref();
 
@@ -270,7 +274,7 @@ function findUserRoles() {
 
 // 批量删除
 function handleDelete(data: any) {
-  api.user.batchDelete(data.params).then(data != null ? data.callback : "");
+  api.user.batchDelete(data.params).then(data ? data.callback : "");
 }
 
 // 显示新增界面
@@ -291,7 +295,7 @@ function handleAdd() {
 }
 
 // 显示编辑界面
-function handleEdit(params: any) {
+function handleEdit(params: unknown) {
   dialogVisible.value = true;
   operation.value = false;
   dataForm = Object.assign({}, params.row);
@@ -358,7 +362,7 @@ function displayFilterColumnsDialog() {
 }
 
 // 处理表格列过滤显示
-function handleFilterColumns(data: any) {
+function handleFilterColumns(data: unknown) {
   filterColumns = data.filterColumns;
   tableColumnFilterDialogRef.value?.setDialogVisible(false);
 }

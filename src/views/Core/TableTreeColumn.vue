@@ -9,14 +9,6 @@
   </el-table-column>
 </template>
 
-<script lang="ts">
-import {defineComponent} from "vue";
-
-export default defineComponent({
-  name: "table-tree-column"
-})
-</script>
-
 <script setup lang="ts">
 import {isArray} from 'lodash'
 import {defineProps, withDefaults, nextTick } from 'vue';

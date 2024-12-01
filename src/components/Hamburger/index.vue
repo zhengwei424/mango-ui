@@ -29,21 +29,11 @@
   </svg>
 </template>
 
-<script lang="ts">
-export default {
-  name: "Hamburger",
-};
-</script>
-
 <script setup lang="ts">
-import { withDefaults } from "vue";
+import { withDefaults, defineProps } from "vue";
 
 function emptyClick() {}
-
-withDefaults(defineProps<{ isActive: boolean; onClick: () => void }>(), {
-  isActive: false,
-  onClick: () => {},
-});
+withDefaults(defineProps<>(), {});
 </script>
 
 <style scoped>

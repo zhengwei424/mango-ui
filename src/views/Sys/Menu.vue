@@ -12,16 +12,16 @@
         <el-form-item>
           <kt-button
             icon="fa fa-search"
-            :label="$t('action.search')"
+            :label="t('action.search')"
             perms="sys:menu:view"
             type="primary"
-            @click="findTreeData(null)"
+            @click="findTreeData()"
           />
         </el-form-item>
         <el-form-item>
           <kt-button
             icon="fa fa-plus"
-            :label="$t('action.add')"
+            :label="t('action.add')"
             perms="sys:menu:add"
             type="primary"
             @click="handleAdd"
@@ -33,11 +33,11 @@
     <el-table
       :data="tableTreeData"
       stripe
-      size="mini"
+      size="small"
       style="width: 100%"
       v-loading="loading"
       rowKey="id"
-      element-loading-text="$t('action.loading')"
+      element-loading-text="t('action.loading')"
     >
       <el-table-column
         prop="id"
@@ -114,18 +114,18 @@
         header-align="center"
         align="center"
         width="185"
-        :label="$t('action.operation')"
+        :label="t('action.operation')"
       >
         <template #default="scope">
           <kt-button
             icon="fa fa-edit"
-            :label="$t('action.edit')"
+            :label="t('action.edit')"
             perms="sys:menu:edit"
             @click="handleEdit(scope.row)"
           />
           <kt-button
             icon="fa fa-trash"
-            :label="$t('action.delete')"
+            :label="t('action.delete')"
             perms="sys:menu:delete"
             type="danger"
             @click="handleDelete(scope.row)"
@@ -137,7 +137,7 @@
     <el-dialog
       :title="!dataForm.id ? '新增' : '修改'"
       width="40%"
-      :visible.sync="dialogVisible"
+      v-model:visible="dialogVisible"
       :close-on-click-modal="false"
     >
       <el-form
@@ -195,7 +195,8 @@
             </el-col>
             <el-col :span="2" class="icon-list__tips">
               <el-tooltip placement="top" effect="light" style="padding: 10px">
-                <div slot="content">
+                <template v-slot:content>
+<div >
                   <p>URL格式：</p>
                   <p>
                     1.常规业务开发的功能URL，如用户管理，Views目录下页面路径为
@@ -206,10 +207,11 @@
                     http://www.baidu.com，http:// 不可省略。
                   </p>
                   <p>
-                    示例：用户管理：/sys/user 嵌套百度：http://www.baidu.com
+                    示例：用户管理：/sys/user 嵌套百度：https://www.baidu.com
                     嵌套网页：http://127.0.0.1:8000
                   </p>
                 </div>
+</template>
                 <i class="el-icon-warning"></i>
               </el-tooltip>
             </el-col>
@@ -259,26 +261,31 @@
           </el-row>
         </el-form-item>
       </el-form>
-      <span slot="footer" class="dialog-footer">
+      <template v-slot:footer>
+<span  class="dialog-footer">
         <el-button :size="size" @click="dialogVisible = false">{{
-          $t("action.cancel")
+          t("action.cancel")
         }}</el-button>
         <el-button :size="size" type="primary" @click="submitForm()">{{
-          $t("action.confirm")
+          t("action.confirm")
         }}</el-button>
       </span>
+</template>
     </el-dialog>
   </div>
 </template>
 
 <script setup lang="ts">
-import api from "@/http/api.ts";
-import KtButton from "@/views/Core/KtButton";
-import TableTreeColumn from "@/views/Core/TableTreeColumn";
-import PopupTreeInput from "@/components/PopupTreeInput";
-import FaIconTooltip from "@/components/FaIconTooltip";
+import KtButton from "@/views/Core/KtButton.vue";
+import TableTreeColumn from "@/views/Core/TableTreeColumn.vue";
+import PopupTreeInput from "@/components/PopupTreeInput/index.vue";
+import FaIconTooltip from "@/components/FaIconTooltip/index.vue";
 import { ElMessage, ElMessageBox, FormInstance } from "element-plus";
-import { onMounted, reactive, ref } from "vue";
+import {inject, onMounted, reactive, ref} from "vue";
+import { useI18n } from "vue-i18n";
+
+const api = inject('api')
+const { t } = useI18n();
 
 const dataFormRef = ref<FormInstance>();
 

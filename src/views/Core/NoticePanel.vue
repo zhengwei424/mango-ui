@@ -6,7 +6,7 @@
         <span class="notice-icon">
           <li :class="item.icon"></li>
         </span>
-        <span class="notice-cotent">
+        <span class="notice-content">
           {{ item.content }}
         </span>
       </div>
@@ -15,48 +15,35 @@
   </div>
 </template>
 
-<script lang="ts">
-import {defineComponent} from "vue";
-
-export default defineComponent({
-  name: 'NoticePanel'
-})
-
-</script>
-
 <script setup lang="ts">
-import {withDefaults, defineEmits, defineProps} from 'vue'
+import { withDefaults, defineEmits, defineProps } from "vue";
 
-const emit = defineEmits(['click'])
+const emit = defineEmits(["click"]);
 
 withDefaults(defineProps<{ data: any }>(), {
   data: () => [
     {
       key: "1",
-      icon: 'fa fa-envelope-o',
-      content: '你修改了用户密码'
+      icon: "fa fa-envelope-o",
+      content: "你修改了用户密码",
     },
     {
       key: "2",
-      icon: 'fa fa-music',
-      content: '你修改了用户头像'
+      icon: "fa fa-music",
+      content: "你修改了用户头像",
     },
     {
       key: "3",
-      icon: 'fa fa-edit',
-      content: '今日25名新成员加入'
+      icon: "fa fa-edit",
+      content: "今日25名新成员加入",
     },
     {
       key: "4",
-      icon: 'fa fa-edit',
-      content: '您发表了一篇新随笔'
-    }]
-})
-
-function handleClick() {
-  emit('click', {})
-}
-
+      icon: "fa fa-edit",
+      content: "您发表了一篇新随笔",
+    },
+  ],
+});
 </script>
 
 <style scoped>
@@ -107,6 +94,6 @@ function handleClick() {
 
 .notice-footer:hover {
   cursor: pointer;
-  background: #b1a6a61e
+  background: #b1a6a61e;
 }
 </style>

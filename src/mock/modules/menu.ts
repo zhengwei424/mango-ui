@@ -1428,9 +1428,9 @@ export function setParentName(data: any) {
     if (data == null) {
         return
     }
-    let len = data.length
+    const len = data.length
     for (let i = 0; i < len; i++) {
-        let menu = data[i]
+        const menu = data[i]
         menu.parentName = 'menu' + menu.parentId
         if (menu.children != null) {
             setParentName(menu.children)

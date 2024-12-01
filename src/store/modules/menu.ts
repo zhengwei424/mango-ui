@@ -1,16 +1,18 @@
-export default {
-    state: {
-        navTree: [],  // 导航菜单树
-    },
-    getters: {
-   
-    },
-    mutations: {
-        setNavTree(state:any, navTree:string[]){  // 设置导航菜单树
-            state.navTree = navTree;
-        }
-    },
-    actions: {
-        
+import {defineStore} from "pinia";
+import {reactive} from "vue";
+
+
+export const useMenuStore = defineStore('menu', () => {
+    // 导航菜单树
+    let navTree = reactive<any[]>([])
+
+    // 设置导航菜单树
+    function setNavTree(val: string[]) {
+        navTree = val
     }
-}
+
+    return {
+        navTree,
+        setNavTree
+    }
+})

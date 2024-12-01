@@ -12,7 +12,7 @@
         <el-form-item>
           <kt-button
             icon="fa fa-search"
-            :label="$t('action.search')"
+            :label="t('action.search')"
             perms="sys:role:view"
             type="primary"
             @click="findPage(null)"
@@ -21,7 +21,7 @@
         <el-form-item>
           <kt-button
             icon="fa fa-plus"
-            :label="$t('action.add')"
+            :label="t('action.add')"
             perms="sys:role:add"
             type="primary"
             @click="handleAdd"
@@ -49,7 +49,7 @@
     <el-dialog
       :title="operation ? '新增' : '编辑'"
       width="40%"
-      :visible.sync="dialogVisible"
+      v-model:visible="dialogVisible"
       :close-on-click-modal="false"
     >
       <el-form
@@ -77,9 +77,10 @@
           ></el-input>
         </el-form-item>
       </el-form>
-      <div slot="footer" class="dialog-footer">
+      <template v-slot:footer>
+<div  class="dialog-footer">
         <el-button :size="size" @click.native="dialogVisible = false"
-          >{{ $t("action.cancel") }}
+          >{{ t("action.cancel") }}
         </el-button>
         <el-button
           :size="size"
@@ -87,9 +88,10 @@
           @click.native="submitForm"
           :loading="editLoading"
         >
-          {{ $t("action.submit") }}
+          {{ t("action.submit") }}
         </el-button>
       </div>
+</template>
     </el-dialog>
     <!--角色菜单，表格树内容栏-->
     <div class="menu-container" :v-if="true">
@@ -98,7 +100,7 @@
       </div>
       <el-tree
         :data="menuData"
-        size="mini"
+        size="small"
         show-checkbox
         node-key="id"
         :props="defaultProps"
@@ -135,14 +137,14 @@
         "
       >
         <kt-button
-          :label="$t('action.reset')"
+          :label="t('action.reset')"
           perms="sys:role:edit"
           type="primary"
           @click="resetSelection"
           :disabled="this.selectRole.id == null"
         />
         <kt-button
-          :label="$t('action.submit')"
+          :label="t('action.submit')"
           perms="sys:role:edit"
           type="primary"
           @click="submitAuthForm"
@@ -155,14 +157,17 @@
 </template>
 
 <script setup lang="ts">
-import api from "@/http/api.ts";
-import KtTable from "@/views/Core/KtTable";
-import KtButton from "@/views/Core/KtButton";
-import TableTreeColumn from "@/views/Core/TableTreeColumn";
+import KtTable from "@/views/Core/KtTable.vue";
+import KtButton from "@/views/Core/KtButton.vue";
 import { format } from "@/utils/datetime";
 import { ElMessage, ElMessageBox, FormInstance } from "element-plus";
 import type Node from "element-plus/es/components/tree/src/model/node";
-import { reactive, ref } from "vue";
+import {inject, reactive, ref} from "vue";
+import { useI18n } from "vue-i18n";
+
+
+const api = inject('api')
+const { t } = useI18n();
 
 interface Tree {
   icon: string;
@@ -300,7 +305,7 @@ function handleRoleSelectChange(val: any) {
   }
   selectRole = val.val;
   api.role.findRoleMenus({ roleId: val.val.id }).then((res: any) => {
-    currentRoleMenus = res.data;
+    currentRoleMenus.value = res.data;
     menuTreeRef.value?.setCheckedNodes(res.data);
   });
 }

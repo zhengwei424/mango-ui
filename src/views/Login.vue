@@ -74,19 +74,17 @@
 </template>
 
 <script setup lang="ts">
-import api from "@/http/api.ts";
-import router from "@/router";
+import { useRouter } from "vue-router";
 import store from "@/store";
 import { ElMessage, FormInstance } from "element-plus";
-import useMapState from "element-plus/es/components/table/src/table-footer/mapState-helper";
-import { computed, inject, onMounted, reactive, ref } from "vue";
-import { mapState } from "vuex";
-import ThemePicker from "../components/ThemePicker";
-import * as Cookies from "js-cookies";
+import { inject, onMounted, reactive, ref } from "vue";
+import ThemePicker from "@/components/ThemePicker/index.vue";
+import Cookies from "js-cookie";
 
 const global = inject("global");
-
+const api = inject('api')
 const loginFormRef = ref<FormInstance>();
+const router = useRouter();
 
 let loading = ref(false);
 let loginForm = reactive({
@@ -96,7 +94,7 @@ let loginForm = reactive({
   src: "",
 });
 
-let checked = ref(true);
+let themeColor = store.useAppStore().themeColor;
 
 let fieldRules = {
   account: [{ required: true, message: "请输入账号", trigger: "blur" }],
@@ -106,13 +104,13 @@ let fieldRules = {
 function login() {
   loading.value = true;
   let userInfo = {
-    account: this.loginForm.account,
-    password: this.loginForm.password,
-    captcha: this.loginForm.captcha,
+    account: loginForm.account,
+    password: loginForm.password,
+    captcha: loginForm.captcha,
   };
   api.login
     .login(userInfo)
-    .then((res) => {
+    .then((res: any) => {
       if (res.msg != null) {
         ElMessage({
           message: res.msg,
@@ -121,13 +119,13 @@ function login() {
       } else {
         Cookies.set("token", res.data.token); // 放置token到Cookie
         sessionStorage.setItem("user", userInfo.account); // 保存用户到本地会话
-        store.commit("menuRouteLoaded", false); // 要求重新加载导航菜单
+        store.useAppStore().changeMenuRouteLoaded(false); // 要求重新加载导航菜单
         router.push("/"); // 登录成功，跳转到主页
       }
-      this.loading = false;
+      loading.value = false;
     })
     .catch((res) => {
-      this.$message({
+      ElMessage({
         message: res.message,
         type: "error",
       });
@@ -135,8 +133,7 @@ function login() {
 }
 
 function refreshCaptcha() {
-  this.loginForm.src =
-    global.baseUrl + "/captcha.jpg?t=" + new Date().getTime();
+  loginForm.src = global.baseUrl + "/captcha.jpg?t=" + new Date().getTime();
 }
 
 function reset() {
@@ -144,8 +141,8 @@ function reset() {
 }
 
 // 切换主题
-function onThemeChange(themeColor) {
-  this.$store.commit("setThemeColor", themeColor);
+function onThemeChange(themeColor: string) {
+  store.useAppStore().setThemeColor(themeColor);
 }
 
 onMounted(() => {

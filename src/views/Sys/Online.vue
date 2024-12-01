@@ -12,7 +12,7 @@
         <el-form-item>
           <kt-button
             icon="fa fa-search"
-            :label="$t('action.search')"
+            :label="t('action.search')"
             perms="sys:loginlog:view"
             type="primary"
             @click="findPage(null)"
@@ -32,11 +32,14 @@
 </template>
 
 <script setup lang="ts">
-import api from "@/http/api.ts";
-import KtTable from "@/views/Core/KtTable";
-import KtButton from "@/views/Core/KtButton";
+import KtTable from "@/views/Core/KtTable.vue";
+import KtButton from "@/views/Core/KtButton.vue";
 import { format } from "@/utils/datetime";
-import { reactive, ref } from "vue";
+import {inject, reactive, ref} from "vue";
+import { useI18n } from "vue-i18n";
+
+const api = inject('api')
+const { t } = useI18n();
 
 let size = ref("small");
 let filters = reactive({

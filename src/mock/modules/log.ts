@@ -4,7 +4,7 @@
 
 // 分页查询
 export function findPage(params: any) {
-    let findPageData = {
+    const findPageData = {
         "code": 200,
         "msg": null,
         "data": {
@@ -14,15 +14,15 @@ export function findPage(params: any) {
             content: [{}]
         }
     }
-    let pageNum = 1
-    let pageSize = 8
+    const pageNum = 1
+    const pageSize = 8
     if (params !== null) {
         // pageNum = params.pageNum
     }
     if (params !== null) {
         // pageSize = params.pageSize
     }
-    let content = getContent(pageNum, pageSize)
+    const content = getContent(pageNum, pageSize)
     findPageData.data.pageNum = pageNum
     findPageData.data.pageSize = pageSize
     findPageData.data.totalSize = 50
@@ -35,9 +35,9 @@ export function findPage(params: any) {
 }
 
 export function getContent(pageNum: number, pageSize: number) {
-    let content = []
+    const content = []
     for (let i = 0; i < pageSize; i++) {
-        let obj = {
+        const obj = {
             id: 0,
             userName: '',
             operation: '',
@@ -49,7 +49,7 @@ export function getContent(pageNum: number, pageSize: number) {
             createBy: '',
             createTime: ''
         }
-        let index = ((pageNum - 1) * pageSize) + i + 1
+        const index = ((pageNum - 1) * pageSize) + i + 1
         obj.id = index
         obj.userName = 'admin' + index
         obj.operation = 'operation'

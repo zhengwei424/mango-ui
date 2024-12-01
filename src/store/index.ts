@@ -1,20 +1,13 @@
-// 引入子模块
-import app from './modules/app.js'
-import tab from './modules/tab.js'
-import iframe from './modules/iframe.js'
-import user from './modules/user.js'
-import menu from './modules/menu.js'
+import {useAppStore} from "./modules/app.ts";
+import {useIframeStore} from "./modules/iframe.ts";
+import {useMenuStore} from "./modules/menu.ts";
+import {useTabStore} from "./modules/tab.ts";
+import {useUserStore} from "./modules/user.ts";
 
-const createStore = require('vuex')
-
-const store = createStore({
-    modules: {
-        app: app,
-        tab: tab,
-        iframe: iframe,
-        user: user,
-        menu: menu
-    }
-})
-
-export default store
+export default {
+    useAppStore,
+    useIframeStore,
+    useMenuStore,
+    useTabStore,
+    useUserStore
+}

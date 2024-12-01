@@ -12,7 +12,7 @@
         <el-form-item>
           <kt-button
             icon="fa fa-search"
-            :label="$t('action.search')"
+            :label="t('action.search')"
             perms="sys:dict:view"
             type="primary"
             @click="findPage(null)"
@@ -21,7 +21,7 @@
         <el-form-item>
           <kt-button
             icon="fa fa-plus"
-            :label="$t('action.add')"
+            :label="t('action.add')"
             perms="sys:dict:add"
             type="primary"
             @click="handleAdd"
@@ -44,7 +44,7 @@
     <el-dialog
       :title="operation ? '新增' : '编辑'"
       width="40%"
-      :visible.sync="editDialogVisible"
+      v-model:visible="editDialogVisible"
       :close-on-click-modal="false"
     >
       <el-form
@@ -88,9 +88,10 @@
           ></el-input>
         </el-form-item>
       </el-form>
-      <div slot="footer" class="dialog-footer">
+      <template v-slot:footer>
+<div  class="dialog-footer">
         <el-button :size="size" @click.native="editDialogVisible = false"
-          >{{ $t("action.cancel") }}
+          >{{ t("action.cancel") }}
         </el-button>
         <el-button
           :size="size"
@@ -98,21 +99,24 @@
           @click.native="submitForm"
           :loading="editLoading"
         >
-          {{ $t("action.submit") }}
+          {{ t("action.submit") }}
         </el-button>
       </div>
+</template>
     </el-dialog>
   </div>
 </template>
 
 <script setup lang="ts">
-import api from "@/http/api.ts";
-import KtTable from "@/views/Core/KtTable";
-import KtButton from "@/views/Core/KtButton";
+import KtTable from "@/views/Core/KtTable.vue";
+import KtButton from "@/views/Core/KtButton.vue";
 import { format } from "@/utils/datetime";
 import { ElMessage, ElMessageBox, FormInstance } from "element-plus";
-import { reactive, ref } from "vue";
+import {inject, reactive, ref} from "vue";
+import { useI18n } from "vue-i18n";
 
+const api = inject('api')
+const { t } = useI18n();
 const dataFormRef = ref<FormInstance>();
 
 let size = ref("small");
@@ -181,7 +185,7 @@ function findPage(data: any) {
 
 // 批量删除
 function handleDelete(data: any) {
-  api.dict.batchDelete(data.params).then(data != null ? data.callback : "");
+  api.dict.batchDelete(data.params).then(data ? data.callback : "");
 }
 
 // 显示新增界面

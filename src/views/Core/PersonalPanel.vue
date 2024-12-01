@@ -1,17 +1,20 @@
 <template>
   <div class="personal-panel">
-    <div class="personal-desc" :style="{'background':store.state.app.themeColor}">
+    <div
+      class="personal-desc"
+      :style="{ background: store.useAppStore().themeColor }"
+    >
       <div class="avatar-container">
-        <img class="avatar" :src="require('@/assets/user.png')"/>
+        <img class="avatar" src="@/assets/user.png" />
       </div>
       <div class="name-role">
         <span class="sender">{{ user.nickName }} - {{ user.roleNames }}</span>
       </div>
       <div class="registe-info">
-          <span class="registe-info">
-            <li class="fa fa-clock-o"></li>
-            {{ dateFormat(user.createTime) }}
-          </span>
+        <span class="registe-info">
+          <li class="fa fa-clock-o"></li>
+          {{ dateFormat(user.createTime) }}
+        </span>
       </div>
     </div>
     <div class="personal-relation">
@@ -20,12 +23,22 @@
       <span class="relation-item">friends</span>
     </div>
     <div class="main-operation">
-        <span class="main-operation-item" @click="openPersonCenter">
-          <el-button size="small" icon="fa fa-male"> 个人中心</el-button>
-        </span>
+      <span class="main-operation-item" @click="openPersonCenter">
+        <el-button size="small">
+          <template #icon>
+            <font-awesome-icon :icon="['fas', 'person']"></font-awesome-icon>/
+          </template>
+          个人中心
+        </el-button>
+      </span>
       <span class="main-operation-item" @click="openupdatePasswordDialog">
-          <el-button size="small" icon="fa fa-key"> 修改密码</el-button>
-        </span>
+        <el-button size="small">
+          <template #icon>
+            <font-awesome-icon :icon="['fas', 'key']" />
+          </template>
+          修改密码
+        </el-button>
+      </span>
     </div>
     <div class="other-operation">
       <div class="other-operation-item" @click="clearCache">
@@ -42,59 +55,84 @@
       </div>
       <div class="other-operation-item" @click="showBackupDialog">
         <li class="fa fa-undo"></li>
-        {{ $t("common.backupRestore") }}
+        {{ t("common.backupRestore") }}
       </div>
     </div>
     <div class="personal-footer" @click="logout">
       <li class="fa fa-sign-out"></li>
-      {{ $t("common.logout") }}
+      {{ t("common.logout") }}
     </div>
     <!--修改密码界面-->
-    <el-dialog title="修改密码" width="40%" :visible.sync="updatePwdDialogVisible" :close-on-click-modal="false"
-               :modal="false">
-      <el-form :model="updatePwdDataForm" label-width="100px" :rules="updatePwdDataFormRules" ref="updatePwdDataFormRef"
-               :size="size">
+    <el-dialog
+      title="修改密码"
+      width="40%"
+      v-model="updatePwdDialogVisible"
+      :close-on-click-modal="false"
+      :modal="false"
+    >
+      <el-form
+        :model="updatePwdDataForm"
+        label-width="100px"
+        :rules="updatePwdDataFormRules"
+        ref="updatePwdDataFormRef"
+        :size="size"
+      >
         <el-form-item label="原密码" prop="password">
-          <el-input v-model="updatePwdDataForm.password" type="password" auto-complete="off"></el-input>
+          <el-input
+            v-model="updatePwdDataForm.password"
+            type="password"
+            auto-complete="off"
+          ></el-input>
         </el-form-item>
         <el-form-item label="新密码" prop="newPassword">
-          <el-input v-model="updatePwdDataForm.newPassword" type="password" auto-complete="off"></el-input>
+          <el-input
+            v-model="updatePwdDataForm.newPassword"
+            type="password"
+            auto-complete="off"
+          ></el-input>
         </el-form-item>
         <el-form-item label="确认新密码" prop="confirmPassword">
-          <el-input v-model="updatePwdDataForm.confirmPassword" type="password" auto-complete="off"></el-input>
+          <el-input
+            v-model="updatePwdDataForm.confirmPassword"
+            type="password"
+            auto-complete="off"
+          ></el-input>
         </el-form-item>
       </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button :size="size" @click.native="updatePwdDialogVisible = false">{{ $t('action.cancel') }}</el-button>
-        <el-button :size="size" type="primary" @click.native="updatePassword" :loading="updatePwdLoading">
-          {{ $t('action.confirm') }}
-        </el-button>
-      </div>
+      <template v-slot:footer>
+        <div class="dialog-footer">
+          <el-button :size="size" @click.native="updatePwdDialogVisible = false"
+            >{{ t("action.cancel") }}
+          </el-button>
+          <el-button
+            :size="size"
+            type="primary"
+            @click.native="updatePassword"
+            :loading="updatePwdLoading"
+          >
+            {{ t("action.confirm") }}
+          </el-button>
+        </div>
+      </template>
     </el-dialog>
     <!--备份还原界面-->
     <backup ref="backupDialogRef" @afterRestore="afterRestore"></backup>
   </div>
 </template>
 
-<script lang="ts">
-import {defineComponent} from "vue";
-
-export default defineComponent({
-  name: 'PersonalPanel'
-})
-</script>
-
 <script setup lang="ts">
-import Backup from "@/views/Backup/Backup"
-import {format} from "@/utils/datetime"
-import {withDefaults, defineEmits, defineProps, ref, reactive, onMounted} from 'vue'
-import {ElMessageBox, ElMessage, FormInstance} from "element-plus";
-import api from "@/http/api.ts";
-import {useRouter} from "vue-router";
-import {useStore} from "vuex/types/index.d.ts";
+import Backup from "@/views/Backup/Backup.vue";
+import { format } from "@/utils/datetime";
+import { withDefaults, defineProps, ref, reactive, onMounted } from "vue";
+import { ElMessageBox, ElMessage, FormInstance } from "element-plus";
+import { useRouter } from "vue-router";
+import store from "@/store";
+import { useI18n } from "vue-i18n";
+import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
 
-const router = useRouter()
-const store = useStore()
+const { t } = useI18n();
+const router = useRouter();
+
 
 withDefaults(defineProps<{ user: any }>(), {
   user: () => {
@@ -102,43 +140,37 @@ withDefaults(defineProps<{ user: any }>(), {
       nickName: "admin",
       avatar: "@/assets/user.png",
       role: "超级管理员",
-      registeInfo: "注册时间：2018-12-25 "
-    }
-  }
-})
+      registeInfo: "注册时间：2018-12-25 ",
+    };
+  },
+});
 
-const backupDialogRef = ref()
-const updatePwdDataFormRef = ref<FormInstance>()
-let onlineUser = ref(0)
-let accessTimes = ref(0)
-let size = ref('small')
-let updatePwdDialogVisible = ref(false)
-let updatePwdLoading = ref(false)
+const backupDialogRef = ref();
+const updatePwdDataFormRef = ref<FormInstance>();
+let onlineUser = ref(0);
+let accessTimes = ref(0);
+let size = ref("small");
+let updatePwdDialogVisible = ref(false);
+let updatePwdLoading = ref(false);
 let updatePwdDataForm = reactive({
-  password: '',
-  newPassword: '',
-  confirmPassword: ''
-})
+  password: "",
+  newPassword: "",
+  confirmPassword: "",
+});
 let updatePwdDataFormRules = reactive({
-  password: [
-    {required: true, message: '请输入原密码', trigger: 'blur'}
-  ],
-  newPassword: [
-    {required: true, message: '请输入新密码', trigger: 'blur'}
-  ],
-  confirmPassword: [
-    {required: true, message: '请确认密码', trigger: 'blur'}
-  ]
-})
+  password: [{ required: true, message: "请输入原密码", trigger: "blur" }],
+  newPassword: [{ required: true, message: "请输入新密码", trigger: "blur" }],
+  confirmPassword: [{ required: true, message: "请确认密码", trigger: "blur" }],
+});
 
 // 打开个人中心
 function openPersonCenter() {
-  alert('待开发')
+  alert("待开发");
 }
 
 // 打开修改密码对话框
 function openupdatePasswordDialog() {
-  updatePwdDialogVisible.value = true
+  updatePwdDialogVisible.value = true;
 }
 
 // 修改密码
@@ -146,116 +178,118 @@ function updatePassword() {
   updatePwdDataFormRef.value?.validate((valid) => {
     if (valid) {
       if (updatePwdDataForm.newPassword != updatePwdDataForm.confirmPassword) {
-        ElMessage({message: '新密码与确认新密码不一致', type: 'error'})
-        return
+        ElMessage({ message: "新密码与确认新密码不一致", type: "error" });
+        return;
       }
-      ElMessageBox.confirm('确认提交吗？', '提示', {}).then(() => {
-        updatePwdLoading.value = true
-        let params = {password: updatePwdDataForm.password, newPassword: updatePwdDataForm.newPassword}
-        api.user.updatePassword(params).then((res: any) => {
-          updatePwdLoading.value = false
-          if (res.code == 200) {
-            ElMessage({message: '操作成功', type: 'success'})
-            updatePwdDataFormRef.value?.resetFields()
-            logoutApi()
-          } else {
-            ElMessage({message: '操作失败, ' + res.msg, type: 'error'})
-          }
-          updatePwdDialogVisible.value = false
-        })
-      })
+      ElMessageBox.confirm("确认提交吗？", "提示", {}).then(() => {
+        updatePwdLoading.value = true;
+        let params = {
+          password: updatePwdDataForm.password,
+          newPassword: updatePwdDataForm.newPassword,
+        };
+        // api.user.updatePassword(params).then((res: any) => {
+        //   updatePwdLoading.value = false;
+        //   if (res.code == 200) {
+        //     ElMessage({ message: "操作成功", type: "success" });
+        //     updatePwdDataFormRef.value?.resetFields();
+        //     logoutApi();
+        //   } else {
+        //     ElMessage({ message: "操作失败, " + res.msg, type: "error" });
+        //   }
+        //   updatePwdDialogVisible.value = false;
+        // });
+      });
     }
-  })
+  });
 }
 
 // 退出登录
 function logout() {
   ElMessageBox.confirm("确认退出吗?", "提示", {
-    type: "warning"
+    type: "warning",
   })
-      .then(() => {
-        logoutApi()
-      })
-      .catch(() => {
-      })
+    .then(() => {
+      logoutApi();
+    })
+    .catch(() => {});
 }
 
 // 清除缓存并退出登录
 function clearCache() {
   ElMessageBox.confirm("确认清除缓存并退出登录吗?", "提示", {
-    type: "warning"
+    type: "warning",
   })
-      .then(() => {
-        deleteCookie('token')// 清空Cookie里的token
-        logoutApi()
-      })
-      .catch(() => {
-      })
+    .then(() => {
+      deleteCookie("token"); // 清空Cookie里的token
+      logoutApi();
+    })
+    .catch(() => {});
 }
 
 function logoutApi() {
-  sessionStorage.removeItem("user")
-  router.push("/login")
-  api.login.logout().then(() => {
-  }).catch(function () {
-  })
+  sessionStorage.removeItem("user");
+  router.push("/login");
+  // api.login
+  //   .logout()
+  //   .then(() => {})
+  //   .catch(function () {});
 }
 
 // 清除Cookie
 function deleteCookie(name: string) {
-  let myDate = new Date()
-  myDate.setTime(-1000) // 设置过期时间
+  let myDate = new Date();
+  myDate.setTime(-1000); // 设置过期时间
   document.cookie = name + "=''; expires=" + myDate.toUTCString();
 }
 
 // 获取在线用户数
 function countOnlineUser() {
-  let pageRequest = {pageNum: 1, pageSize: 10000000, params: [{}]}
-  pageRequest.params = [{name: 'status', value: 'online'}]
-  api.loginlog.findPage(pageRequest).then((res: any) => {
-    onlineUser.value = res.data.content.length
-  })
+  let pageRequest = { pageNum: 1, pageSize: 10000000, params: [{}] };
+  pageRequest.params = [{ name: "status", value: "online" }];
+  // api.loginlog.findPage(pageRequest).then((res: any) => {
+  //   onlineUser.value = res.data.content.length;
+  // });
 }
 
 // 获取访问次数
 function countAccessTimes() {
-  let pageRequest = {pageNum: 1, pageSize: 10000000, params: [{}]}
-  pageRequest.params = [{name: 'status', value: 'login'}]
-  api.loginlog.findPage(pageRequest).then((res: any) => {
-    accessTimes.value = res.data.content.length + 1
-  })
+  let pageRequest = { pageNum: 1, pageSize: 10000000, params: [{}] };
+  pageRequest.params = [{ name: "status", value: "login" }];
+  // api.loginlog.findPage(pageRequest).then((res: any) => {
+  //   accessTimes.value = res.data.content.length + 1;
+  // });
 }
 
 function openOnlinePage() {
   // 通过菜单URL跳转至指定路由
-  router.push('/sys/online')
+  router.push("/sys/online");
 }
 
 // 时间格式化
 function dateFormat(date: string) {
-  return format(date)
+  return format(date);
 }
 
 // 打开备份还原界面
 function showBackupDialog() {
-  backupDialogRef.value.setBackupVisible(true)
+  backupDialogRef.value.setBackupVisible(true);
 }
 
 // 成功还原之后，重新登录
 function afterRestore() {
-  backupDialogRef.value.setBackupVisible(false)
-  sessionStorage.removeItem("user")
-  router.push("/login")
-  api.login.logout().then((res) => {
-  }).catch(function (res) {
-  })
+  backupDialogRef.value.setBackupVisible(false);
+  sessionStorage.removeItem("user");
+  router.push("/login");
+  // api.login
+  //   .logout()
+  //   .then(() => {})
+  //   .catch(function () {});
 }
 
 onMounted(() => {
-  countOnlineUser()
-  countAccessTimes()
-})
-
+  countOnlineUser();
+  countAccessTimes();
+});
 </script>
 
 <style scoped>

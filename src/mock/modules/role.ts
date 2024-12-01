@@ -28,7 +28,7 @@ export function batchDelete() {
 }
 // 查询全部
 export function findAll() {
-  let findAllData = {
+  const findAllData = {
     "code": 200,
     "msg": null,
     "data": [
@@ -72,7 +72,7 @@ export function findAll() {
 }
 // 分页查询
 export function findPage() {
-  let findPageData = {
+  const findPageData = {
     "code": 200,
     "msg": null,
     "data": {
@@ -132,7 +132,7 @@ export function findPage() {
 }
 // 查询角色菜单集合
 export function findRoleMenus() {
-  let findRoleMenuData = {
+  const findRoleMenuData = {
     "code": 200,
     "msg": null,
     "data": [

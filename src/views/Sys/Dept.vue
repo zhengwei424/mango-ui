@@ -12,7 +12,7 @@
         <el-form-item>
           <kt-button
             icon="fa fa-search"
-            :label="$t('action.search')"
+            :label="t('action.search')"
             perms="sys:dept:view"
             type="primary"
             @click="findTreeData()"
@@ -21,7 +21,7 @@
         <el-form-item>
           <kt-button
             icon="fa fa-plus"
-            :label="$t('action.add')"
+            :label="t('action.add')"
             perms="sys:dept:add"
             type="primary"
             @click="handleAdd"
@@ -33,11 +33,11 @@
     <el-table
       :data="tableTreeDdata"
       stripe
-      size="mini"
+      size="small"
       style="width: 100%"
       v-loading="loading"
       rowKey="id"
-      element-loading-text="$t('action.loading')"
+      element-loading-text="t('action.loading')"
     >
       <el-table-column
         prop="id"
@@ -90,18 +90,18 @@
         header-align="center"
         align="center"
         width="185"
-        :label="$t('action.operation')"
+        :label="t('action.operation')"
       >
         <template #default="scope">
           <kt-button
             icon="fa fa-edit"
-            :label="$t('action.edit')"
+            :label="t('action.edit')"
             perms="sys:dept:edit"
             @click="handleEdit(scope.row)"
           />
           <kt-button
             icon="fa fa-trash"
-            :label="$t('action.delete')"
+            :label="t('action.delete')"
             perms="sys:dept:delete"
             type="danger"
             @click="handleDelete(scope.row)"
@@ -113,7 +113,7 @@
     <el-dialog
       :title="!dataForm.id ? '新增' : '修改'"
       width="40%"
-      :visible.sync="dialogVisible"
+      v-model:visible="dialogVisible"
       :close-on-click-modal="false"
     >
       <el-form
@@ -149,30 +149,32 @@
           ></el-input-number>
         </el-form-item>
       </el-form>
-      <span slot="footer" class="dialog-footer">
+      <template v-slot:footer>
+<span  class="dialog-footer">
         <el-button :size="size" @click="dialogVisible = false">{{
-          $t("action.cancel")
+          t("action.cancel")
         }}</el-button>
         <el-button :size="size" type="primary" @click="submitForm()">{{
-          $t("action.confirm")
+          t("action.confirm")
         }}</el-button>
       </span>
+</template>
     </el-dialog>
   </div>
 </template>
 
 <script setup lang="ts">
-import api from "@/http/api.ts";
-import KtButton from "@/views/Core/KtButton";
-import TableTreeColumn from "@/views/Core/TableTreeColumn";
-import PopupTreeInput from "@/components/PopupTreeInput";
-import FaIconTooltip from "@/components/FaIconTooltip";
+import KtButton from "@/views/Core/KtButton.vue";
+import TableTreeColumn from "@/views/Core/TableTreeColumn.vue";
+import PopupTreeInput from "@/components/PopupTreeInput/index.vue";
 import { format } from "@/utils/datetime";
 import { ElMessage, ElMessageBox, FormInstance } from "element-plus";
-import { onMounted, reactive, ref } from "vue";
+import {inject, onMounted, reactive, ref} from "vue";
+import { useI18n } from "vue-i18n";
 
+const api = inject('api')
 const dataFormRef = ref<FormInstance>();
-
+const { t } = useI18n();
 let size = ref("small");
 let loading = ref(false);
 let filters = reactive({

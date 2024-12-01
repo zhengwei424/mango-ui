@@ -1,16 +1,8 @@
 <template>
   <div class="iframe-container">
-    <iframe :src="src" scrolling="auto" frameborder="0" class="frame" :onload="onloaded()">
-    </iframe>
+    <iframe :src="src" class="frame"  :loading="onloaded()"></iframe>
   </div>
 </template>
-
-<script lang="ts">
-import {defineComponent} from "vue";
-export default defineComponent({
-  name: "IFrame"
-})
-</script>
 
 <script setup lang="ts">
 import {onMounted, reactive, ref, watchEffect} from "vue";
@@ -88,10 +80,10 @@ onMounted(() => {
 <style lang="scss">
 .iframe-container {
   position: absolute;
-  top: 0px;
-  left: 0px;
-  right: 0px;;
-  bottom: 0px;
+  top: 0;
+  left: 0;
+  right: 0;;
+  bottom: 0;
   .frame {
     width: 100%;
     height: 100%;

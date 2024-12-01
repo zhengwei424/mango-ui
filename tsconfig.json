@@ -1,5 +1,5 @@
 {
-//  "files": [],
+  "files": [],
   "references": [
     { "path": "./tsconfig.app.json" },
     { "path": "./tsconfig.node.json" }
@@ -8,10 +8,12 @@
   "compilerOptions": {
     /* JavaScript Support */
     "allowJs": true,
+    "outDir": "dist",
+    "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"]
     },
+    "types": ["js-cookie", "node"]
   },
-  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.d.ts", "src/**/*.vue"],
-  "exclude": ["node_modules"]
+  "include": ["src/**/*.d.ts", "vite.config.ts", "src/**/*.vue", "src/**/*.ts"]
 }

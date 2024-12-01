@@ -9,13 +9,13 @@ import * as config from './modules/config.js'
 import * as log from './modules/log.js'
 import * as loginlog from './modules/loginlog.js'
 
-let Mock = require('mockjs')
+const Mock = require('mockjs')
 
 // 1. 开启/关闭[所有模块]拦截, 通过调[openMock参数]设置.
 // 2. 开启/关闭[业务模块]拦截, 通过调用fnCreate方法[isOpen参数]设置.
 // 3. 开启/关闭[业务模块中某个请求]拦截, 通过函数返回对象中的[isOpen属性]设置.
 // let openMock = true
-let openMock = false
+const openMock = false
 fnCreate(user, openMock)
 fnCreate(role, openMock)
 fnCreate(dept, openMock)
@@ -34,7 +34,7 @@ fnCreate(login, openMock)
 function fnCreate(mod: any, isOpen = true) {
 
     if (isOpen) {
-        for (var key in mod) {
+        for (const key in mod) {
             ((res) => {
                 if (res.isOpen !== false) {
                     let url = baseUrl

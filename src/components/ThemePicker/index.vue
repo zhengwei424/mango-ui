@@ -5,8 +5,8 @@
 </template>
 
 <script>
-
-const version = require('element-ui/package.json').version // element-ui
+import elversion from 'element-plus/package.json'
+const version = elversion.version // element-ui
 const ORIGINAL_THEME = '#409EFF' // default color
 
 export default {
@@ -41,7 +41,7 @@ export default {
       // 替换CSS样式，修改主题色
       const themeCluster = this.getThemeCluster(val.replace('#', ''))
       const originalCluster = this.getThemeCluster(oldVal.replace('#', ''))
-      console.log(themeCluster, originalCluster)
+      // console.log(themeCluster, originalCluster)
       const getHandler = (variable, id) => {
         return () => {
           const originalCluster = this.getThemeCluster(ORIGINAL_THEME.replace('#', ''))
@@ -58,7 +58,7 @@ export default {
       }
       const chalkHandler = getHandler('chalk', 'chalk-style')
       if (!this.chalk) {
-        const url = `https://unpkg.com/element-ui@${version}/lib/theme-chalk/index.css`
+        const url = `https://unpkg.com/element-plus@${version}/theme-chalk/index.css`
         this.getCSSString(url, chalkHandler, 'chalk')
       } else {
         chalkHandler()

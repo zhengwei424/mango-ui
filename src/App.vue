@@ -1,9 +1,9 @@
 <template>
-  <div :style="{ visibility: 'hidden' }">
-    <h1>hello</h1>
-  </div>
+<Home/>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import Home from "./views/Home.vue"
+</script>
 
 <style scoped></style>

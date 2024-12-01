@@ -1,5 +1,5 @@
-import { defineConfig } from 'vite'
-import vue from '@vitejs/plugin-vue'
+import { defineConfig } from "vite";
+import vue from "@vitejs/plugin-vue";
 import { fileURLToPath, URL } from "node:url";
 
 // https://vite.dev/config/
@@ -10,9 +10,9 @@ export default defineConfig({
   resolve: {
     alias: [
       {
-        find: '@', replacement: fileURLToPath(new URL('src', import.meta.url))
-      }
+        find: "@",
+        replacement: fileURLToPath(new URL("src", import.meta.url)),
+      },
     ],
-    extensions: ['.js','.ts','.vue','.json','.css']
-  }
-})
+  },
+});

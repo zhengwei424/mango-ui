@@ -28,7 +28,7 @@ export function batchDelete() {
 }
 // 分页查询
 export function findPage() {
-  let findPageData = {
+  const findPageData = {
     "code": 200,
     "msg": null,
     "data": {

@@ -4,15 +4,16 @@
     <div class="message-content">
       <div v-for="item in data" :key="item.key" class="message-item">
         <div class="message-avatar">
-          <img class="avatar" :src="require('@/assets/user.png')"/>
+          <img class="avatar" src="@/assets/user.png" alt="" />
         </div>
         <span class="sender">
           {{ item.sender }}
         </span>
         <span class="time">
-          <li class="fa fa-clock-o"></li> {{ item.time }}
+          <li class="fa fa-clock-o"></li>
+          {{ item.time }}
         </span>
-        <div class="message-cotent">
+        <div class="message-content">
           {{ item.content }}
         </div>
       </div>
@@ -21,62 +22,48 @@
   </div>
 </template>
 
-<script lang="ts">
-import {defineComponent} from "vue";
-
-export default defineComponent({
-  name: 'MessagePanel'
-})
-</script>
-
 <script setup lang="ts">
-import {withDefaults, defineProps} from "vue"
-
-const emit = defineEmits(['click'])
+import { withDefaults, defineProps } from "vue";
 
 withDefaults(defineProps<{ data: any }>(), {
   data: () => [
     {
       key: "1",
-      avatar: '@/assets/user.png',
-      content: '你修改了用户密码',
-      sender: '诸葛亮',
-      time: '5分钟前'
+      avatar: "@/assets/user.png",
+      content: "你修改了用户密码",
+      sender: "诸葛亮",
+      time: "5分钟前",
     },
     {
       key: "2",
-      avatar: '@/assets/user.png',
-      content: '你修改了用户头像',
-      sender: '武则天',
-      time: '2小时前'
+      avatar: "@/assets/user.png",
+      content: "你修改了用户头像",
+      sender: "武则天",
+      time: "2小时前",
     },
     {
       key: "3",
-      avatar: '@/assets/user.png',
-      content: '今日25名新成员加入',
-      sender: '王语嫣',
-      time: '昨天'
+      avatar: "@/assets/user.png",
+      content: "今日25名新成员加入",
+      sender: "王语嫣",
+      time: "昨天",
     },
     {
       key: "4",
-      avatar: '@/assets/user.png',
-      content: '您发表了一篇新随笔',
-      sender: '苍井空',
-      time: '昨天'
+      avatar: "@/assets/user.png",
+      content: "您发表了一篇新随笔",
+      sender: "苍井空",
+      time: "昨天",
     },
     {
       key: "5",
-      avatar: '@/assets/user.png',
-      content: '您发表了一篇新随笔',
-      sender: '上官婉儿',
-      time: '前天'
-    }]
-})
-
-function handleClick() {
-  emit('click', {})
-}
-
+      avatar: "@/assets/user.png",
+      content: "您发表了一篇新随笔",
+      sender: "上官婉儿",
+      time: "前天",
+    },
+  ],
+});
 </script>
 
 <style scoped>

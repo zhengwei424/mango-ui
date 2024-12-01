@@ -3,7 +3,7 @@
     id="main-container"
     class="main-container"
     :class="
-      $store.state.app.collapse ? 'position-collapse-left' : 'position-left'
+      store.useAppStore.collapse ? 'position-collapse-left' : 'position-left'
     "
   >
     <!-- 标签页 -->
@@ -11,7 +11,9 @@
       <el-tabs
         class="tabs"
         :class="
-          $store.state.app.collapse ? 'position-collapse-left' : 'position-left'
+          store.useAppStore.collapse
+            ? 'position-collapse-left'
+            : 'position-left'
         "
         v-model="mainTabsActiveName"
         :closable="true"
@@ -23,20 +25,22 @@
           <div style="font-size: 20px; width: 50px">
             <i class="el-icon-arrow-down"></i>
           </div>
-          <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item @click.native="tabsCloseCurrentHandle"
-              >关闭当前标签
-            </el-dropdown-item>
-            <el-dropdown-item @click.native="tabsCloseOtherHandle"
-              >关闭其它标签
-            </el-dropdown-item>
-            <el-dropdown-item @click.native="tabsCloseAllHandle"
-              >关闭全部标签
-            </el-dropdown-item>
-            <el-dropdown-item @click.native="tabsRefreshCurrentHandle"
-              >刷新当前标签
-            </el-dropdown-item>
-          </el-dropdown-menu>
+          <template v-slot:dropdown>
+            <el-dropdown-menu>
+              <el-dropdown-item @click.native="tabsCloseCurrentHandle"
+                >关闭当前标签
+              </el-dropdown-item>
+              <el-dropdown-item @click.native="tabsCloseOtherHandle"
+                >关闭其它标签
+              </el-dropdown-item>
+              <el-dropdown-item @click.native="tabsCloseAllHandle"
+                >关闭全部标签
+              </el-dropdown-item>
+              <el-dropdown-item @click.native="tabsRefreshCurrentHandle"
+                >刷新当前标签
+              </el-dropdown-item>
+            </el-dropdown-menu>
+          </template>
         </el-dropdown>
         <el-tab-pane
           v-for="item in mainTabs"
@@ -44,7 +48,9 @@
           :label="item.title"
           :name="item.name"
         >
-          <span slot="label"><i :class="item.icon"></i> {{ item.title }} </span>
+          <template v-slot:label>
+            <span><i :class="item.icon"></i> {{ item.title }} </span>
+          </template>
         </el-tab-pane>
       </el-tabs>
     </div>
@@ -60,29 +66,31 @@
 </template>
 
 <script setup lang="ts">
-import router from "@/router";
+import { useRouter } from "vue-router";
 import { computed, nextTick } from "vue";
+import store from "@/store";
+const router = useRouter();
 
 let mainTabs: any = computed({
   get() {
-    return this.$store.state.tab.mainTabs;
+    return store.useTabStore().mainTabs;
   },
   set(val) {
-    this.$store.commit("updateMainTabs", val);
+    store.useMenuStore().updateMainTabs(val);
   },
 });
 let mainTabsActiveName = computed({
   get() {
-    return this.$store.state.tab.mainTabsActiveName;
+    return store.useTabStore().mainTabsActiveName;
   },
   set(val) {
-    this.$store.commit("updateMainTabsActiveName", val);
+    store.useTabStore().updateMainTabsActiveName(val);
   },
 });
 
 // tabs, 选中tab
 function selectedTabHandle(tab) {
-  tab = this.mainTabs.filter((item) => item.name === tab.name);
+  tab = mainTabs.filter((item) => item.name === tab.name);
   if (tab.length >= 1) {
     router.push({ name: tab[0].name });
   }
@@ -90,10 +98,10 @@ function selectedTabHandle(tab) {
 
 // tabs, 删除tab
 function removeTabHandle(tabName) {
-  mainTabs = mainTabs.filter((item) => item.name !== tabName);
-  if (mainTabs.length >= 1) {
+  mainTabs.value = mainTabs.value.filter((item) => item.name !== tabName);
+  if (mainTabs.value.length >= 1) {
     // 当前选中tab被删除
-    if (tabName === mainTabsActiveName) {
+    if (tabName === mainTabsActiveName.value) {
       // router.push(
       //   { name: mainTabs[this.mainTabs.length - 1].name },
       //   () => {
@@ -108,25 +116,23 @@ function removeTabHandle(tabName) {
 
 // tabs, 关闭当前
 function tabsCloseCurrentHandle() {
-  removeTabHandle(this.mainTabsActiveName);
+  removeTabHandle(mainTabsActiveName);
 }
 
 // tabs, 关闭其它
 function tabsCloseOtherHandle() {
-  mainTabs = this.mainTabs.filter(
-    (item) => item.name === this.mainTabsActiveName,
-  );
+  mainTabs.value = mainTabs.filter((item) => item.name === mainTabsActiveName);
 }
 
 // tabs, 关闭全部
 function tabsCloseAllHandle() {
-  mainTabs = [];
+  mainTabs.value = [];
   router.push("/");
 }
 
 // tabs, 刷新当前
 function tabsRefreshCurrentHandle() {
-  let tempTabName = this.mainTabsActiveName;
+  let tempTabName = mainTabsActiveName;
   removeTabHandle(tempTabName);
   nextTick(() => {
     router.push({ name: tempTabName });
