@@ -22,6 +22,6 @@ import MainContent from "./MainContent.vue";
   left: 0;
   right: 0;
   bottom: 0;
-  // background: rgba(224, 234, 235, 0.1);
 }
+
 </style>

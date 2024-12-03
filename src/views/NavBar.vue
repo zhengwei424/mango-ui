@@ -2,52 +2,79 @@
   <div class="menu-bar-container">
     <!-- logo -->
     <div
-        class="logo"
-        :style="{ 'background-color': themeColor }"
-        :class="collapse ? 'menu-bar-collapse-width' : 'menu-bar-width'"
-        @click="router.push('/')"
+      class="logo"
+      :class="collapse ? 'menu-bar-fold-width' : 'menu-bar-expand-width'"
+      :style="{ 'background-color': themeColor }"
+      @click="router.push('/')"
     >
-      <img v-if="collapse" src="@/assets/logo.png"/>
+      <img v-if="collapse" src="../assets/logo.png" alt="" />
       <div>{{ collapse ? "" : appName }}</div>
     </div>
+
     <!-- 导航菜单 -->
     <el-menu
-        ref="navmenuRef"
-        default-active="1"
-        :class="collapse ? 'menu-bar-collapse-width' : 'menu-bar-width'"
-        :collapse="collapse"
-        :collapse-transition="false"
-        :unique-opened="true"
-        @open="handleopen"
-        @close="handleclose"
-        @select="handleselect"
+      ref="navmenuRef"
+      class="el-menu-vertical-demo"
+      :class="collapse ? 'menu-bar-fold-width' : 'menu-bar-expand-width'"
+      default-active="1"
+      :collapse="collapse"
+      :unique-opened="true"
+      @open="handleopen"
+      @close="handleclose"
+      @select="handleselect"
     >
-      <!-- 导航菜单树组件，动态加载菜单 -->
-      <MenuTree
-          v-for="item in navTree"
-          :key="item.id"
-          :menu="item"
-      ></MenuTree>
+      <!--        &lt;!&ndash; 导航菜单树组件，动态加载菜单 &ndash;&gt;-->
+      <!--        <MenuTree v-for="item in navTree" :key="item.id" :menu="item"></MenuTree>-->
+
+      <el-sub-menu index="1">
+        <template #title>
+          <el-icon><location /></el-icon>
+          <span>Navigator One</span>
+        </template>
+        <el-menu-item-group>
+          <template #title><span>Group One</span></template>
+          <el-menu-item index="1-1">item one</el-menu-item>
+          <el-menu-item index="1-2">item two</el-menu-item>
+        </el-menu-item-group>
+        <el-menu-item-group title="Group Two">
+          <el-menu-item index="1-3">item three</el-menu-item>
+        </el-menu-item-group>
+        <el-sub-menu index="1-4">
+          <template #title><span>item four</span></template>
+          <el-menu-item index="1-4-1">item one</el-menu-item>
+        </el-sub-menu>
+      </el-sub-menu>
+      <el-menu-item index="2">
+        <el-icon><icon-menu /></el-icon>
+        <template #title>Navigator Two</template>
+      </el-menu-item>
+      <el-menu-item index="3" disabled>
+        <el-icon><document /></el-icon>
+        <template #title>Navigator Three</template>
+      </el-menu-item>
+      <el-menu-item index="4">
+        <el-icon><setting /></el-icon>
+        <template #title>Navigator Four</template>
+      </el-menu-item>
     </el-menu>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, watchEffect} from "vue";
+import { ref, watchEffect } from "vue";
 import MenuTree from "../components/MenuTree/index.vue";
+import { useRouter, useRoute } from "vue-router";
 import store from "@/store";
-import {useRouter, useRoute} from "vue-router";
 
 const router = useRouter();
-let route = useRoute()
-const {appName, themeColor, collapse} = store.useAppStore();
+const { appName, themeColor, collapse } = store.useAppStore();
 const navmenuRef = ref();
 
-const {mainTabs, mainTabsActiveName} = store.useTabStore()
-const {navTree} = store.useMenuStore()
+let { mainTabs, mainTabsActiveName } = store.useTabStore();
+const { navTree } = store.useMenuStore();
 
 watchEffect(() => {
-  route: 'handleRoute'
+  route: "handleRoute";
 });
 
 // handleRoute(this.$route)
@@ -74,7 +101,7 @@ function handleRoute(route) {
       title: route.name,
       icon: route.meta.icon,
     };
-    mainTabs.value = mainTabs.value.concat(tab);
+    mainTabs = mainTabs.concat(tab);
   }
   mainTabsActiveName.value = tab.name;
   // 切换标签页时同步更新高亮菜单
@@ -87,50 +114,41 @@ function handleRoute(route) {
 
 <style scoped lang="scss">
 .menu-bar-container {
-  position: fixed;
+}
+
+.el-menu-vertical-demo:not(.el-menu--collapse) {
+  width: 200px;
+  min-height: 400px;
+}
+
+.logo {
+  position: absolute;
   top: 0px;
-  left: 0;
-  bottom: 0;
-  z-index: 1020;
+  height: 60px;
+  line-height: 60px;
+  background: #545c64;
+  cursor: pointer;
 
-  .el-menu {
-    position: absolute;
-    top: 60px;
-    bottom: 0px;
+  img {
+    width: 40px;
+    height: 40px;
+    border-radius: 0px;
+    margin: 10px 10px 10px 10px;
+    float: left;
+  }
+
+  div {
+    font-size: 22px;
+    color: white;
     text-align: left;
-    // background-color: #2968a30c;
+    padding-left: 20px;
   }
+}
+.menu-bar-expand-width {
+  width: 200px;
+}
 
-  .logo {
-    position: absolute;
-    top: 0px;
-    height: 60px;
-    line-height: 60px;
-    background: #545c64;
-    cursor: pointer;
-
-    img {
-      width: 40px;
-      height: 40px;
-      border-radius: 0px;
-      margin: 10px 10px 10px 10px;
-      float: left;
-    }
-
-    div {
-      font-size: 22px;
-      color: white;
-      text-align: left;
-      padding-left: 20px;
-    }
-  }
-
-  .menu-bar-width {
-    width: 200px;
-  }
-
-  .menu-bar-collapse-width {
-    width: 65px;
-  }
+.menu-bar-fold-width {
+  width: 65px;
 }
 </style>
