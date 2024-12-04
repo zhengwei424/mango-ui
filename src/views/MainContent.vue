@@ -1,48 +1,39 @@
 <template>
-  <div
-    id="main-container"
-    class="main-container"
-    :class="collapse ? 'position-collapse-left' : 'position-left'"
-  >
+  <div class="main-container">
     <!-- 标签页 -->
     <div class="tab-container">
+      <el-dropdown class="tabs-tools" :show-timeout="0" trigger="hover">
+        <el-icon><arrow-down /></el-icon>
+        <template #dropdown>
+          <el-dropdown-menu>
+            <el-dropdown-item @click.native="tabsCloseCurrentHandle"
+              >关闭当前标签
+            </el-dropdown-item>
+            <el-dropdown-item @click.native="tabsCloseOtherHandle"
+              >关闭其它标签
+            </el-dropdown-item>
+            <el-dropdown-item @click.native="tabsCloseAllHandle"
+              >关闭全部标签
+            </el-dropdown-item>
+            <el-dropdown-item @click.native="tabsRefreshCurrentHandle"
+              >刷新当前标签
+            </el-dropdown-item>
+          </el-dropdown-menu>
+        </template>
+      </el-dropdown>
       <el-tabs
         class="tabs"
-        :class="collapse ? 'position-collapse-left' : 'position-left'"
         v-model="mainTabsActiveName"
-        :closable="true"
-        type="card"
         @tab-click="selectedTabHandle"
         @tab-remove="removeTabHandle"
       >
-        <el-dropdown class="tabs-tools" :show-timeout="0" trigger="hover">
-          <div style="font-size: 20px; width: 50px">
-            <i class="el-icon-arrow-down"></i>
-          </div>
-          <template v-slot:dropdown>
-            <el-dropdown-menu>
-              <el-dropdown-item @click.native="tabsCloseCurrentHandle"
-                >关闭当前标签
-              </el-dropdown-item>
-              <el-dropdown-item @click.native="tabsCloseOtherHandle"
-                >关闭其它标签
-              </el-dropdown-item>
-              <el-dropdown-item @click.native="tabsCloseAllHandle"
-                >关闭全部标签
-              </el-dropdown-item>
-              <el-dropdown-item @click.native="tabsRefreshCurrentHandle"
-                >刷新当前标签
-              </el-dropdown-item>
-            </el-dropdown-menu>
-          </template>
-        </el-dropdown>
         <el-tab-pane
           v-for="item in mainTabs"
           :key="item.name"
           :label="item.title"
           :name="item.name"
         >
-          <template v-slot:label>
+          <template #label>
             <span><i :class="item.icon"></i> {{ item.title }} </span>
           </template>
         </el-tab-pane>
@@ -64,11 +55,12 @@ import { storeToRefs } from "pinia";
 import { useRouter } from "vue-router";
 import { computed, nextTick } from "vue";
 import store from "@/store";
+import { ArrowDown } from "@element-plus/icons-vue";
 
 const router = useRouter();
+const { mainTabs, mainTabsActiveName } = storeToRefs(store.useTabStore());
 
-const { mainTabs, mainTabsActiveName } = storeToRefs(store.useAppStore());
-const { themeColor, collapse } = storeToRefs(store.useAppStore());
+console.log("maincontent_maintabs:", mainTabs);
 
 // tabs, 选中tab
 function selectedTabHandle(tab) {
@@ -124,42 +116,22 @@ function tabsRefreshCurrentHandle() {
 
 <style scoped lang="scss">
 .main-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
   height: 100%;
+  width: 100%;
+  background-color: #be82e3;
+}
 
-  .tabs {
-    padding-left: 0px;
-    padding-right: 2px;
-    z-index: 1020;
-    height: 40px;
-    line-height: 40px;
-    font-size: 14px;
-    background: rgb(255, 253, 255);
-    border-color: rgba(200, 206, 206, 0.5);
-    border-bottom-width: 1px;
-    border-bottom-style: solid;
-  }
+.tab-container {
+  width: 100%;
+  height: 60px;
+}
 
-  .tabs-tools {
-    height: 40px;
-    // padding: 0 10px;
-    font-size: 14px;
-    line-height: 40px;
-    cursor: pointer;
-    border-color: rgba(200, 206, 206, 0.5);
-    border-left-width: 1px;
-    border-left-style: solid;
-    border-bottom-width: 1px;
-    border-bottom-style: solid;
-    background: rgba(255, 255, 255, 1);
-  }
-
-  .tabs-tools:hover {
-    background: rgba(200, 206, 206, 1);
-  }
-
-  .main-content {
-    height: 100%;
-  }
+.main-content {
+  height: 100%;
 }
 
 .position-left {

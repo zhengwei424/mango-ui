@@ -3,22 +3,26 @@
     <div class="nav">
       <!-- 导航菜单 -->
       <el-menu
-        :default-active="activeIndex"
-        class="el-menu-demo"
+        :default-active="1"
+        class="el-menu-nav"
         :background-color="themeColor"
         text-color="#fff"
         active-text-color="#ffd04b"
         mode="horizontal"
       >
-        <div class="expand" @click="changeIcon">
+        <div class="expand">
           <keep-alive>
-            <el-icon size="24px" color="#ffffff">
-              <component :is="collapse ? 'Expand' : 'Fold'">
-                <template></template>
-              </component>
+            <el-icon
+              style="display: block"
+              size="24px"
+              color="#ffffff"
+              @click="changeIcon"
+            >
+              <component :is="collapse ? 'Expand' : 'Fold'" />
             </el-icon>
           </keep-alive>
         </div>
+
         <el-menu-item index="2" @click="router.push('/')"
           >{{ t("common.home") }}
         </el-menu-item>
@@ -38,7 +42,7 @@
     <!-- 工具栏 -->
     <div class="tools">
       <el-menu
-        class="el-menu-demo"
+        class="el-menu-tool"
         :background-color="themeColor"
         text-color="#14889A"
         :active-text-color="themeColor"
@@ -50,59 +54,83 @@
         </el-menu-item>
         <el-menu-item index="2">
           <!-- 语言切换 -->
-          <li style="color: #fff" class="fa fa-language fa-lg"></li>
           <el-popover
             ref="popover-lang"
-            placement="bottom-start"
+            placement="bottom"
             trigger="click"
-            v-model="langVisible"
+            :show-arrow="false"
+            :show-after="300"
           >
-            <div class="lang-item" @click="changeLanguage('zh_cn')">
-              简体中文
-            </div>
-            <div class="lang-item" @click="changeLanguage('en_us')">
-              English
-            </div>
+            <template #reference>
+              <i style="color: #fff" class="fa fa-language fa-lg"></i>
+            </template>
+            <template #default>
+              <div class="lang-item" @click="changeLanguage('zh_cn')">
+                简体中文
+              </div>
+              <div class="lang-item" @click="changeLanguage('en_us')">
+                English
+              </div>
+            </template>
           </el-popover>
         </el-menu-item>
         <el-menu-item index="3">
           <!-- 我的私信 -->
-          <el-badge :value="5" :max="99" class="badge">
-            <li style="color: #fff" class="fa fa-envelope-o fa-lg"></li>
-          </el-badge>
           <el-popover
             ref="popover-message"
-            placement="bottom-end"
+            placement="bottom"
             trigger="click"
+            width="300px"
+            :show-arrow="false"
+            :show-after="300"
           >
-            <MessagePanel />
+            <template #reference>
+              <el-badge :value="5" :max="99" class="badge">
+                <i style="color: #fff" class="fa fa-envelope-o fa-lg"></i>
+              </el-badge>
+            </template>
+            <template #default>
+              <MessagePanel />
+            </template>
           </el-popover>
         </el-menu-item>
         <el-menu-item index="4">
           <!-- 系统通知 -->
-          <el-badge :value="4" :max="99" class="badge">
-            <li style="color: #fff" class="fa fa-bell-o fa-lg"></li>
-          </el-badge>
           <el-popover
             ref="popover-notice"
-            placement="bottom-end"
+            placement="bottom"
             trigger="click"
+            width="300px"
+            :show-arrow="false"
+            :show-after="300"
           >
-            <NoticePanel />
+            <template #reference>
+              <el-badge :value="4" :max="99" class="badge">
+                <i style="color: #fff" class="fa fa-bell-o fa-lg"></i>
+              </el-badge>
+            </template>
+            <template #default>
+              <NoticePanel />
+            </template>
           </el-popover>
         </el-menu-item>
         <el-menu-item index="5">
           <!-- 用户信息 -->
-          <span class="user-info"
-            ><img src="../assets/user.png" alt="" srcset="" />超管</span
-          >
           <el-popover
             ref="popover-personal"
             placement="bottom-end"
             trigger="click"
-            :visible-arrow="false"
+            width="300px"
           >
-            <PersonalPanel :user="user"></PersonalPanel>
+            <template #reference>
+              <span class="user-info">
+                <img src="../assets/user.png" alt="" srcset="" />
+                超管
+              </span>
+            </template>
+            <template #default>
+              <PersonalPanel :user="user"></PersonalPanel>
+            </template>
           </el-popover>
         </el-menu-item>
       </el-menu>
@@ -129,7 +157,6 @@ const api = inject("api");
 const { themeColor, collapse } = storeToRefs(store.useAppStore());
 
 let user = reactive({});
-let activeIndex = ref("1");
 let langVisible = ref(false);
 
 function openWindow(url: any) {
@@ -179,19 +206,20 @@ onMounted(() => {
   width: 100%;
 }
 
-.expand {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 60px;
-}
-
 .nav {
   width: 100%;
 }
 
+.expand {
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
 .tools {
-  width: 500px;
+  min-width: 450px;
 }
 
 .lang-item {
@@ -208,7 +236,7 @@ onMounted(() => {
 }
 
 .user-info {
-  font-size: 20px;
+  font-size: 16px;
   color: #fff;
   cursor: pointer;
 

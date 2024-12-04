@@ -8,8 +8,11 @@ import ElementUI from "element-plus";
 import { createPinia } from "pinia";
 import api from "./http/api.ts";
 import * as ElementPlusIconsVue from "@element-plus/icons-vue";
+// @ts-ignore
 import "./style.css";
+// @ts-ignore
 import "element-plus/dist/index.css";
+import "font-awesome/css/font-awesome.min.css";
 
 const piniaStore = createPinia();
 const app = createApp(App);

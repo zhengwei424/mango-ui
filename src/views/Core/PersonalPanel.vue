@@ -128,11 +128,10 @@ import { ElMessageBox, ElMessage, FormInstance } from "element-plus";
 import { useRouter } from "vue-router";
 import store from "@/store";
 import { useI18n } from "vue-i18n";
-import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
+import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 
 const { t } = useI18n();
 const router = useRouter();
-
 
 withDefaults(defineProps<{ user: any }>(), {
   user: () => {
@@ -295,7 +294,7 @@ onMounted(() => {
 <style scoped>
 .personal-panel {
   font-size: 14px;
-  width: 280px;
+  width: 300px;
   text-align: center;
   border-color: rgba(180, 190, 190, 0.2);
   border-width: 1px;

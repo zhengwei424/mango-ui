@@ -3,7 +3,6 @@
     <!-- logo -->
     <div
       class="logo"
-      :class="collapse ? 'menu-bar-fold-width' : 'menu-bar-expand-width'"
       :style="{ 'background-color': themeColor }"
       @click="router.push('/')"
     >
@@ -13,61 +12,64 @@
       <div v-show="!collapse">{{ collapse ? "" : appName }}</div>
     </div>
 
-    <!-- 导航菜单 -->
-    <el-menu
-      ref="navmenuRef"
-      class="el-menu-vertical-demo"
-      :class="collapse ? 'menu-bar-fold-width' : 'menu-bar-expand-width'"
-      default-active="1"
-      :collapse="collapse"
-      :unique-opened="true"
-      :collapse-transition="false"
-      @open="handleopen"
-      @close="handleclose"
-      @select="handleselect"
-    >
-      <!--        &lt;!&ndash; 导航菜单树组件，动态加载菜单 &ndash;&gt;-->
-      <!--        <MenuTree v-for="item in navTree" :key="item.id" :menu="item"></MenuTree>-->
+    <div class="nav-menu">
+      <!-- 导航菜单 -->
+      <el-menu
+        ref="navmenuRef"
+        class="el-menu-vertical-demo"
+        :class="collapse ? 'menu-bar-fold-width' : 'menu-bar-expand-width'"
+        default-active="1"
+        :collapse="collapse"
+        :unique-opened="true"
+        :collapse-transition="false"
+        :background-color="themeColor"
+        @open="handleopen"
+        @close="handleclose"
+        @select="handleselect"
+      >
+        <!--        &lt;!&ndash; 导航菜单树组件，动态加载菜单 &ndash;&gt;-->
+        <!--        <MenuTree v-for="item in navTree" :key="item.id" :menu="item"></MenuTree>-->
 
-      <el-sub-menu index="1">
-        <template #title>
-          <el-icon>
-            <location />
-          </el-icon>
-          <span>Navigator One</span>
-        </template>
-        <el-menu-item-group>
-          <template #title><span>Group One</span></template>
-          <el-menu-item index="1-1">item one</el-menu-item>
-          <el-menu-item index="1-2">item two</el-menu-item>
-        </el-menu-item-group>
-        <el-menu-item-group title="Group Two">
-          <el-menu-item index="1-3">item three</el-menu-item>
-        </el-menu-item-group>
-        <el-sub-menu index="1-4">
-          <template #title><span>item four</span></template>
-          <el-menu-item index="1-4-1">item one</el-menu-item>
+        <el-sub-menu index="1">
+          <template #title>
+            <el-icon>
+              <location />
+            </el-icon>
+            <span>Navigator One</span>
+          </template>
+          <el-menu-item-group>
+            <template #title><span>Group One</span></template>
+            <el-menu-item index="1-1">item one</el-menu-item>
+            <el-menu-item index="1-2">item two</el-menu-item>
+          </el-menu-item-group>
+          <el-menu-item-group title="Group Two">
+            <el-menu-item index="1-3">item three</el-menu-item>
+          </el-menu-item-group>
+          <el-sub-menu index="1-4">
+            <template #title><span>item four</span></template>
+            <el-menu-item index="1-4-1">item one</el-menu-item>
+          </el-sub-menu>
         </el-sub-menu>
-      </el-sub-menu>
-      <el-menu-item index="2">
-        <el-icon>
-          <document />
-        </el-icon>
-        <template #title>Navigator Two</template>
-      </el-menu-item>
-      <el-menu-item index="3" disabled>
-        <el-icon>
-          <document />
-        </el-icon>
-        <template #title>Navigator Three</template>
-      </el-menu-item>
-      <el-menu-item index="4">
-        <el-icon>
-          <setting />
-        </el-icon>
-        <template #title>Navigator Four</template>
-      </el-menu-item>
-    </el-menu>
+        <el-menu-item index="2">
+          <el-icon>
+            <document />
+          </el-icon>
+          <template #title>Navigator Two</template>
+        </el-menu-item>
+        <el-menu-item index="3" disabled>
+          <el-icon>
+            <document />
+          </el-icon>
+          <template #title>Navigator Three</template>
+        </el-menu-item>
+        <el-menu-item index="4">
+          <el-icon>
+            <setting />
+          </el-icon>
+          <template #title>Navigator Four</template>
+        </el-menu-item>
+      </el-menu>
+    </div>
   </div>
 </template>
 
@@ -127,6 +129,16 @@ function handleRoute(route) {
 
 <style scoped lang="scss">
 .menu-bar-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  height: 100%;
+}
+
+.nav-menu,
+.el-menu-vertical-demo {
+  height: 100%;
 }
 
 .el-menu-vertical-demo:not(.el-menu--collapse) {
