@@ -51,7 +51,7 @@
       </el-sub-menu>
       <el-menu-item index="2">
         <el-icon>
-          <icon-menu />
+          <document />
         </el-icon>
         <template #title>Navigator Two</template>
       </el-menu-item>
@@ -72,7 +72,7 @@
 </template>
 
 <script setup lang="ts">
-import { Location } from "@element-plus/icons-vue";
+import { Document, Location, Setting } from "@element-plus/icons-vue";
 import { storeToRefs } from "pinia";
 import { ref, watchEffect } from "vue";
 import MenuTree from "../components/MenuTree/index.vue";
@@ -145,8 +145,8 @@ function handleRoute(route) {
 
   img {
     display: block;
-    width: 40px;
-    height: 40px;
+    width: 32px;
+    height: 32px;
   }
 
   div {

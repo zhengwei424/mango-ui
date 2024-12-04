@@ -1,16 +1,5 @@
 <template>
   <div class="headBar" :style="{ backgroundColor: themeColor }">
-    <div class="fold">
-      <!-- 导航收缩 -->
-      <!--
-      background-color deprecated	菜单的背景颜色 (十六进制格式) (推荐在样式类中使用 --el-menu-bg-color)
-      text-color deprecated	菜单的文字颜色 (十六进制格式) (推荐在样式类中使用 --el-menu-text-color)
-      active-text-color deprecated	活动菜单项的文本颜色（十六进制格式）（推荐使用 css var --el-menu-active-color）
-      -->
-
-      <el-icon><component :is="icon" /></el-icon>
-    </div>
-
     <div class="nav">
       <!-- 导航菜单 -->
       <el-menu
@@ -22,11 +11,14 @@
         mode="horizontal"
       >
         <div class="expand" @click="changeIcon">
-          <el-icon size="24px" color="#ffffff">
-            <component :is="collapse ? icon.expand : icon.fold"></component>
-          </el-icon>
+          <keep-alive>
+            <el-icon size="24px" color="#ffffff">
+              <component :is="collapse ? 'Expand' : 'Fold'">
+                <template></template>
+              </component>
+            </el-icon>
+          </keep-alive>
         </div>
-
         <el-menu-item index="2" @click="router.push('/')"
           >{{ t("common.home") }}
         </el-menu-item>
@@ -54,14 +46,9 @@
       >
         <el-menu-item index="1">
           <!-- 主题切换 -->
-          <ThemePicker
-            class="theme-picker"
-            :default="themeColor"
-            @onThemeChange="onThemeChange"
-          >
-          </ThemePicker>
+          <theme-picker />
         </el-menu-item>
-        <el-menu-item index="2" v-popover:popover-lang>
+        <el-menu-item index="2">
           <!-- 语言切换 -->
           <li style="color: #fff" class="fa fa-language fa-lg"></li>
           <el-popover
@@ -78,7 +65,7 @@
             </div>
           </el-popover>
         </el-menu-item>
-        <el-menu-item index="3" v-popover:popover-message>
+        <el-menu-item index="3">
           <!-- 我的私信 -->
           <el-badge :value="5" :max="99" class="badge">
             <li style="color: #fff" class="fa fa-envelope-o fa-lg"></li>
@@ -91,7 +78,7 @@
             <MessagePanel />
           </el-popover>
         </el-menu-item>
-        <el-menu-item index="4" v-popover:popover-notice>
+        <el-menu-item index="4">
           <!-- 系统通知 -->
           <el-badge :value="4" :max="99" class="badge">
             <li style="color: #fff" class="fa fa-bell-o fa-lg"></li>
@@ -104,7 +91,7 @@
             <NoticePanel />
           </el-popover>
         </el-menu-item>
-        <el-menu-item index="5" v-popover:popover-personal>
+        <el-menu-item index="5">
           <!-- 用户信息 -->
           <span class="user-info"
             ><img src="../assets/user.png" alt="" srcset="" />超管</span
@@ -145,11 +132,6 @@ let user = reactive({});
 let activeIndex = ref("1");
 let langVisible = ref(false);
 
-enum icon {
-  expand = "Expand",
-  fold = "Fold",
-}
-
 function openWindow(url: any) {
   window.open(url);
 }
@@ -171,7 +153,7 @@ function onThemeChange(themeColor: string) {
 
 // 语言切换
 function changeLanguage(lang: "zh_cn" | "en_us") {
-  locale = lang;
+  locale.value = lang;
   langVisible.value = false;
 }
 

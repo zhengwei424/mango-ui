@@ -9,12 +9,7 @@
   >
     <span class="tool-bar">
       <!-- 主题切换 -->
-      <theme-picker
-        style="float: right"
-        class="theme-picker"
-        :default="themeColor"
-        @onThemeChange="onThemeChange"
-      ></theme-picker>
+      <theme-picker />
     </span>
     <h2 class="title" style="padding-left: 22px">系统登录</h2>
     <el-form-item prop="account">
@@ -82,7 +77,7 @@ import ThemePicker from "@/components/ThemePicker/index.vue";
 import Cookies from "js-cookie";
 
 const global = inject("global");
-const api = inject('api')
+const api = inject("api");
 const loginFormRef = ref<FormInstance>();
 const router = useRouter();
 
