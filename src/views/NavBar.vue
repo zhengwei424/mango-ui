@@ -7,8 +7,10 @@
       :style="{ 'background-color': themeColor }"
       @click="router.push('/')"
     >
-      <img v-if="collapse" src="../assets/logo.png" alt="" />
-      <div>{{ collapse ? "" : appName }}</div>
+      <div v-show="collapse">
+        <img src="../assets/logo.png" alt="" />
+      </div>
+      <div v-show="!collapse">{{ collapse ? "" : appName }}</div>
     </div>
 
     <!-- 导航菜单 -->
@@ -19,6 +21,7 @@
       default-active="1"
       :collapse="collapse"
       :unique-opened="true"
+      :collapse-transition="false"
       @open="handleopen"
       @close="handleclose"
       @select="handleselect"
@@ -28,7 +31,9 @@
 
       <el-sub-menu index="1">
         <template #title>
-          <el-icon><location /></el-icon>
+          <el-icon>
+            <location />
+          </el-icon>
           <span>Navigator One</span>
         </template>
         <el-menu-item-group>
@@ -45,15 +50,21 @@
         </el-sub-menu>
       </el-sub-menu>
       <el-menu-item index="2">
-        <el-icon><icon-menu /></el-icon>
+        <el-icon>
+          <icon-menu />
+        </el-icon>
         <template #title>Navigator Two</template>
       </el-menu-item>
       <el-menu-item index="3" disabled>
-        <el-icon><document /></el-icon>
+        <el-icon>
+          <document />
+        </el-icon>
         <template #title>Navigator Three</template>
       </el-menu-item>
       <el-menu-item index="4">
-        <el-icon><setting /></el-icon>
+        <el-icon>
+          <setting />
+        </el-icon>
         <template #title>Navigator Four</template>
       </el-menu-item>
     </el-menu>
@@ -61,17 +72,19 @@
 </template>
 
 <script setup lang="ts">
+import { Location } from "@element-plus/icons-vue";
+import { storeToRefs } from "pinia";
 import { ref, watchEffect } from "vue";
 import MenuTree from "../components/MenuTree/index.vue";
 import { useRouter, useRoute } from "vue-router";
 import store from "@/store";
 
 const router = useRouter();
-const { appName, themeColor, collapse } = store.useAppStore();
+const { appName, themeColor, collapse } = storeToRefs(store.useAppStore());
 const navmenuRef = ref();
 
-let { mainTabs, mainTabsActiveName } = store.useTabStore();
-const { navTree } = store.useMenuStore();
+let { mainTabs, mainTabsActiveName } = storeToRefs(store.useTabStore());
+const { navTree } = storeToRefs(store.useMenuStore());
 
 watchEffect(() => {
   route: "handleRoute";
@@ -94,7 +107,7 @@ function handleselect(a, b) {
 // 路由操作处理
 function handleRoute(route) {
   // tab标签页选中, 如果不存在则先添加
-  let tab = mainTabs.value.filter((item) => item.name === route.name)[0];
+  let tab = mainTabs.filter((item) => item.name === route.name)[0];
   if (!tab) {
     tab = {
       name: route.name,
@@ -118,32 +131,31 @@ function handleRoute(route) {
 
 .el-menu-vertical-demo:not(.el-menu--collapse) {
   width: 200px;
-  min-height: 400px;
+  min-height: 100%;
 }
 
 .logo {
-  position: absolute;
-  top: 0px;
   height: 60px;
+  width: 100%;
   line-height: 60px;
-  background: #545c64;
-  cursor: pointer;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
 
   img {
+    display: block;
     width: 40px;
     height: 40px;
-    border-radius: 0px;
-    margin: 10px 10px 10px 10px;
-    float: left;
   }
 
   div {
     font-size: 22px;
     color: white;
-    text-align: left;
-    padding-left: 20px;
+    text-align: center;
   }
 }
+
 .menu-bar-expand-width {
   width: 200px;
 }

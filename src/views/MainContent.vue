@@ -2,19 +2,13 @@
   <div
     id="main-container"
     class="main-container"
-    :class="
-      store.useAppStore.collapse ? 'position-collapse-left' : 'position-left'
-    "
+    :class="collapse ? 'position-collapse-left' : 'position-left'"
   >
     <!-- 标签页 -->
     <div class="tab-container">
       <el-tabs
         class="tabs"
-        :class="
-          store.useAppStore.collapse
-            ? 'position-collapse-left'
-            : 'position-left'
-        "
+        :class="collapse ? 'position-collapse-left' : 'position-left'"
         v-model="mainTabsActiveName"
         :closable="true"
         type="card"
@@ -66,27 +60,15 @@
 </template>
 
 <script setup lang="ts">
+import { storeToRefs } from "pinia";
 import { useRouter } from "vue-router";
 import { computed, nextTick } from "vue";
 import store from "@/store";
+
 const router = useRouter();
 
-let mainTabs: any = computed({
-  get() {
-    return store.useTabStore().mainTabs;
-  },
-  set(val) {
-    store.useMenuStore().updateMainTabs(val);
-  },
-});
-let mainTabsActiveName = computed({
-  get() {
-    return store.useTabStore().mainTabsActiveName;
-  },
-  set(val) {
-    store.useTabStore().updateMainTabsActiveName(val);
-  },
-});
+const { mainTabs, mainTabsActiveName } = storeToRefs(store.useAppStore());
+const { themeColor, collapse } = storeToRefs(store.useAppStore());
 
 // tabs, 选中tab
 function selectedTabHandle(tab) {
@@ -142,17 +124,9 @@ function tabsRefreshCurrentHandle() {
 
 <style scoped lang="scss">
 .main-container {
-  padding: 0 5px 5px;
-  position: absolute;
-  top: 60px;
-  left: 1px;
-  right: 1px;
-  bottom: 0px;
-  // background: rgba(56, 5, 114, 0.5);
+  height: 100%;
+
   .tabs {
-    position: fixed;
-    top: 60px;
-    right: 50px;
     padding-left: 0px;
     padding-right: 2px;
     z-index: 1020;
@@ -161,17 +135,11 @@ function tabsRefreshCurrentHandle() {
     font-size: 14px;
     background: rgb(255, 253, 255);
     border-color: rgba(200, 206, 206, 0.5);
-    // border-left-width: 1px;
-    // border-left-style: solid;
     border-bottom-width: 1px;
     border-bottom-style: solid;
   }
 
   .tabs-tools {
-    position: fixed;
-    top: 60px;
-    right: 0;
-    z-index: 1020;
     height: 40px;
     // padding: 0 10px;
     font-size: 14px;
@@ -190,13 +158,7 @@ function tabsRefreshCurrentHandle() {
   }
 
   .main-content {
-    position: absolute;
-    top: 45px;
-    left: 5px;
-    right: 5px;
-    bottom: 5px;
-    padding: 5px;
-    // background: rgba(209, 212, 212, 0.5);
+    height: 100%;
   }
 }
 

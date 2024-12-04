@@ -1,11 +1,13 @@
 <template>
   <div class="container">
     <!-- 导航菜单栏 -->
-    <NavBar/>
-    <!-- 头部区域 -->
-    <HeadBar/>
-    <!-- 主内容区域 -->
-    <MainContent/>
+    <NavBar />
+    <div class="main">
+      <!-- 头部区域 -->
+      <HeadBar />
+      <!-- 主内容区域 -->
+      <MainContent />
+    </div>
   </div>
 </template>
 
@@ -17,11 +19,21 @@ import MainContent from "./MainContent.vue";
 
 <style scoped lang="scss">
 .container {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  flex-wrap: nowrap;
+  height: 100%;
+  width: 100%;
 }
 
+.main {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: nowrap;
+  height: 100%;
+  width: 100%;
+}
 </style>

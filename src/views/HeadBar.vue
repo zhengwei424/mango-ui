@@ -8,7 +8,7 @@
       active-text-color deprecated	活动菜单项的文本颜色（十六进制格式）（推荐使用 css var --el-menu-active-color）
       -->
 
-      <!--      <el-icon><fold /></el-icon>-->
+      <el-icon><component :is="icon" /></el-icon>
     </div>
 
     <div class="nav">
@@ -21,11 +21,11 @@
         active-text-color="#ffd04b"
         mode="horizontal"
       >
-        <el-menu-item index="1" @click="changeIcon">
-          <el-icon size="32px">
-            <component :is="collapse ? icon.fold : icon.expand"></component>
+        <div class="expand" @click="changeIcon">
+          <el-icon size="24px" color="#ffffff">
+            <component :is="collapse ? icon.expand : icon.fold"></component>
           </el-icon>
-        </el-menu-item>
+        </div>
 
         <el-menu-item index="2" @click="router.push('/')"
           >{{ t("common.home") }}
@@ -191,7 +191,17 @@ onMounted(() => {
 <style scoped lang="scss">
 .headBar {
   display: flex;
-  z-index: 1020;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.expand {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 60px;
 }
 
 .nav {
@@ -225,7 +235,6 @@ onMounted(() => {
     height: 40px;
     border-radius: 10px;
     margin: 10px 0px 10px 10px;
-    float: right;
   }
 }
 
