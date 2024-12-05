@@ -89,7 +89,7 @@
               </el-badge>
             </template>
             <template #default>
-              <MessagePanel />
+              <MessagePanel data="" />
             </template>
           </el-popover>
         </el-menu-item>
@@ -109,7 +109,7 @@
               </el-badge>
             </template>
             <template #default>
-              <NoticePanel />
+              <NoticePanel data="" />
             </template>
           </el-popover>
         </el-menu-item>

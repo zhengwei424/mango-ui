@@ -261,7 +261,7 @@ function countAccessTimes() {
 
 function openOnlinePage() {
   // 通过菜单URL跳转至指定路由
-  router.push("/sys/online");
+  router.push("/Sys/online");
 }
 
 // 时间格式化

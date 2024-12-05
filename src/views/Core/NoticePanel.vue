@@ -16,9 +16,7 @@
 </template>
 
 <script setup lang="ts">
-import { withDefaults, defineEmits, defineProps } from "vue";
-
-const emit = defineEmits(["click"]);
+import { withDefaults, defineProps } from "vue";
 
 withDefaults(defineProps<{ data: any }>(), {
   data: () => [

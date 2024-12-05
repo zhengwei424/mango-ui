@@ -42,15 +42,15 @@
       </el-table-column>
     </el-table>
     <template v-slot:footer>
-<span  class="dialog-footer">
-      <el-button size="small" @click="backupVisible = false">{{
-        t("action.cancel")
-      }}</el-button>
-      <el-button size="small" type="primary" @click="handleBackup">{{
-        t("common.backup")
-      }}</el-button>
-    </span>
-</template>
+      <span class="dialog-footer">
+        <el-button size="small" @click="backupVisible = false">{{
+          t("action.cancel")
+        }}</el-button>
+        <el-button size="small" type="primary" @click="handleBackup">{{
+          t("common.backup")
+        }}</el-button>
+      </span>
+    </template>
   </el-dialog>
 </template>
 
@@ -79,68 +79,68 @@ let tableLoading = ref(false);
 // 查询备份记录
 function findRecords() {
   tableLoading.value = true;
-  axios.get(global.backupBaseUrl + "/backup/findRecords").then((res) => {
-    let resData = res.data;
-    if (resData.code == 200) {
-      tableData = res.data;
-    } else {
-      ElMessage({ message: "操作失败, " + resData.msg, type: "error" });
-    }
-    tableLoading.value = false;
-  });
+  // axios.get(global.backupBaseUrl + "/backup/findRecords").then((res) => {
+  //   let resData = res.data;
+  //   if (resData.code == 200) {
+  //     tableData = res.data;
+  //   } else {
+  //     ElMessage({ message: "操作失败, " + resData.msg, type: "error" });
+  //   }
+  //   tableLoading.value = false;
+  // });
 }
 
 // 数据备份
 function handleBackup() {
   tableLoading.value = true;
-  axios.get(global.backupBaseUrl + "/backup/backup").then((res) => {
-    let resData = res.data;
-    if (resData.code == 200) {
-      ElMessage({ message: "操作成功", type: "success" });
-    } else {
-      ElMessage({ message: "操作失败, " + resData.msg, type: "error" });
-    }
-    tableLoading.value = false;
-    findRecords();
-  });
+  // axios.get(global.backupBaseUrl + "/backup/backup").then((res) => {
+  //   let resData = res.data;
+  //   if (resData.code == 200) {
+  //     ElMessage({ message: "操作成功", type: "success" });
+  //   } else {
+  //     ElMessage({ message: "操作失败, " + resData.msg, type: "error" });
+  //   }
+  //   tableLoading.value = false;
+  //   findRecords();
+  // });
 }
 
 // 数据还原
 function handleRestore(data: any) {
   tableLoading.value = true;
-  axios
-    .get(global.backupBaseUrl + "/backup/restore", {
-      params: { name: data.name },
-    })
-    .then((res) => {
-      let resData = res.data;
-      if (resData.code == 200) {
-        ElMessage({ message: "操作成功", type: "success" });
-        // this.$emit('afterRestore', {}) ?????????????????????????????
-      } else {
-        ElMessage({ message: "操作失败, " + resData.msg, type: "error" });
-      }
-      tableLoading.value = false;
-    });
+  // axios
+  //   .get(global.backupBaseUrl + "/backup/restore", {
+  //     params: { name: data.name },
+  //   })
+  //   .then((res) => {
+  //     let resData = res.data;
+  //     if (resData.code == 200) {
+  //       ElMessage({ message: "操作成功", type: "success" });
+  //       // this.$emit('afterRestore', {}) ?????????????????????????????
+  //     } else {
+  //       ElMessage({ message: "操作失败, " + resData.msg, type: "error" });
+  //     }
+  //     tableLoading.value = false;
+  //   });
 }
 
 // 删除备份
 function handleDelete(data: any) {
   tableLoading.value = true;
-  axios
-    .get(global.backupBaseUrl + "/backup/delete", {
-      params: { name: data.name },
-    })
-    .then((res) => {
-      let resData = res.data;
-      if (resData.code == 200) {
-        ElMessage({ message: "操作成功", type: "success" });
-      } else {
-        ElMessage({ message: "操作失败, " + resData.msg, type: "error" });
-      }
-      findRecords();
-      tableLoading.value = false;
-    });
+  // axios
+  //   .get(global.backupBaseUrl + "/backup/delete", {
+  //     params: { name: data.name },
+  //   })
+  //   .then((res) => {
+  //     let resData = res.data;
+  //     if (resData.code == 200) {
+  //       ElMessage({ message: "操作成功", type: "success" });
+  //     } else {
+  //       ElMessage({ message: "操作失败, " + resData.msg, type: "error" });
+  //     }
+  //     findRecords();
+  //     tableLoading.value = false;
+  //   });
 }
 
 function setBackupVisible(val: boolean) {
@@ -152,7 +152,7 @@ onMounted(() => {
   findRecords();
 });
 
-defineExpose({setBackupVisible});
+defineExpose({ setBackupVisible });
 </script>
 
 <style scoped></style>
