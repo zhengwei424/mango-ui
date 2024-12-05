@@ -1,9 +1,7 @@
 <template>
-<Home/>
+  <router-view />
 </template>
 
-<script setup lang="ts">
-import Home from "./views/Home.vue"
-</script>
+<script setup lang="ts"></script>
 
 <style scoped></style>

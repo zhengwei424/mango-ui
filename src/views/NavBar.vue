@@ -27,47 +27,12 @@
         @close="handleclose"
         @select="handleselect"
       >
-        <!--        &lt;!&ndash; 导航菜单树组件，动态加载菜单 &ndash;&gt;-->
-        <!--        <MenuTree v-for="item in navTree" :key="item.id" :menu="item"></MenuTree>-->
-
-        <el-sub-menu index="1">
-          <template #title>
-            <el-icon>
-              <location />
-            </el-icon>
-            <span>Navigator One</span>
-          </template>
-          <el-menu-item-group>
-            <template #title><span>Group One</span></template>
-            <el-menu-item index="1-1">item one</el-menu-item>
-            <el-menu-item index="1-2">item two</el-menu-item>
-          </el-menu-item-group>
-          <el-menu-item-group title="Group Two">
-            <el-menu-item index="1-3">item three</el-menu-item>
-          </el-menu-item-group>
-          <el-sub-menu index="1-4">
-            <template #title><span>item four</span></template>
-            <el-menu-item index="1-4-1">item one</el-menu-item>
-          </el-sub-menu>
-        </el-sub-menu>
-        <el-menu-item index="2">
-          <el-icon>
-            <document />
-          </el-icon>
-          <template #title>Navigator Two</template>
-        </el-menu-item>
-        <el-menu-item index="3" disabled>
-          <el-icon>
-            <document />
-          </el-icon>
-          <template #title>Navigator Three</template>
-        </el-menu-item>
-        <el-menu-item index="4">
-          <el-icon>
-            <setting />
-          </el-icon>
-          <template #title>Navigator Four</template>
-        </el-menu-item>
+        <!-- 导航菜单树组件，动态加载菜单 -->
+        <MenuTree
+          v-for="item in navTree"
+          :key="item.id"
+          :menu="item"
+        ></MenuTree>
       </el-menu>
     </div>
   </div>
@@ -82,17 +47,13 @@ import { useRouter, useRoute } from "vue-router";
 import store from "@/store";
 
 const router = useRouter();
+const route = useRoute();
+
 const { appName, themeColor, collapse } = storeToRefs(store.useAppStore());
 const navmenuRef = ref();
 
 let { mainTabs, mainTabsActiveName } = storeToRefs(store.useTabStore());
 const { navTree } = storeToRefs(store.useMenuStore());
-
-watchEffect(() => {
-  route: "handleRoute";
-});
-
-// handleRoute(this.$route)
 
 function handleopen() {
   console.log("handleopen");
@@ -125,6 +86,13 @@ function handleRoute(route) {
     navmenuRef.value.initOpenedMenu();
   }
 }
+
+// // 执行一次
+// handleRoute(route);
+//
+// watchEffect(() => {
+//   handleRoute(route);
+// });
 </script>
 
 <style scoped lang="scss">

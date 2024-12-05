@@ -122,7 +122,6 @@ function tabsRefreshCurrentHandle() {
   align-items: center;
   height: 100%;
   width: 100%;
-  background-color: #be82e3;
 }
 
 .tab-container {
@@ -132,6 +131,11 @@ function tabsRefreshCurrentHandle() {
 
 .main-content {
   height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 .position-left {

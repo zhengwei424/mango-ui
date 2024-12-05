@@ -22,23 +22,21 @@
 </template>
 
 <script lang="ts">
-import {defineComponent} from "vue";
-export default defineComponent({
-  name: "MenuTree"
-})
-
+export default {
+  name: "MenuTree",
+};
 </script>
 
 <script setup lang="ts">
 import { getIFrameUrl, getIFramePath } from "@/utils/iframe";
-import {withDefaults, defineProps} from 'vue'
-import {useRouter} from "vue-router";
+import { withDefaults, defineProps } from "vue";
+import { useRouter } from "vue-router";
 
-const router = useRouter()
+const router = useRouter();
 
-withDefaults(defineProps<{menu: any}>(), {
-  menu: {name: "zhangsan"}
-})
+withDefaults(defineProps<{ menu: any }>(), {
+  menu: { name: "zhangsan" },
+});
 
 function handleRoute(menu) {
   // 如果是嵌套页面，转换成iframe的path
@@ -50,6 +48,5 @@ function handleRoute(menu) {
   router.push("/" + path);
 }
 </script>
-
 
 <style scoped lang="scss"></style>

@@ -3,7 +3,7 @@
     <div class="nav">
       <!-- 导航菜单 -->
       <el-menu
-        :default-active="1"
+        default-active="1"
         class="el-menu-nav"
         :background-color="themeColor"
         text-color="#fff"
@@ -22,17 +22,16 @@
             </el-icon>
           </keep-alive>
         </div>
-
-        <el-menu-item index="2" @click="router.push('/')"
+        <el-menu-item index="1" @click="router.push('/')"
           >{{ t("common.home") }}
         </el-menu-item>
         <el-menu-item
-          index="3"
+          index="2"
           @click="openWindow('https://gitee.com/liuge1988/kitty/wikis/Home')"
           >{{ t("common.doc") }}
         </el-menu-item>
         <el-menu-item
-          index="4"
+          index="3"
           @click="openWindow('https://www.cnblogs.com/xifengxiaoma/')"
           >{{ t("common.blog") }}
         </el-menu-item>
@@ -216,6 +215,7 @@ onMounted(() => {
   flex-direction: row;
   justify-content: center;
   align-items: center;
+  margin: 0 20px;
 }
 
 .tools {

@@ -32,7 +32,7 @@
       <el-col :span="12">
         <el-form-item prop="captcha">
           <el-input
-            type="test"
+            type="text"
             v-model="loginForm.captcha"
             auto-complete="off"
             placeholder="验证码, 单击图片刷新"
@@ -49,6 +49,7 @@
             class="pointer"
             :src="loginForm.src"
             @click="refreshCaptcha"
+            alt=""
           />
         </el-form-item>
       </el-col>
@@ -88,8 +89,6 @@ let loginForm = reactive({
   captcha: "",
   src: "",
 });
-
-let themeColor = store.useAppStore().themeColor;
 
 let fieldRules = {
   account: [{ required: true, message: "请输入账号", trigger: "blur" }],

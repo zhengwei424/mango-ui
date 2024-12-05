@@ -26,7 +26,7 @@
       <span class="main-operation-item" @click="openPersonCenter">
         <el-button size="small">
           <template #icon>
-            <font-awesome-icon :icon="['fas', 'person']"></font-awesome-icon>/
+            <i class="fa fa-male" />
           </template>
           个人中心
         </el-button>
@@ -34,7 +34,7 @@
       <span class="main-operation-item" @click="openupdatePasswordDialog">
         <el-button size="small">
           <template #icon>
-            <font-awesome-icon :icon="['fas', 'key']" />
+            <i class="fa fa-key" />
           </template>
           修改密码
         </el-button>
