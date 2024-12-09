@@ -147,7 +147,6 @@ import NoticePanel from "@/views/Core/NoticePanel.vue";
 import MessagePanel from "@/views/Core/MessagePanel.vue";
 import PersonalPanel from "@/views/Core/PersonalPanel.vue";
 import { useRouter } from "vue-router";
-import { Expand, Flag, Fold, Location } from "@element-plus/icons-vue";
 import { storeToRefs } from "pinia";
 
 let { t, locale } = useI18n();

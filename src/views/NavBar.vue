@@ -39,7 +39,6 @@
 </template>
 
 <script setup lang="ts">
-import { Document, Location, Setting } from "@element-plus/icons-vue";
 import { storeToRefs } from "pinia";
 import { ref, watchEffect } from "vue";
 import MenuTree from "../components/MenuTree/index.vue";
@@ -47,7 +46,6 @@ import { useRouter, useRoute } from "vue-router";
 import store from "@/store";
 
 const router = useRouter();
-const route = useRoute();
 
 const { appName, themeColor, collapse } = storeToRefs(store.useAppStore());
 const navmenuRef = ref();
@@ -67,25 +65,25 @@ function handleselect(a, b) {
   console.log("handleselect");
 }
 
-// 路由操作处理
-function handleRoute(route) {
-  // tab标签页选中, 如果不存在则先添加
-  let tab = mainTabs.filter((item) => item.name === route.name)[0];
-  if (!tab) {
-    tab = {
-      name: route.name,
-      title: route.name,
-      icon: route.meta.icon,
-    };
-    mainTabs = mainTabs.concat(tab);
-  }
-  mainTabsActiveName.value = tab.name;
-  // 切换标签页时同步更新高亮菜单
-  if (navmenuRef.value != null) {
-    navmenuRef.value.activeIndex = "" + route.meta.index;
-    navmenuRef.value.initOpenedMenu();
-  }
-}
+// // 路由操作处理
+// function handleRoute(route) {
+//   // tab标签页选中, 如果不存在则先添加
+//   let tab = mainTabs.filter((item) => item.name === route.name)[0];
+//   if (!tab) {
+//     tab = {
+//       name: route.name,
+//       title: route.name,
+//       icon: route.meta.icon,
+//     };
+//     mainTabs = mainTabs.concat(tab);
+//   }
+//   mainTabsActiveName.value = tab.name;
+//   // 切换标签页时同步更新高亮菜单
+//   if (navmenuRef.value != null) {
+//     navmenuRef.value.activeIndex = "" + route.meta.index;
+//     navmenuRef.value.initOpenedMenu();
+//   }
+// }
 
 // // 执行一次
 // handleRoute(route);

@@ -30,7 +30,8 @@ const router = createRouter({
         {
           path: "",
           name: "系统介绍",
-          component: Intro,
+          // @ts-ignore
+          component: () => import("../views/Intro/Intro.vue"),
           meta: {
             icon: "fa fa-home fa-lg",
             index: 0,
@@ -50,7 +51,6 @@ const router = createRouter({
     },
   ],
 });
-
 // 没有使用的变量可以在变量名前面加上下划线_
 router.beforeEach(
   (
@@ -156,14 +156,13 @@ function addDynamicRoutes(menuList: any[] = [], routes: any[] = []) {
       // 创建路由配置
       const route = {
         path: menuList[i].url,
-        component: null,
+        component: Promise.resolve({}),
         name: menuList[i].name,
         meta: {
           icon: menuList[i].icon,
           index: menuList[i].id,
         },
       };
-      // 8001/swagger-ui.html
       const path = getIFramePath(menuList[i].url);
       if (path) {
         // 如果是嵌套页面, 通过iframe展示
@@ -189,7 +188,10 @@ function addDynamicRoutes(menuList: any[] = [], routes: any[] = []) {
           }
           url = url.substring(0, url.length - 1);
           // @ts-ignore
-          route["component"] = () => import(`"../views/${url}.vue"`);
+          // route["component"] = () => import(`"./views/${url}.vue"`);  // 不使用这种方式，解析不到组件地址！！！！！
+          route["component"] = Promise.resolve(
+            () => import("../views/" + url + ".vue"),
+          );
         } catch (e) {}
       }
       routes.push(route);
@@ -204,5 +206,4 @@ function addDynamicRoutes(menuList: any[] = [], routes: any[] = []) {
   }
   return routes;
 }
-
 export default router;

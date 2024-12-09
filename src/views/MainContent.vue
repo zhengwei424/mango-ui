@@ -41,18 +41,14 @@
     </div>
     <!-- 主内容区域 -->
     <div class="main-content">
-      <router-view v-slot="{ Component }">
+      <!-- <router-view/>获取component， <component/>使用component-->
+      <router-view v-slot="{ Component, route }">
         <transition>
           <keep-alive>
-            <component :is="Component" />
+            <component :is="Component" :key="route.fullPath" />
           </keep-alive>
         </transition>
       </router-view>
-      <!--      <keep-alive>-->
-      <!--        <transition name="fade" mode="out-in">-->
-      <!--          <router-view></router-view>-->
-      <!--        </transition>-->
-      <!--      </keep-alive>-->
     </div>
   </div>
 </template>
@@ -60,7 +56,7 @@
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
 import { useRouter } from "vue-router";
-import { computed, nextTick } from "vue";
+import { nextTick } from "vue";
 import store from "@/store";
 import { ArrowDown } from "@element-plus/icons-vue";
 

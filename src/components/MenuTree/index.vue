@@ -4,7 +4,9 @@
     :index="'' + menu.id"
   >
     <template v-slot:title>
-      <i :class="menu.icon"></i>
+      <el-icon>
+        <component :is="menu.icon" />
+      </el-icon>
       <span slot="title">{{ menu.name }}</span>
     </template>
     <MenuTree
@@ -14,7 +16,9 @@
     ></MenuTree>
   </el-sub-menu>
   <el-menu-item v-else :index="'' + menu.id" @click="handleRoute(menu)">
-    <i :class="menu.icon"></i>
+    <el-icon>
+      <component :is="menu.icon" />
+    </el-icon>
     <template v-slot:title>
       <span>{{ menu.name }}</span>
     </template>
@@ -28,19 +32,21 @@ export default {
 </script>
 
 <script setup lang="ts">
+import { IMenu } from "@/interface/menu.ts";
 import { getIFrameUrl, getIFramePath } from "@/utils/iframe";
+import { storeToRefs } from "pinia";
 import { withDefaults, defineProps } from "vue";
 import { useRouter } from "vue-router";
+import store from "@/store";
 
 const router = useRouter();
 
-withDefaults(defineProps<{ menu: any }>(), {
-  menu: { name: "zhangsan" },
-});
+withDefaults(defineProps<{ menu: IMenu }>(), {});
 
 function handleRoute(menu) {
   // 如果是嵌套页面，转换成iframe的path
   let path = getIFramePath(menu.url);
+  store.useIframeStore().setIFrameUrl(menu.url);
   if (!path) {
     path = menu.url;
   }
