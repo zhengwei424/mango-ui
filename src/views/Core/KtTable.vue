@@ -111,7 +111,7 @@ withDefaults(
     data: any; // 表格分页数据
     permsEdit: string; // 编辑权限标识
     permsDelete: string; // 删除权限标识
-    size: string; // 尺寸样式
+    size: any; // 尺寸样式
     align: string; // 文本对齐方式
     maxHeight: number; // 表格最大高度
     showOperation: boolean; // 是否显示操作组件
@@ -126,7 +126,7 @@ withDefaults(
     data: {},
     permsEdit: "",
     permsDelete: "",
-    size: "mini",
+    size: "small",
     align: "left",
     maxHeight: 440,
     showOperation: true,

@@ -1,17 +1,17 @@
-import {defineStore} from "pinia";
-import {reactive} from "vue";
+import { defineStore } from "pinia";
+import { reactive } from "vue";
 
-export const useUserStore = defineStore('user', () => {
-    // 用户权限标识集合
-    let perms = reactive<string[]>([])
+export const useUserStore = defineStore("user", () => {
+  // 用户权限标识集合
+  let perms = reactive<string[]>([]);
 
-    // 用户权限标识集合
-    function setPerms(val: string[]) {
-        perms = val
-    }
+  // 用户权限标识集合
+  function setPerms(val: string[]) {
+    perms = Object.assign(perms, val);
+  }
 
-    return {
-        perms,
-        setPerms
-    }
-})
+  return {
+    perms,
+    setPerms,
+  };
+});

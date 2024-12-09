@@ -1,61 +1,57 @@
 <template>
   <div>
-    <el-popover ref="popover" :placement="placement" trigger="click">
+    <el-popover :placement="placement" trigger="click">
       <el-tree
-        :data="data"
-        :props="props"
+        :data="treeData"
+        :props="treeProps"
         node-key="nodeKey"
-        ref="popupTree"
         @current-change="currentChangeHandle"
         :default-expand-all="defaultExpandAll"
         :highlight-current="true"
-        :expand-on-click-node="true">
+        :expand-on-click-node="true"
+      >
       </el-tree>
     </el-popover>
-    <el-input v-model="prop" v-popover:popover :readonly="true" :placeholder="placeholder" style="cursor:pointer;"></el-input>
+    <!--    <el-input-->
+    <!--      v-model="prop"-->
+    <!--      :readonly="true"-->
+    <!--      :placeholder="placeholder"-->
+    <!--      style="cursor: pointer"-->
+    <!--    ></el-input>-->
   </div>
 </template>
 
-<script>
+<script lang="ts">
 export default {
-  name: 'PopupTreeInput',
-  props: {
-    data: {
-      type: Array,
-      default: []
-    },
-    props: {
-      type: Object,
-      default: {}
-    },
-    prop: {
-      type: String,
-      default: ''
-    },
-    nodeKey: {
-      type: String,
-      default: ''
-    },
-    placeholder: {
-      type: String,
-      default: '点击选择内容'
-    },
-    placement: {
-      type: String,
-      default: 'right-start'
-    },
-    defaultExpandAll: {
-      type: Boolean,
-      default: false
-    },
-    currentChangeHandle: {
-      type: Function,
-      default: null
-    }
-  }
-}
+  name: "PopoverTreeInput",
+};
 </script>
 
-<style scoped>
+<script setup lang="ts">
+import { defineProps, withDefaults } from "vue";
 
-</style>
+withDefaults(
+  defineProps<{
+    treeData: Array<any>;
+    treeProps: any;
+    prop: string;
+    nodeKey: string;
+    placeholder: string;
+    placement: any;
+    defaultExpandAll: boolean;
+    currentChangeHandle: Function;
+  }>(),
+  {
+    treeData: () => [],
+    treeProps: () => {},
+    prop: "",
+    nodeKey: "",
+    placeholder: "",
+    placement: "right-start",
+    defaultExpandAll: false,
+    currentChangeHandle: () => {},
+  },
+);
+</script>
+
+<style scoped></style>

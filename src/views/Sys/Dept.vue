@@ -150,15 +150,15 @@
         </el-form-item>
       </el-form>
       <template v-slot:footer>
-<span  class="dialog-footer">
-        <el-button :size="size" @click="dialogVisible = false">{{
-          t("action.cancel")
-        }}</el-button>
-        <el-button :size="size" type="primary" @click="submitForm()">{{
-          t("action.confirm")
-        }}</el-button>
-      </span>
-</template>
+        <span class="dialog-footer">
+          <el-button :size="size" @click="dialogVisible = false">{{
+            t("action.cancel")
+          }}</el-button>
+          <el-button :size="size" type="primary" @click="submitForm()">{{
+            t("action.confirm")
+          }}</el-button>
+        </span>
+      </template>
     </el-dialog>
   </div>
 </template>
@@ -166,13 +166,13 @@
 <script setup lang="ts">
 import KtButton from "@/views/Core/KtButton.vue";
 import TableTreeColumn from "@/views/Core/TableTreeColumn.vue";
-import PopupTreeInput from "@/components/PopupTreeInput/index.vue";
+import PopoverTreeInput from "@/components/PopupTreeInput/index.vue";
 import { format } from "@/utils/datetime";
 import { ElMessage, ElMessageBox, FormInstance } from "element-plus";
-import {inject, onMounted, reactive, ref} from "vue";
+import { inject, onMounted, reactive, ref } from "vue";
 import { useI18n } from "vue-i18n";
 
-const api = inject('api')
+const api = inject("api");
 const dataFormRef = ref<FormInstance>();
 const { t } = useI18n();
 let size = ref("small");

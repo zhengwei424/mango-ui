@@ -189,9 +189,7 @@ function addDynamicRoutes(menuList: any[] = [], routes: any[] = []) {
           url = url.substring(0, url.length - 1);
           // @ts-ignore
           // route["component"] = () => import(`"./views/${url}.vue"`);  // 不使用这种方式，解析不到组件地址！！！！！
-          route["component"] = Promise.resolve(
-            () => import("../views/" + url + ".vue"),
-          );
+          route["component"] = () => import("../views/" + url + ".vue");
         } catch (e) {}
       }
       routes.push(route);

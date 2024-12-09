@@ -1,70 +1,70 @@
 <template>
   <div class="page-container">
     <!--工具栏-->
-    <div
-      class="toolbar"
-      style="float: left; padding-top: 10px; padding-left: 15px"
-    >
-      <el-form :inline="true" :model="filters" :size="size">
-        <el-form-item>
-          <el-input v-model="filters.name" placeholder="用户名"></el-input>
-        </el-form-item>
-        <el-form-item>
-          <kt-button
-            icon="fa fa-search"
-            :label="t('action.search')"
-            perms="sys:role:view"
-            type="primary"
-            @click="findPage(null)"
-          />
-        </el-form-item>
-        <el-form-item>
-          <kt-button
-            icon="fa fa-plus"
-            :label="t('action.add')"
-            perms="sys:user:add"
-            type="primary"
-            @click="handleAdd"
-          />
-        </el-form-item>
-      </el-form>
+    <div class="toolbar">
+      <div>
+        <el-form :inline="true" :model="filters" :size="size">
+          <el-form-item>
+            <el-input v-model="filters.name" placeholder="用户名"></el-input>
+          </el-form-item>
+          <el-form-item>
+            <kt-button
+              icon="fa fa-search"
+              :label="t('action.search')"
+              perms="sys:role:view"
+              type="primary"
+              @click="findPage"
+            />
+          </el-form-item>
+          <el-form-item>
+            <kt-button
+              icon="fa fa-plus"
+              :label="t('action.add')"
+              perms="sys:user:add"
+              type="primary"
+              @click="handleAdd"
+            />
+          </el-form-item>
+        </el-form>
+      </div>
+      <div>
+        <el-form :inline="true" :size="size">
+          <el-form-item>
+            <el-button-group>
+              <el-tooltip content="刷新" placement="top">
+                <el-button @click="findPage(null)">
+                  <template #icon>
+                    <i class="fa fa-refresh"></i>
+                  </template>
+                </el-button>
+              </el-tooltip>
+              <el-tooltip content="列显示" placement="top">
+                <el-button @click="displayFilterColumnsDialog">
+                  <template #icon>
+                    <i class="fa fa-filter"></i>
+                  </template>
+                </el-button>
+              </el-tooltip>
+              <el-tooltip content="导出" placement="top">
+                <el-button @click="exportUserExcelFile">
+                  <template #icon>
+                    <i class="fa fa-file-excel-o"></i>
+                  </template>
+                </el-button>
+              </el-tooltip>
+            </el-button-group>
+          </el-form-item>
+        </el-form>
+        <!--表格显示列界面-->
+        <!--      <table-column-filter-dialog-->
+        <!--        ref="tableColumnFilterDialogRef"-->
+        <!--        :columns="columns"-->
+        <!--        @handleFilterColumns="handleFilterColumns"-->
+        <!--      >-->
+        <!--      </table-column-filter-dialog>-->
+      </div>
     </div>
-    <div
-      class="toolbar"
-      style="float: right; padding-top: 10px; padding-right: 15px"
-    >
-      <el-form :inline="true" :size="size">
-        <el-form-item>
-          <el-button-group>
-            <el-tooltip content="刷新" placement="top">
-              <el-button
-                icon="fa fa-refresh"
-                @click="findPage(null)"
-              ></el-button>
-            </el-tooltip>
-            <el-tooltip content="列显示" placement="top">
-              <el-button
-                icon="fa fa-filter"
-                @click="displayFilterColumnsDialog"
-              ></el-button>
-            </el-tooltip>
-            <el-tooltip content="导出" placement="top">
-              <el-button
-                icon="fa fa-file-excel-o"
-                @click="exportUserExcelFile"
-              ></el-button>
-            </el-tooltip>
-          </el-button-group>
-        </el-form-item>
-      </el-form>
-      <!--表格显示列界面-->
-      <table-column-filter-dialog
-        ref="tableColumnFilterDialogRef"
-        :columns="columns"
-        @handleFilterColumns="handleFilterColumns"
-      >
-      </table-column-filter-dialog>
-    </div>
+
     <!--表格内容栏-->
     <kt-table
       permsEdit="sys:user:edit"
@@ -77,119 +77,152 @@
     >
     </kt-table>
     <!--新增编辑界面-->
-    <el-dialog
-      :title="operation ? '新增' : '编辑'"
-      width="40%"
-      v-model:visible="dialogVisible"
-      :close-on-click-modal="false"
-    >
-      <el-form
-        :model="dataForm"
-        label-width="80px"
-        :rules="dataFormRules"
-        ref="dataFormRef"
-        :size="size"
-        label-position="right"
-      >
-        <el-form-item label="ID" prop="id" v-if="false">
-          <el-input
-            v-model="dataForm.id"
-            :disabled="true"
-            auto-complete="off"
-          ></el-input>
-        </el-form-item>
-        <el-form-item label="用户名" prop="name">
-          <el-input v-model="dataForm.name" auto-complete="off"></el-input>
-        </el-form-item>
-        <el-form-item label="昵称" prop="nickName">
-          <el-input v-model="dataForm.nickName" auto-complete="off"></el-input>
-        </el-form-item>
-        <el-form-item label="密码" prop="password">
-          <el-input
-            v-model="dataForm.password"
-            type="password"
-            auto-complete="off"
-          ></el-input>
-        </el-form-item>
-        <el-form-item label="机构" prop="deptName">
-          <popup-tree-input
-            :data="deptData"
-            :props="deptTreeProps"
-            :prop="dataForm.deptName"
-            :nodeKey="'' + dataForm.deptId"
-            :currentChangeHandle="deptTreeCurrentChangeHandle"
-          >
-          </popup-tree-input>
-        </el-form-item>
-        <el-form-item label="邮箱" prop="email">
-          <el-input v-model="dataForm.email" auto-complete="off"></el-input>
-        </el-form-item>
-        <el-form-item label="手机" prop="mobile">
-          <el-input v-model="dataForm.mobile" auto-complete="off"></el-input>
-        </el-form-item>
-        <el-form-item label="角色" prop="userRoles" v-if="!operation">
-          <el-select
-            v-model="dataForm.userRoles"
-            multiple
-            placeholder="请选择"
-            style="width: 100%"
-          >
-            <el-option
-              v-for="item in roles"
-              :key="item.id"
-              :label="item.remark"
-              :value="item.id"
-            >
-            </el-option>
-          </el-select>
-        </el-form-item>
-      </el-form>
-      <template v-slot:footer>
-        <div class="dialog-footer">
-          <el-button :size="size" @click.native="dialogVisible = false"
-            >{{ t("action.cancel") }}
-          </el-button>
-          <el-button
-            :size="size"
-            type="primary"
-            @click.native="submitForm"
-            :loading="editLoading"
-          >
-            {{ t("action.submit") }}
-          </el-button>
-        </div>
-      </template>
-    </el-dialog>
+    <!--    <el-dialog-->
+    <!--      :title="operation ? '新增' : '编辑'"-->
+    <!--      width="40%"-->
+    <!--      v-model:visible="dialogVisible"-->
+    <!--      :close-on-click-modal="false"-->
+    <!--    >-->
+    <!--      <el-form-->
+    <!--        :model="dataForm"-->
+    <!--        label-width="80px"-->
+    <!--        :rules="dataFormRules"-->
+    <!--        ref="dataFormRef"-->
+    <!--        :size="size"-->
+    <!--        label-position="right"-->
+    <!--      >-->
+    <!--        <el-form-item label="ID" prop="id" v-if="false">-->
+    <!--          <el-input-->
+    <!--            v-model="dataForm.id"-->
+    <!--            :disabled="true"-->
+    <!--            auto-complete="off"-->
+    <!--          ></el-input>-->
+    <!--        </el-form-item>-->
+    <!--        <el-form-item label="用户名" prop="name">-->
+    <!--          <el-input v-model="dataForm.name" auto-complete="off"></el-input>-->
+    <!--        </el-form-item>-->
+    <!--        <el-form-item label="昵称" prop="nickName">-->
+    <!--          <el-input v-model="dataForm.nickName" auto-complete="off"></el-input>-->
+    <!--        </el-form-item>-->
+    <!--        <el-form-item label="密码" prop="password">-->
+    <!--          <el-input-->
+    <!--            v-model="dataForm.password"-->
+    <!--            type="password"-->
+    <!--            auto-complete="off"-->
+    <!--          ></el-input>-->
+    <!--        </el-form-item>-->
+    <!--        <el-form-item label="机构" prop="deptName">-->
+    <!--          <popover-tree-input-->
+    <!--            :data="deptData"-->
+    <!--            :props="deptTreeProps"-->
+    <!--            :prop="dataForm.deptName"-->
+    <!--            :nodeKey="'' + dataForm.deptId"-->
+    <!--            :currentChangeHandle="deptTreeCurrentChangeHandle"-->
+    <!--          >-->
+    <!--          </popover-tree-input>-->
+    <!--        </el-form-item>-->
+    <!--        <el-form-item label="邮箱" prop="email">-->
+    <!--          <el-input v-model="dataForm.email" auto-complete="off"></el-input>-->
+    <!--        </el-form-item>-->
+    <!--        <el-form-item label="手机" prop="mobile">-->
+    <!--          <el-input v-model="dataForm.mobile" auto-complete="off"></el-input>-->
+    <!--        </el-form-item>-->
+    <!--        <el-form-item label="角色" prop="userRoles" v-if="!operation">-->
+    <!--          <el-select-->
+    <!--            v-model="dataForm.userRoles"-->
+    <!--            multiple-->
+    <!--            placeholder="请选择"-->
+    <!--            style="width: 100%"-->
+    <!--          >-->
+    <!--            <el-option-->
+    <!--              v-for="item in roles"-->
+    <!--              :key="item.id"-->
+    <!--              :label="item.remark"-->
+    <!--              :value="item.id"-->
+    <!--            >-->
+    <!--            </el-option>-->
+    <!--          </el-select>-->
+    <!--        </el-form-item>-->
+    <!--      </el-form>-->
+    <!--      <template v-slot:footer>-->
+    <!--        <div class="dialog-footer">-->
+    <!--          <el-button :size="size" @click.native="dialogVisible = false"-->
+    <!--            >{{ t("action.cancel") }}-->
+    <!--          </el-button>-->
+    <!--          <el-button-->
+    <!--            :size="size"-->
+    <!--            type="primary"-->
+    <!--            @click.native="submitForm"-->
+    <!--            :loading="editLoading"-->
+    <!--          >-->
+    <!--            {{ t("action.submit") }}-->
+    <!--          </el-button>-->
+    <!--        </div>-->
+    <!--      </template>-->
+    <!--    </el-dialog>-->
   </div>
 </template>
 
 <script setup lang="ts">
-import PopupTreeInput from "@/components/PopupTreeInput/index.vue";
+import PopoverTreeInput from "@/components/PopupTreeInput/index.vue";
 import KtTable from "@/views/Core/KtTable.vue";
 import KtButton from "@/views/Core/KtButton.vue";
-import TableColumnFilterDialog from "@/views/Core/TableColumnFilterDialog";
+import TableColumnFilterDialog from "@/views/Core/TableColumnFilterDialog.vue";
 import { format } from "@/utils/datetime";
 import { ElMessage, ElMessageBox, FormInstance } from "element-plus";
-import {inject, onMounted, reactive, ref} from "vue";
+import { inject, onMounted, reactive, ref } from "vue";
 import { useI18n } from "vue-i18n";
 
-const api = inject('api')
+const api = inject("api");
 const { t } = useI18n();
-const dataFormRef = ref<FormInstance>();
-const tableColumnFilterDialogRef = ref();
 
-let size = ref("small");
+// /user/findPage返回结果
+let pageResult = reactive({});
+
+// /role/findAll查询结果
+let roles = reactive<
+  {
+    id: number;
+    createBy: string;
+    createTime: string;
+    lastUpdateBy: string;
+    lastUpdateTime: string;
+    name: string;
+    remark: string;
+    delFlag: number;
+  }[]
+>([
+  {
+    id: 1,
+    createBy: "admin",
+    createTime: "2019-01-19T17:11:11.000+0000",
+    lastUpdateBy: "admin",
+    lastUpdateTime: "2019-01-20T01:07:18.000+0000",
+    name: "admin",
+    remark: "超级管理员",
+    delFlag: 0,
+  },
+]);
+
+// 工具栏过滤用户名
 let filters = reactive({
   name: "",
 });
+
+// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+const dataFormRef = ref<FormInstance>();
+const tableColumnFilterDialogRef = ref();
+
+let disabled = ref(true);
+let size = ref<"large" | "default" | "small">("small");
+
 let columns = reactive<any[]>([]);
 let filterColumns = reactive([]);
 let pageRequest = reactive<{
   pageNum: number;
   pageSize: number;
-  params: any[];
-}>({ pageNum: 1, pageSize: 8, params: [] });
-let pageResult = reactive({});
+  params: {};
+}>({ pageNum: 1, pageSize: 8, params: {} });
 
 let operation = ref(false); // true:新增, false:编辑
 let dialogVisible = ref(false); // 新增编辑界面是否显示
@@ -226,28 +259,18 @@ let deptTreeProps = reactive({
   label: "name",
   children: "children",
 });
-let roles = reactive<
-  {
-    id: number;
-    remark?: string;
-  }[]
->([
-  {
-    id: 0,
-  },
-]);
 
 // 获取分页数据
 function findPage(data: any) {
   if (data !== null) {
     pageRequest = data.pageRequest;
   }
-  pageRequest.params = [{ name: "name", value: this.filters.name }];
+  pageRequest.params = { name: filters.name, email: "" };
   api.user
-    .findPage(pageRequest)
+    .findPage({ params: { name: "admin", email: "" } })
     .then((res: any) => {
-      pageResult = res.data;
-      findUserRoles();
+      pageResult = Object.assign(pageResult, res.data);
+      findUserRoles(); // 有啥用???????????
     })
     .then(data != null ? data.callback : "");
 }
@@ -281,17 +304,6 @@ function handleDelete(data: any) {
 function handleAdd() {
   dialogVisible.value = true;
   operation.value = true;
-  dataForm = {
-    id: 0,
-    name: "",
-    password: "",
-    deptId: 1,
-    deptName: "",
-    email: "test@qq.com",
-    mobile: "13889700023",
-    status: 1,
-    userRoles: [],
-  };
 }
 
 // 显示编辑界面
@@ -392,4 +404,15 @@ onMounted(() => {
 });
 </script>
 
-<style scoped></style>
+<style scoped>
+.page-container {
+  height: 100%;
+  width: 100%;
+}
+.toolbar {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+</style>

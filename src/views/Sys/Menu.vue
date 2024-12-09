@@ -196,22 +196,22 @@
             <el-col :span="2" class="icon-list__tips">
               <el-tooltip placement="top" effect="light" style="padding: 10px">
                 <template v-slot:content>
-<div >
-                  <p>URL格式：</p>
-                  <p>
-                    1.常规业务开发的功能URL，如用户管理，Views目录下页面路径为
-                    /Sys/User, 此处填写 /sys/user。
-                  </p>
-                  <p>
-                    2.嵌套外部网页，如通过菜单打开百度网页，此处填写
-                    http://www.baidu.com，http:// 不可省略。
-                  </p>
-                  <p>
-                    示例：用户管理：/sys/user 嵌套百度：https://www.baidu.com
-                    嵌套网页：http://127.0.0.1:8000
-                  </p>
-                </div>
-</template>
+                  <div>
+                    <p>URL格式：</p>
+                    <p>
+                      1.常规业务开发的功能URL，如用户管理，Views目录下页面路径为
+                      /Sys/User, 此处填写 /sys/user。
+                    </p>
+                    <p>
+                      2.嵌套外部网页，如通过菜单打开百度网页，此处填写
+                      http://www.baidu.com，http:// 不可省略。
+                    </p>
+                    <p>
+                      示例：用户管理：/sys/user 嵌套百度：https://www.baidu.com
+                      嵌套网页：http://127.0.0.1:8000
+                    </p>
+                  </div>
+                </template>
                 <i class="el-icon-warning"></i>
               </el-tooltip>
             </el-col>
@@ -262,15 +262,15 @@
         </el-form-item>
       </el-form>
       <template v-slot:footer>
-<span  class="dialog-footer">
-        <el-button :size="size" @click="dialogVisible = false">{{
-          t("action.cancel")
-        }}</el-button>
-        <el-button :size="size" type="primary" @click="submitForm()">{{
-          t("action.confirm")
-        }}</el-button>
-      </span>
-</template>
+        <span class="dialog-footer">
+          <el-button :size="size" @click="dialogVisible = false">{{
+            t("action.cancel")
+          }}</el-button>
+          <el-button :size="size" type="primary" @click="submitForm()">{{
+            t("action.confirm")
+          }}</el-button>
+        </span>
+      </template>
     </el-dialog>
   </div>
 </template>
@@ -278,13 +278,13 @@
 <script setup lang="ts">
 import KtButton from "@/views/Core/KtButton.vue";
 import TableTreeColumn from "@/views/Core/TableTreeColumn.vue";
-import PopupTreeInput from "@/components/PopupTreeInput/index.vue";
+import PopoverTreeInput from "@/components/PopupTreeInput/index.vue";
 import FaIconTooltip from "@/components/FaIconTooltip/index.vue";
 import { ElMessage, ElMessageBox, FormInstance } from "element-plus";
-import {inject, onMounted, reactive, ref} from "vue";
+import { inject, onMounted, reactive, ref } from "vue";
 import { useI18n } from "vue-i18n";
 
-const api = inject('api')
+const api = inject("api");
 const { t } = useI18n();
 
 const dataFormRef = ref<FormInstance>();
