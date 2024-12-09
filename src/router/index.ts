@@ -156,7 +156,7 @@ function addDynamicRoutes(menuList: any[] = [], routes: any[] = []) {
       // 创建路由配置
       const route = {
         path: menuList[i].url,
-        component: Promise.resolve({}),
+        component: () => Promise.resolve<any>({}),
         name: menuList[i].name,
         meta: {
           icon: menuList[i].icon,
@@ -167,6 +167,7 @@ function addDynamicRoutes(menuList: any[] = [], routes: any[] = []) {
       if (path) {
         // 如果是嵌套页面, 通过iframe展示
         route["path"] = path;
+
         // @ts-ignore
         route["component"] = () => import("../views/IFrame/IFrame.vue");
 
@@ -189,6 +190,7 @@ function addDynamicRoutes(menuList: any[] = [], routes: any[] = []) {
           url = url.substring(0, url.length - 1);
           // @ts-ignore
           // route["component"] = () => import(`"./views/${url}.vue"`);  // 不使用这种方式，解析不到组件地址！！！！！
+          /*@vite-ignore*/
           route["component"] = () => import("../views/" + url + ".vue");
         } catch (e) {}
       }
@@ -204,4 +206,5 @@ function addDynamicRoutes(menuList: any[] = [], routes: any[] = []) {
   }
   return routes;
 }
+
 export default router;

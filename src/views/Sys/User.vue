@@ -398,8 +398,8 @@ function initColumns() {
   filterColumns = JSON.parse(JSON.stringify(columns));
 }
 
-onMounted(() => {
-  findDeptTree();
+onMounted(async () => {
+  await findDeptTree();
   initColumns();
 });
 </script>

@@ -1,10 +1,7 @@
 <template>
   <div class="page-container">
     <!--工具栏-->
-    <div
-      class="toolbar"
-      style="float: left; padding-top: 10px; padding-left: 15px"
-    >
+    <div>
       <el-form :inline="true" :model="filters" :size="size">
         <el-form-item>
           <el-input v-model="filters.name" placeholder="角色名"></el-input>
@@ -78,20 +75,20 @@
         </el-form-item>
       </el-form>
       <template v-slot:footer>
-<div  class="dialog-footer">
-        <el-button :size="size" @click.native="dialogVisible = false"
-          >{{ t("action.cancel") }}
-        </el-button>
-        <el-button
-          :size="size"
-          type="primary"
-          @click.native="submitForm"
-          :loading="editLoading"
-        >
-          {{ t("action.submit") }}
-        </el-button>
-      </div>
-</template>
+        <div class="dialog-footer">
+          <el-button :size="size" @click.native="dialogVisible = false"
+            >{{ t("action.cancel") }}
+          </el-button>
+          <el-button
+            :size="size"
+            type="primary"
+            @click.native="submitForm"
+            :loading="editLoading"
+          >
+            {{ t("action.submit") }}
+          </el-button>
+        </div>
+      </template>
     </el-dialog>
     <!--角色菜单，表格树内容栏-->
     <div class="menu-container" :v-if="true">
@@ -162,11 +159,10 @@ import KtButton from "@/views/Core/KtButton.vue";
 import { format } from "@/utils/datetime";
 import { ElMessage, ElMessageBox, FormInstance } from "element-plus";
 import type Node from "element-plus/es/components/tree/src/model/node";
-import {inject, reactive, ref} from "vue";
+import { inject, reactive, ref } from "vue";
 import { useI18n } from "vue-i18n";
 
-
-const api = inject('api')
+const api = inject("api");
 const { t } = useI18n();
 
 interface Tree {
