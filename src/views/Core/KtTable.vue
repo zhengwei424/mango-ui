@@ -241,7 +241,6 @@ function handleDeleteRecord(ids: string) {
 
 /* 生命周期钩子 */
 onMounted(() => {
-  console.log("kttable-data:", props.data.content);
   refreshPageRequest(1);
 });
 </script>
