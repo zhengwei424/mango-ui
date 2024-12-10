@@ -35,7 +35,7 @@
 import KtTable from "@/views/Core/KtTable.vue";
 import KtButton from "@/views/Core/KtButton.vue";
 import { format } from "@/utils/datetime";
-import {inject, reactive, ref} from "vue";
+import {inject, onMounted, reactive, ref} from "vue";
 import { useI18n } from "vue-i18n";
 
 const api = inject('api')
@@ -77,16 +77,16 @@ let showOperation = ref(false);
 
 // 获取分页数据
 function findPage(data: any) {
-  if (data !== null) {
-    pageRequest = data.pageRequest;
-  }
-  pageRequest.params = [{ name: "userName", value: filters.name }];
+  // if (data !== null) {
+  //   pageRequest = data.pageRequest;
+  // }
+  // pageRequest.params = [{ name: "userName", value: filters.name }];
   api.log
-    .findPage(pageRequest)
+    .findPage({params: {username: 'admin'}})
     .then((res: any) => {
       pageResult = res.data;
     })
-    .then(data != null ? data.callback : "");
+    // .then(data != null ? data.callback : "");
 }
 
 // 时间格式化
@@ -94,9 +94,19 @@ function findPage(data: any) {
 //   return format(row[column.property]);
 // }
 
-function dataFormat(val: string) {
-  return format(val);
+function dateFormat(row: any, column: any, cellValue: any, index: number) {
+  return format(cellValue);
 }
+
+onMounted(()=>{
+  findPage('')
+})
+
 </script>
 
-<style scoped></style>
+<style scoped>
+.page-container {
+  height: 100%;
+  width: 100%;
+}
+</style>

@@ -4,13 +4,7 @@
     <el-table :data="data.content">
       <el-table-column type="selection"></el-table-column>
       <el-table-column label="id" prop="id"></el-table-column>
-      <el-table-column label="用户名" prop="name"></el-table-column>
-      <el-table-column label="昵称" prop="nickName"></el-table-column>
-      <el-table-column label="机构" prop="deptName"></el-table-column>
-      <el-table-column label="角色" prop="roleNames"></el-table-column>
-      <el-table-column label="邮箱" prop="email"></el-table-column>
-      <el-table-column label="手机" prop="mobile"></el-table-column>
-      <el-table-column label="状态" prop="status"></el-table-column>
+      <el-table-column label="name" prop="name"></el-table-column>
       <el-table-column :label="t('action.operation')" align="right">
         <template #default="scope">
           <el-button size="small" @click="handleEdit(scope.$index, scope.row)">

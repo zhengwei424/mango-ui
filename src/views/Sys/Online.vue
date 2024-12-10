@@ -79,7 +79,7 @@ function findPage(data: any) {
     { name: "status", value: "online" },
   ];
   api.loginlog
-    .findPage(pageRequest)
+    .findPage({params: {username: '', status: 'online'}})
     .then((res: any) => {
       pageResult = res.data;
     })
@@ -91,9 +91,14 @@ function findPage(data: any) {
 //   return format(row[column.property])
 // }
 
-function dataFormat(val: string) {
-  return format(val);
+function dateFormat(row: any, column: any, cellValue: any, index: number) {
+  return format(cellValue);
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+.page-container {
+  height: 100%;
+  width: 100%;
+}
+</style>

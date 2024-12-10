@@ -39,10 +39,10 @@
     >
       <el-table-column prop="id" label="ID" sortable/>
       <el-table-column prop="name" label="名称" sortable/>
-      <el-table-column prop="name" label="上级机构" sortable/>
-      <el-table-column prop="name" label="排序" sortable/>
-      <el-table-column prop="name" label="创建人" sortable/>
-      <el-table-column prop="name" label="创建时间" sortable/>
+      <el-table-column prop="parentName" label="上级机构" sortable/>
+      <el-table-column prop="orderNum" label="排序" sortable/>
+      <el-table-column prop="createBy" label="创建人" sortable/>
+      <el-table-column prop="createTime" label="创建时间" :formatter="dateFormat" sortable/>
       <el-table-column prop="name" align="center" :label="t('action.operation')">
         <template #default="scope">
           <kt-button

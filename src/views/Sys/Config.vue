@@ -111,7 +111,7 @@
 import KtTable from "@/views/Core/KtTable.vue";
 import KtButton from "@/views/Core/KtButton.vue";
 import { format } from "@/utils/datetime";
-import {ref, reactive, inject} from "vue";
+import {ref, reactive, inject, onMounted} from "vue";
 import { ElMessageBox, ElMessage, FormInstance } from "element-plus";
 import { useI18n } from "vue-i18n";
 
@@ -164,16 +164,16 @@ let dataFormRules = reactive({
 
 // 获取分页数据
 function findPage(data: any) {
-  if (data !== null) {
-    pageRequest = data.pageRequest;
-  }
-  pageRequest.params = [{ name: "label", value: filters.label }];
+  // if (data !== null) {
+  //   pageRequest = data.pageRequest;
+  // }
+  // pageRequest.params = [{ name: "label", value: filters.label }];
   api.config
-    .findPage(pageRequest)
+    .findPage({params: {label: ''}})
     .then((res: any) => {
       pageResult = res.data;
     })
-    .then(data != null ? data.callback : "");
+    // .then(data != null ? data.callback : "");
 }
 
 // 批量删除
@@ -230,9 +230,18 @@ function submitForm() {
 // function dateFormat(row, column, cellValue, index) {
 //   return format(row[column.property])
 // }
-function dateFormat(val: string) {
-  return format(val);
+function dateFormat(row: any, column: any, cellValue: any, index: number) {
+  return format(cellValue);
 }
+
+onMounted(()=>{
+  findPage('')
+})
 </script>
 
-<style scoped></style>
+<style scoped>
+.page-container {
+  height: 100%;
+  width: 100%;
+}
+</style>

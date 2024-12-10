@@ -427,4 +427,9 @@ onMounted(() => {
 });
 </script>
 
-<style scoped></style>
+<style scoped>
+.page-container {
+  height: 100%;
+  width: 100%;
+}
+</style>

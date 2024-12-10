@@ -66,16 +66,41 @@
     </div>
 
     <!--表格内容栏-->
-    <kt-table
-      permsEdit="sys:user:edit"
-      permsDelete="sys:user:delete"
-      :data="pageResult"
-      :columns="filterColumns"
-      @findPage="findPage"
-      @handleEdit="handleEdit"
-      @handleDelete="handleDelete"
-    >
-    </kt-table>
+    <el-table :data="pageResult.content">
+      <el-table-column type="selection"></el-table-column>
+      <el-table-column label="id" prop="id"></el-table-column>
+      <el-table-column label="用户名" prop="name"></el-table-column>
+      <el-table-column label="昵称" prop="nickName"></el-table-column>
+      <el-table-column label="机构" prop="deptName"></el-table-column>
+      <el-table-column label="角色" prop="roleNames"></el-table-column>
+      <el-table-column label="邮箱" prop="email"></el-table-column>
+      <el-table-column label="手机" prop="mobile"></el-table-column>
+      <el-table-column label="状态" prop="status"></el-table-column>
+      <el-table-column :label="t('action.operation')" align="right">
+        <template #default="scope">
+          <el-button size="small" @click="handleEdit(scope.$index, scope.row)">
+            {{ t("action.edit") }}
+          </el-button>
+          <el-button
+              size="small"
+              type="danger"
+              @click="handleDelete(scope.row)"
+          >
+            {{ t("action.delete") }}
+          </el-button>
+        </template>
+      </el-table-column>
+    </el-table>
+<!--    <kt-table-->
+<!--      permsEdit="sys:user:edit"-->
+<!--      permsDelete="sys:user:delete"-->
+<!--      :data="pageResult"-->
+<!--      :columns="filterColumns"-->
+<!--      @findPage="findPage"-->
+<!--      @handleEdit="handleEdit"-->
+<!--      @handleDelete="handleDelete"-->
+<!--    >-->
+<!--    </kt-table>-->
     <!--新增编辑界面-->
     <!--    <el-dialog-->
     <!--      :title="operation ? '新增' : '编辑'"-->
@@ -177,7 +202,7 @@ const api = inject("api");
 const { t } = useI18n();
 
 // /user/findPage返回结果
-let pageResult = reactive({});
+let pageResult = reactive<any>({});
 
 // /role/findAll查询结果
 let roles = reactive<

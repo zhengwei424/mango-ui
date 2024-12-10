@@ -112,7 +112,7 @@ import KtTable from "@/views/Core/KtTable.vue";
 import KtButton from "@/views/Core/KtButton.vue";
 import { format } from "@/utils/datetime";
 import { ElMessage, ElMessageBox, FormInstance } from "element-plus";
-import {inject, reactive, ref} from "vue";
+import {inject, onMounted, reactive, ref} from "vue";
 import { useI18n } from "vue-i18n";
 
 const api = inject('api')
@@ -150,7 +150,7 @@ let pageRequest = reactive<{
   pageSize: 10,
   params: [{}],
 });
-let pageResult = reactive({});
+let pageResult = reactive<any>({});
 
 let operation = ref(false); // true:新增, false:编辑
 let editDialogVisible = ref(false); // 新增编辑界面是否显示
@@ -171,16 +171,16 @@ let dataForm = reactive({
 
 // 获取分页数据
 function findPage(data: any) {
-  if (data !== null) {
-    pageRequest = data.pageRequest;
-  }
-  pageRequest.params = [{ name: "label", value: filters.label }];
+  // if (data !== null) {
+  //   pageRequest = data.pageRequest;
+  // }
+  // pageRequest.params = [{ name: "label", value: filters.label }];
   api.dict
-    .findPage(pageRequest)
+    .findPage({params: {label: ""}})
     .then((res: any) => {
       pageResult = res.data;
     })
-    .then(data != null ? data.callback : "");
+    // .then(data != null ? data.callback : "");
 }
 
 // 批量删除
@@ -238,9 +238,19 @@ function submitForm() {
 //   return format(row[column.property])
 // }
 
-function dateFormat(val: string) {
-  return format(val);
+function dateFormat(row: any, column: any, cellValue: any, index: number) {
+  return format(cellValue);
 }
+
+onMounted(()=>{
+  findPage('')
+})
+
 </script>
 
-<style scoped></style>
+<style scoped>
+.page-container {
+  height: 100%;
+  width: 100%;
+}
+</style>
