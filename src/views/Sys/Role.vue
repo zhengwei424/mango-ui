@@ -8,64 +8,39 @@
         </el-form-item>
         <el-form-item>
           <kt-button
-              icon="fa fa-search"
-              :label="t('action.search')"
-              perms="sys:role:view"
-              type="primary"
-              @click="findPage(null)"
+            icon="fa fa-search"
+            :label="t('action.search')"
+            perms="sys:role:view"
+            type="primary"
+            @click="findPage(null)"
           />
         </el-form-item>
         <el-form-item>
           <kt-button
-              icon="fa fa-plus"
-              :label="t('action.add')"
-              perms="sys:role:add"
-              type="primary"
-              @click="handleAdd"
+            icon="fa fa-plus"
+            :label="t('action.add')"
+            perms="sys:role:add"
+            type="primary"
+            @click="handleAdd"
           />
         </el-form-item>
       </el-form>
     </div>
-    <el-table :data="pageResult.content">
-      <el-table-column type="selection"></el-table-column>
-      <el-table-column label="id" prop="id"></el-table-column>
-      <el-table-column label="角色ID" prop="name"></el-table-column>
-      <el-table-column label="角色名称" prop="remark"></el-table-column>
-      <el-table-column label="创建者" prop="createBy"></el-table-column>
-      <el-table-column label="创建时间" prop="createTime" :formatter="dateFormat"></el-table-column>
-      <el-table-column label="更新者" prop="lastUpdateBy"></el-table-column>
-      <el-table-column label="更新时间" prop="lastUpdateTime" :formatter="dateFormat"></el-table-column>
-      <el-table-column :label="t('action.operation')" align="center">
-        <template #default="scope">
-          <el-button size="small" @click="handleEdit(scope.$index, scope.row)">
-            {{ t("action.edit") }}
-          </el-button>
-          <el-button
-              size="small"
-              type="danger"
-              @click="handleDelete(scope.row)"
-          >
-            {{ t("action.delete") }}
-          </el-button>
-        </template>
-      </el-table-column>
-    </el-table>
     <!--表格内容栏-->
-<!--    <kt-table-->
-<!--        permsEdit="sys:role:edit"-->
-<!--        permsDelete="sys:role:delete"-->
-<!--        :highlightCurrentRow="true"-->
-<!--        :stripe="false"-->
-<!--        :data="pageResult"-->
-<!--        :columns="columns"-->
-<!--        :showBatchDelete="false"-->
-<!--        @handleCurrentChange="handleRoleSelectChange"-->
-<!--        @findPage="findPage"-->
-<!--        @handleEdit="handleEdit"-->
-<!--        @handleDelete="handleDelete"-->
-<!--    >-->
-<!--    </kt-table>-->
-    <!-- </el-col> -->
+    <kt-table
+      permsEdit="sys:role:edit"
+      permsDelete="sys:role:delete"
+      :highlightCurrentRow="true"
+      :stripe="false"
+      :data="pageResult"
+      :columns="columns"
+      :showBatchDelete="false"
+      @handleCurrentChange="handleRoleSelectChange"
+      @findPage="findPage"
+      @handleEdit="handleEdit"
+      @handleDelete="handleDelete"
+    >
+    </kt-table>
     <!--新增编辑界面-->
     <!--    <el-dialog-->
     <!--      :title="operation ? '新增' : '编辑'"-->
@@ -180,14 +155,14 @@
 <script setup lang="ts">
 import KtTable from "@/views/Core/KtTable.vue";
 import KtButton from "@/views/Core/KtButton.vue";
-import {format} from "@/utils/datetime";
-import {ElMessage, ElMessageBox, FormInstance} from "element-plus";
+import { format } from "@/utils/datetime";
+import { ElMessage, ElMessageBox, FormInstance } from "element-plus";
 import type Node from "element-plus/es/components/tree/src/model/node";
-import {inject, onMounted, reactive, ref} from "vue";
-import {useI18n} from "vue-i18n";
+import { inject, onMounted, reactive, ref } from "vue";
+import { useI18n } from "vue-i18n";
 
 const api = inject("api");
-const {t} = useI18n();
+const { t } = useI18n();
 
 interface Tree {
   icon: string;
@@ -205,10 +180,10 @@ let filters = reactive({
   name: "",
 });
 let columns = reactive([
-  {prop: "id", label: "ID", minWidth: 50},
-  {prop: "name", label: "角色名", minWidth: 120},
-  {prop: "remark", label: "备注", minWidth: 120},
-  {prop: "createBy", label: "创建人", minWidth: 120},
+  { prop: "id", label: "ID", minWidth: 50 },
+  { prop: "name", label: "角色名", minWidth: 120 },
+  { prop: "remark", label: "备注", minWidth: 120 },
+  { prop: "createBy", label: "创建人", minWidth: 120 },
   {
     prop: "createTime",
     label: "创建时间",
@@ -222,13 +197,13 @@ let pageRequest = reactive<{
   pageNum: number;
   pageSize: number;
   params: any[];
-}>({pageNum: 1, pageSize: 10, params: []});
+}>({ pageNum: 1, pageSize: 10, params: [] });
 let pageResult = reactive<any>({});
 let operation = ref(false); // true:新增, false:编辑
 let dialogVisible = ref(false); // 新增编辑界面是否显示
 let editLoading = ref(false);
 let dataFormRules = {
-  name: [{required: true, message: "请输入角色名", trigger: "blur"}],
+  name: [{ required: true, message: "请输入角色名", trigger: "blur" }],
 };
 // 新增编辑界面数据
 let dataForm = reactive({
@@ -254,14 +229,12 @@ function findPage(data: any) {
   //   pageRequest = data.pageRequest;
   // }
   // pageRequest.params = [{name: "name", value: filters.name}];
-  api.role
-      .findPage({params: {name: ''}})
-      .then((res: any) => {
-        pageResult = res.data;
-        console.log("role pageResult:", pageResult)
-        findTreeData();
-      })
-      // .then(data != null ? data.callback : "");
+  api.role.findPage({ params: { name: "" } }).then((res: any) => {
+    pageResult = res.data;
+    console.log("role pageResult:", pageResult);
+    findTreeData();
+  });
+  // .then(data != null ? data.callback : "");
 }
 
 // 批量删除
@@ -281,7 +254,7 @@ function handleAdd() {
 }
 
 // 显示编辑界面
-function handleEdit(index:number, row:any) {
+function handleEdit(index: number, row: any) {
   dialogVisible.value = true;
   operation.value = false;
   dataForm = Object.assign({}, row);
@@ -297,11 +270,11 @@ function submitForm() {
         api.role.save(params).then((res: any) => {
           editLoading.value = false;
           if (res.code == 200) {
-            ElMessage({message: "操作成功", type: "success"});
+            ElMessage({ message: "操作成功", type: "success" });
             dialogVisible.value = false;
             dataFormRef.value?.resetFields();
           } else {
-            ElMessage({message: "操作失败, " + res.msg, type: "error"});
+            ElMessage({ message: "操作失败, " + res.msg, type: "error" });
           }
           findPage(null);
         });
@@ -325,7 +298,7 @@ function handleRoleSelectChange(val: any) {
     return;
   }
   selectRole = val.val;
-  api.role.findRoleMenus({roleId: val.val.id}).then((res: any) => {
+  api.role.findRoleMenus({ roleId: val.val.id }).then((res: any) => {
     currentRoleMenus.value = res.data;
     menuTreeRef.value?.setCheckedNodes(res.data);
   });
@@ -388,65 +361,65 @@ function submitAuthForm() {
   let checkedNodes = menuTreeRef.value?.getCheckedNodes(false, true);
   let roleMenus = [];
   for (let i = 0, len = checkedNodes.length; i < len; i++) {
-    let roleMenu = {roleId: roleId, menuId: checkedNodes[i].id};
+    let roleMenu = { roleId: roleId, menuId: checkedNodes[i].id };
     roleMenus.push(roleMenu);
   }
   api.role.saveRoleMenus(roleMenus).then((res: any) => {
     if (res.code == 200) {
-      ElMessage({message: "操作成功", type: "success"});
+      ElMessage({ message: "操作成功", type: "success" });
     } else {
-      ElMessage({message: "操作失败, " + res.msg, type: "error"});
+      ElMessage({ message: "操作失败, " + res.msg, type: "error" });
     }
     authLoading.value = false;
   });
 }
 
 const renderContent = (
-    h: any,
-    {node, data, store}: { node: Node; data: Tree; store: Node["store"] },
+  h: any,
+  { node, data, store }: { node: Node; data: Tree; store: Node["store"] },
 ) => {
   h(
-      "div",
-      {class: "column-container"},
+    "div",
+    { class: "column-container" },
+    h(
+      "span",
+      { class: "column" },
+      { style: { textAlign: "center", marginRight: "80px" } },
+      data.name,
+    ),
+    h(
+      "span",
+      { class: "column" },
+      { style: { textAlign: "center", marginRight: "80px" } },
       h(
-          "span",
-          {class: "column"},
-          {style: {textAlign: "center", marginRight: "80px"}},
-          data.name,
+        "el-tag",
+        {
+          type: data.type === 0 ? "" : data.type === 1 ? "success" : "info",
+        },
+        { size: "small" },
+        data.type === 0 ? "目录" : data.type === 1 ? "菜单" : "按钮",
       ),
-      h(
-          "span",
-          {class: "column"},
-          {style: {textAlign: "center", marginRight: "80px"}},
-          h(
-              "el-tag",
-              {
-                type: data.type === 0 ? "" : data.type === 1 ? "success" : "info",
-              },
-              {size: "small"},
-              data.type === 0 ? "目录" : data.type === 1 ? "菜单" : "按钮",
-          ),
-      ),
-      h(
-          "span",
-          {class: "column"},
-          {style: {textAlign: "center", marginRight: "80px"}},
-          h("i", {
-            class: data.icon,
-          }),
-      ),
-      h(
-          "span",
-          {class: "column"},
-          {style: {textAlign: "center", marginRight: "80px"}},
-          data.parentName ? data.parentName : "顶级菜单",
-      ),
-      h(
-          "span",
-          {class: "column"},
-          {style: {textAlign: "center", marginRight: "80px"}},
-          data.url ? data.url : "\t",
-      ),
+    ),
+    h(
+      "span",
+      { class: "column" },
+      { style: { textAlign: "center", marginRight: "80px" } },
+      h("i", {
+        class: data.icon,
+      }),
+    ),
+    h(
+      "span",
+      { class: "column" },
+      { style: { textAlign: "center", marginRight: "80px" } },
+      data.parentName ? data.parentName : "顶级菜单",
+    ),
+    h(
+      "span",
+      { class: "column" },
+      { style: { textAlign: "center", marginRight: "80px" } },
+      data.url ? data.url : "\t",
+    ),
   );
 };
 
@@ -459,9 +432,8 @@ function dateFormat(row: any, column: any, cellValue: any, index: number) {
 }
 
 onMounted(() => {
-  findPage("")
-})
-
+  findPage("");
+});
 </script>
 <style scoped>
 .page-container {

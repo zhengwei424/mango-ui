@@ -66,41 +66,41 @@
     </div>
 
     <!--表格内容栏-->
-    <el-table :data="pageResult.content">
-      <el-table-column type="selection"></el-table-column>
-      <el-table-column label="id" prop="id"></el-table-column>
-      <el-table-column label="用户名" prop="name"></el-table-column>
-      <el-table-column label="昵称" prop="nickName"></el-table-column>
-      <el-table-column label="机构" prop="deptName"></el-table-column>
-      <el-table-column label="角色" prop="roleNames"></el-table-column>
-      <el-table-column label="邮箱" prop="email"></el-table-column>
-      <el-table-column label="手机" prop="mobile"></el-table-column>
-      <el-table-column label="状态" prop="status"></el-table-column>
-      <el-table-column :label="t('action.operation')" align="right">
-        <template #default="scope">
-          <el-button size="small" @click="handleEdit(scope.$index, scope.row)">
-            {{ t("action.edit") }}
-          </el-button>
-          <el-button
-              size="small"
-              type="danger"
-              @click="handleDelete(scope.row)"
-          >
-            {{ t("action.delete") }}
-          </el-button>
-        </template>
-      </el-table-column>
-    </el-table>
-<!--    <kt-table-->
-<!--      permsEdit="sys:user:edit"-->
-<!--      permsDelete="sys:user:delete"-->
-<!--      :data="pageResult"-->
-<!--      :columns="filterColumns"-->
-<!--      @findPage="findPage"-->
-<!--      @handleEdit="handleEdit"-->
-<!--      @handleDelete="handleDelete"-->
-<!--    >-->
-<!--    </kt-table>-->
+    <!--    <el-table :data="pageResult.content">-->
+    <!--      <el-table-column type="selection"></el-table-column>-->
+    <!--      <el-table-column label="id" prop="id"></el-table-column>-->
+    <!--      <el-table-column label="用户名" prop="name"></el-table-column>-->
+    <!--      <el-table-column label="昵称" prop="nickName"></el-table-column>-->
+    <!--      <el-table-column label="机构" prop="deptName"></el-table-column>-->
+    <!--      <el-table-column label="角色" prop="roleNames"></el-table-column>-->
+    <!--      <el-table-column label="邮箱" prop="email"></el-table-column>-->
+    <!--      <el-table-column label="手机" prop="mobile"></el-table-column>-->
+    <!--      <el-table-column label="状态" prop="status"></el-table-column>-->
+    <!--      <el-table-column :label="t('action.operation')" align="right">-->
+    <!--        <template #default="scope">-->
+    <!--          <el-button size="small" @click="handleEdit(scope.$index, scope.row)">-->
+    <!--            {{ t("action.edit") }}-->
+    <!--          </el-button>-->
+    <!--          <el-button-->
+    <!--              size="small"-->
+    <!--              type="danger"-->
+    <!--              @click="handleDelete(scope.row)"-->
+    <!--          >-->
+    <!--            {{ t("action.delete") }}-->
+    <!--          </el-button>-->
+    <!--        </template>-->
+    <!--      </el-table-column>-->
+    <!--    </el-table>-->
+    <kt-table
+      permsEdit="sys:user:edit"
+      permsDelete="sys:user:delete"
+      :data="pageResult"
+      :columns="filterColumns"
+      @findPage="findPage"
+      @handleEdit="handleEdit"
+      @handleDelete="handleDelete"
+    >
+    </kt-table>
     <!--新增编辑界面-->
     <!--    <el-dialog-->
     <!--      :title="operation ? '新增' : '编辑'"-->
@@ -388,11 +388,6 @@ function deptTreeCurrentChangeHandle(data) {
   dataForm.deptName = data.name;
 }
 
-// 时间格式化
-function dateFormat(row, column, cellValue, index) {
-  return format(row[column.property]);
-}
-
 // 处理表格列过滤显示
 function displayFilterColumnsDialog() {
   tableColumnFilterDialogRef.value?.setDialogVisible(true);
@@ -404,7 +399,7 @@ function handleFilterColumns(data: unknown) {
   tableColumnFilterDialogRef.value?.setDialogVisible(false);
 }
 
-// 处理表格列过滤显示
+// 设置列标题
 function initColumns() {
   columns = [
     { prop: "id", label: "ID", minWidth: 50 },
@@ -415,12 +410,26 @@ function initColumns() {
     { prop: "email", label: "邮箱", minWidth: 120 },
     { prop: "mobile", label: "手机", minWidth: 100 },
     { prop: "status", label: "状态", minWidth: 70 },
-    // {prop:"createBy", label:"创建人", minWidth:120},
-    // {prop:"createTime", label:"创建时间", minWidth:120, formatter:this.dateFormat}
-    // {prop:"lastUpdateBy", label:"更新人", minWidth:100},
-    // {prop:"lastUpdateTime", label:"更新时间", minWidth:120, formatter:this.dateFormat}
+    // { prop: "createBy", label: "创建人", minWidth: 120 },
+    // {
+    //   prop: "createTime",
+    //   label: "创建时间",
+    //   minWidth: 120,
+    //   formatter: dateFormat,
+    // },
+    // { prop: "lastUpdateBy", label: "更新人", minWidth: 100 },
+    // {
+    //   prop: "lastUpdateTime",
+    //   label: "更新时间",
+    //   minWidth: 120,
+    //   formatter: dateFormat,
+    // },
   ];
   filterColumns = JSON.parse(JSON.stringify(columns));
+}
+
+function dateFormat(row: any, column: any, cellValue: any, index: number) {
+  return format(cellValue);
 }
 
 onMounted(async () => {

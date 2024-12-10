@@ -1,87 +1,68 @@
 <template>
   <div>
     <!--表格栏-->
-    <el-table :data="data.content">
-      <el-table-column type="selection"></el-table-column>
-      <el-table-column label="id" prop="id"></el-table-column>
-      <el-table-column label="name" prop="name"></el-table-column>
-      <el-table-column :label="t('action.operation')" align="right">
+    <el-table
+      :data="data.content"
+      :highlight-current-row="highlightCurrentRow"
+      @selection-change="selectionChange"
+      @current-change="handleCurrentChange"
+      v-loading="loading"
+      :element-loading-text="t('action.loading')"
+      :border="border"
+      :stripe="stripe"
+      :show-overflow-tooltip="showOverflowTooltip"
+      :max-height="maxHeight"
+      :size="size"
+      :align="align"
+      style="width: 100%"
+    >
+      <el-table-column
+        type="selection"
+        fixed="left"
+        v-if="showBatchDelete && showOperation"
+      ></el-table-column>
+      <el-table-column
+        v-for="column in columns"
+        header-align="center"
+        align="center"
+        :prop="column.prop"
+        :label="column.label"
+        :width="column.width"
+        :min-width="column.minWidth"
+        :fixed="column.fixed"
+        :key="column.prop"
+        :type="column.type"
+        :formatter="column.formatter"
+        :sortable="column.sortable == null ? true : column.sortable"
+      >
+      </el-table-column>
+      <el-table-column
+        :label="t('action.operation')"
+        v-if="showOperation"
+        header-align="center"
+        fixed="right"
+        align="center"
+        width="185"
+      >
         <template #default="scope">
-          <el-button size="small" @click="handleEdit(scope.$index, scope.row)">
-            {{ t("action.edit") }}
-          </el-button>
-          <el-button
-            size="small"
+          <kt-button
+            icon="fa fa-edit"
+            :label="t('action.edit')"
+            :perms="permsEdit"
+            :size="size"
+            @click="handleEdit(scope.$index, scope.row)"
+          />
+          <kt-button
+            icon="fa fa-trash"
+            :label="t('action.delete')"
+            :perms="permsDelete"
+            :size="size"
             type="danger"
             @click="handleDelete(scope.row)"
-          >
-            {{ t("action.delete") }}
-          </el-button>
+          />
         </template>
       </el-table-column>
     </el-table>
-    <!--    <el-table-->
-    <!--      :data="data.content"-->
-    <!--      :highlight-current-row="highlightCurrentRow"-->
-    <!--      @selection-change="selectionChange"-->
-    <!--      @current-change="handleCurrentChange"-->
-    <!--      v-loading="loading"-->
-    <!--      :element-loading-text="t('action.loading')"-->
-    <!--      :border="border"-->
-    <!--      :stripe="stripe"-->
-    <!--      :show-overflow-tooltip="showOverflowTooltip"-->
-    <!--      :max-height="maxHeight"-->
-    <!--      :size="size"-->
-    <!--      :align="align"-->
-    <!--      style="width: 100%"-->
-    <!--    >-->
-    <!--      <el-table-column-->
-    <!--        type="selection"-->
-    <!--        width="40"-->
-    <!--        v-if="showBatchDelete && showOperation"-->
-    <!--      ></el-table-column>-->
-    <!--      <el-table-column-->
-    <!--        v-for="column in columns"-->
-    <!--        header-align="center"-->
-    <!--        align="center"-->
-    <!--        :prop="column.prop"-->
-    <!--        :label="column.label"-->
-    <!--        :width="column.width"-->
-    <!--        :min-width="column.minWidth"-->
-    <!--        :fixed="column.fixed"-->
-    <!--        :key="column.prop"-->
-    <!--        :type="column.type"-->
-    <!--        :formatter="column.formatter"-->
-    <!--        :sortable="column.sortable == null ? true : column.sortable"-->
-    <!--      >-->
-    <!--      </el-table-column>-->
-    <!--      <el-table-column-->
-    <!--        :label="t('action.operation')"-->
-    <!--        width="185"-->
-    <!--        fixed="right"-->
-    <!--        v-if="showOperation"-->
-    <!--        header-align="center"-->
-    <!--        align="center"-->
-    <!--      >-->
-    <!--        <template #default="scope">-->
-    <!--          <kt-button-->
-    <!--            icon="fa fa-edit"-->
-    <!--            :label="t('action.edit')"-->
-    <!--            :perms="permsEdit"-->
-    <!--            :size="size"-->
-    <!--            @click="handleEdit(scope.$index, scope.row)"-->
-    <!--          />-->
-    <!--          <kt-button-->
-    <!--            icon="fa fa-trash"-->
-    <!--            :label="t('action.delete')"-->
-    <!--            :perms="permsDelete"-->
-    <!--            :size="size"-->
-    <!--            type="danger"-->
-    <!--            @click="handleDelete(scope.row)"-->
-    <!--          />-->
-    <!--        </template>-->
-    <!--      </el-table-column>-->
-    <!--    </el-table>-->
     <!--分页栏-->
     <div style="padding: 10px">
       <kt-button
@@ -112,6 +93,7 @@ import KtButton from "./KtButton.vue";
 import { onMounted, reactive, ref, defineEmits } from "vue";
 import { ElMessageBox, ElMessage } from "element-plus";
 import { useI18n } from "vue-i18n";
+import { format } from "@/utils/datetime.ts";
 const { t } = useI18n();
 
 /* emit */
@@ -232,7 +214,9 @@ function handleDeleteRecord(ids: string) {
     })
     .catch(() => {});
 }
-
+function dateFormat(row: any, column: any, cellValue: any, index: number) {
+  return format(cellValue);
+}
 /* 生命周期钩子 */
 onMounted(() => {
   refreshPageRequest(1);

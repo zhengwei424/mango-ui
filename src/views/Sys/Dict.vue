@@ -1,10 +1,7 @@
 <template>
   <div class="page-container">
     <!--工具栏-->
-    <div
-      class="toolbar"
-      style="float: left; padding-top: 10px; padding-left: 15px"
-    >
+    <div class="toolbar">
       <el-form :inline="true" :model="filters" :size="size">
         <el-form-item>
           <el-input v-model="filters.label" placeholder="名称"></el-input>
@@ -89,20 +86,20 @@
         </el-form-item>
       </el-form>
       <template v-slot:footer>
-<div  class="dialog-footer">
-        <el-button :size="size" @click.native="editDialogVisible = false"
-          >{{ t("action.cancel") }}
-        </el-button>
-        <el-button
-          :size="size"
-          type="primary"
-          @click.native="submitForm"
-          :loading="editLoading"
-        >
-          {{ t("action.submit") }}
-        </el-button>
-      </div>
-</template>
+        <div class="dialog-footer">
+          <el-button :size="size" @click.native="editDialogVisible = false"
+            >{{ t("action.cancel") }}
+          </el-button>
+          <el-button
+            :size="size"
+            type="primary"
+            @click.native="submitForm"
+            :loading="editLoading"
+          >
+            {{ t("action.submit") }}
+          </el-button>
+        </div>
+      </template>
     </el-dialog>
   </div>
 </template>
@@ -112,10 +109,10 @@ import KtTable from "@/views/Core/KtTable.vue";
 import KtButton from "@/views/Core/KtButton.vue";
 import { format } from "@/utils/datetime";
 import { ElMessage, ElMessageBox, FormInstance } from "element-plus";
-import {inject, onMounted, reactive, ref} from "vue";
+import { inject, onMounted, reactive, ref } from "vue";
 import { useI18n } from "vue-i18n";
 
-const api = inject('api')
+const api = inject("api");
 const { t } = useI18n();
 const dataFormRef = ref<FormInstance>();
 
@@ -175,12 +172,10 @@ function findPage(data: any) {
   //   pageRequest = data.pageRequest;
   // }
   // pageRequest.params = [{ name: "label", value: filters.label }];
-  api.dict
-    .findPage({params: {label: ""}})
-    .then((res: any) => {
-      pageResult = res.data;
-    })
-    // .then(data != null ? data.callback : "");
+  api.dict.findPage({ params: { label: "" } }).then((res: any) => {
+    pageResult = res.data;
+  });
+  // .then(data != null ? data.callback : "");
 }
 
 // 批量删除
@@ -242,10 +237,9 @@ function dateFormat(row: any, column: any, cellValue: any, index: number) {
   return format(cellValue);
 }
 
-onMounted(()=>{
-  findPage('')
-})
-
+onMounted(() => {
+  findPage("");
+});
 </script>
 
 <style scoped>

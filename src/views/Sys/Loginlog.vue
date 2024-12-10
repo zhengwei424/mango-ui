@@ -1,31 +1,28 @@
 <template>
   <div class="page-container">
     <!--工具栏-->
-    <div
-        class="toolbar"
-        style="float: left; padding-top: 10px; padding-left: 15px"
-    >
+    <div class="toolbar">
       <el-form :inline="true" :model="filters" :size="size">
         <el-form-item>
           <el-input v-model="filters.name" placeholder="用户名"></el-input>
         </el-form-item>
         <el-form-item>
           <kt-button
-              icon="fa fa-search"
-              :label="t('action.search')"
-              perms="sys:loginlog:view"
-              type="primary"
-              @click="findPage(null)"
+            icon="fa fa-search"
+            :label="t('action.search')"
+            perms="sys:loginlog:view"
+            type="primary"
+            @click="findPage(null)"
           />
         </el-form-item>
       </el-form>
     </div>
     <!--表格内容栏-->
     <kt-table
-        :data="pageResult"
-        :columns="columns"
-        :showOperation="showOperation"
-        @findPage="findPage"
+      :data="pageResult"
+      :columns="columns"
+      :showOperation="showOperation"
+      @findPage="findPage"
     >
     </kt-table>
   </div>
@@ -34,24 +31,24 @@
 <script setup lang="ts">
 import KtTable from "@/views/Core/KtTable.vue";
 import KtButton from "@/views/Core/KtButton.vue";
-import {format} from "@/utils/datetime";
-import {inject, onMounted, reactive, ref} from "vue";
-import {useI18n} from "vue-i18n";
+import { format } from "@/utils/datetime";
+import { inject, onMounted, reactive, ref } from "vue";
+import { useI18n } from "vue-i18n";
 
-const api = inject('api')
-const {t} = useI18n();
+const api = inject("api");
+const { t } = useI18n();
 
 let size = ref("small");
 let filters = reactive({
   name: "",
 });
 let columns = reactive([
-  {prop: "id", label: "ID", minWidth: 60},
-  {prop: "userName", label: "用户名", minWidth: 100},
-  {prop: "status", label: "状态", minWidth: 120},
-  {prop: "ip", label: "IP", minWidth: 120},
-  {prop: "time", label: "耗时", minWidth: 80},
-  {prop: "createBy", label: "创建人", minWidth: 100},
+  { prop: "id", label: "ID", minWidth: 60 },
+  { prop: "userName", label: "用户名", minWidth: 100 },
+  { prop: "status", label: "状态", minWidth: 120 },
+  { prop: "ip", label: "IP", minWidth: 120 },
+  { prop: "time", label: "耗时", minWidth: 80 },
+  { prop: "createBy", label: "创建人", minWidth: 100 },
   {
     prop: "createTime",
     label: "创建时间",
@@ -80,11 +77,11 @@ function findPage(data: any) {
   // }
   // pageRequest.params = [{name: "userName", value: filters.name}];
   api.loginlog
-      .findPage({params: {username: 'admin', status: ''}})
-      .then((res: any) => {
-        pageResult = res.data;
-      })
-      // .then(data != null ? data.callback : "");
+    .findPage({ params: { username: "admin", status: "" } })
+    .then((res: any) => {
+      pageResult = res.data;
+    });
+  // .then(data != null ? data.callback : "");
 }
 
 // 时间格式化
@@ -95,10 +92,9 @@ function dateFormat(row: any, column: any, cellValue: any, index: number) {
   return format(cellValue);
 }
 
-onMounted(()=>{
-  findPage('')
-})
-
+onMounted(() => {
+  findPage("");
+});
 </script>
 
 <style scoped>

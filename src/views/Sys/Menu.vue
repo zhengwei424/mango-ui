@@ -1,10 +1,7 @@
 <template>
   <div class="page-container">
     <!--工具栏-->
-    <div
-      class="toolbar"
-      style="float: left; padding-top: 10px; padding-left: 15px"
-    >
+    <div class="toolbar">
       <el-form :inline="true" :model="filters" :size="size">
         <el-form-item>
           <el-input v-model="filters.name" placeholder="名称"></el-input>

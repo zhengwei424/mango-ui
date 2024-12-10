@@ -1,10 +1,7 @@
 <template>
   <div class="page-container">
     <!--工具栏-->
-    <div
-      class="toolbar"
-      style="float: left; padding-top: 10px; padding-left: 15px"
-    >
+    <div class="toolbar">
       <el-form :inline="true" :model="filters" :size="size">
         <el-form-item>
           <el-input v-model="filters.name" placeholder="用户名"></el-input>
@@ -35,10 +32,10 @@
 import KtTable from "@/views/Core/KtTable.vue";
 import KtButton from "@/views/Core/KtButton.vue";
 import { format } from "@/utils/datetime";
-import {inject, onMounted, reactive, ref} from "vue";
+import { inject, onMounted, reactive, ref } from "vue";
 import { useI18n } from "vue-i18n";
 
-const api = inject('api')
+const api = inject("api");
 const { t } = useI18n();
 
 let size = ref("small");
@@ -81,12 +78,10 @@ function findPage(data: any) {
   //   pageRequest = data.pageRequest;
   // }
   // pageRequest.params = [{ name: "userName", value: filters.name }];
-  api.log
-    .findPage({params: {username: 'admin'}})
-    .then((res: any) => {
-      pageResult = res.data;
-    })
-    // .then(data != null ? data.callback : "");
+  api.log.findPage({ params: { username: "admin" } }).then((res: any) => {
+    pageResult = res.data;
+  });
+  // .then(data != null ? data.callback : "");
 }
 
 // 时间格式化
@@ -98,10 +93,9 @@ function dateFormat(row: any, column: any, cellValue: any, index: number) {
   return format(cellValue);
 }
 
-onMounted(()=>{
-  findPage('')
-})
-
+onMounted(() => {
+  findPage("");
+});
 </script>
 
 <style scoped>
