@@ -2,22 +2,23 @@
   <div>
     <el-popover :placement="placement" trigger="click">
       <el-tree
-        :data="treeData"
-        :props="treeProps"
-        node-key="nodeKey"
-        @current-change="currentChangeHandle"
+        :data="data"
+        :props="props"
+        :node-key="nodeKey"
         :default-expand-all="defaultExpandAll"
+        @node-click="handleNodeClick"
         :highlight-current="true"
-        :expand-on-click-node="true"
       >
       </el-tree>
+      <template #reference>
+        <el-input
+          v-model="inputValue"
+          :readonly="true"
+          :placeholder="placeholder"
+          style="cursor: pointer"
+        ></el-input>
+      </template>
     </el-popover>
-    <!--    <el-input-->
-    <!--      v-model="prop"-->
-    <!--      :readonly="true"-->
-    <!--      :placeholder="placeholder"-->
-    <!--      style="cursor: pointer"-->
-    <!--    ></el-input>-->
   </div>
 </template>
 
@@ -28,30 +29,37 @@ export default {
 </script>
 
 <script setup lang="ts">
-import { defineProps, withDefaults } from "vue";
+import { defineProps, ref, toRef, watch, withDefaults } from "vue";
 
-withDefaults(
+const emits = defineEmits(["currentChangeHandle"]);
+
+let popoverProps = withDefaults(
   defineProps<{
-    treeData: Array<any>;
-    treeProps: any;
+    data: Array<any>;
+    props: any;
     prop: string;
     nodeKey: string;
-    placeholder: string;
-    placement: any;
-    defaultExpandAll: boolean;
-    currentChangeHandle: Function;
+    placeholder?: string;
+    placement?: any;
+    defaultExpandAll?: boolean;
   }>(),
   {
-    treeData: () => [],
-    treeProps: () => {},
+    data: () => [],
+    props: () => {},
     prop: "",
     nodeKey: "",
-    placeholder: "",
+    placeholder: "点击选择内容",
     placement: "right-start",
     defaultExpandAll: false,
-    currentChangeHandle: () => {},
   },
 );
-</script>
 
+let inputValue = ref<string>();
+inputValue.value = popoverProps.prop;
+
+function handleNodeClick(data: any) {
+  emits("currentChangeHandle", data);
+  inputValue.value = data.name;
+}
+</script>
 <style scoped></style>

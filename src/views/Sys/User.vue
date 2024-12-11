@@ -56,41 +56,15 @@
           </el-form-item>
         </el-form>
         <!--表格显示列界面-->
-        <!--      <table-column-filter-dialog-->
-        <!--        ref="tableColumnFilterDialogRef"-->
-        <!--        :columns="columns"-->
-        <!--        @handleFilterColumns="handleFilterColumns"-->
-        <!--      >-->
-        <!--      </table-column-filter-dialog>-->
+        <table-column-filter-dialog
+          :columns="columns"
+          @handleFilterColumns="handleFilterColumns"
+        >
+        </table-column-filter-dialog>
       </div>
     </div>
 
     <!--表格内容栏-->
-    <!--    <el-table :data="pageResult.content">-->
-    <!--      <el-table-column type="selection"></el-table-column>-->
-    <!--      <el-table-column label="id" prop="id"></el-table-column>-->
-    <!--      <el-table-column label="用户名" prop="name"></el-table-column>-->
-    <!--      <el-table-column label="昵称" prop="nickName"></el-table-column>-->
-    <!--      <el-table-column label="机构" prop="deptName"></el-table-column>-->
-    <!--      <el-table-column label="角色" prop="roleNames"></el-table-column>-->
-    <!--      <el-table-column label="邮箱" prop="email"></el-table-column>-->
-    <!--      <el-table-column label="手机" prop="mobile"></el-table-column>-->
-    <!--      <el-table-column label="状态" prop="status"></el-table-column>-->
-    <!--      <el-table-column :label="t('action.operation')" align="right">-->
-    <!--        <template #default="scope">-->
-    <!--          <el-button size="small" @click="handleEdit(scope.$index, scope.row)">-->
-    <!--            {{ t("action.edit") }}-->
-    <!--          </el-button>-->
-    <!--          <el-button-->
-    <!--              size="small"-->
-    <!--              type="danger"-->
-    <!--              @click="handleDelete(scope.row)"-->
-    <!--          >-->
-    <!--            {{ t("action.delete") }}-->
-    <!--          </el-button>-->
-    <!--        </template>-->
-    <!--      </el-table-column>-->
-    <!--    </el-table>-->
     <kt-table
       permsEdit="sys:user:edit"
       permsDelete="sys:user:delete"
@@ -103,95 +77,95 @@
     >
     </kt-table>
     <!--新增编辑界面-->
-    <!--    <el-dialog-->
-    <!--      :title="operation ? '新增' : '编辑'"-->
-    <!--      width="40%"-->
-    <!--      v-model:visible="dialogVisible"-->
-    <!--      :close-on-click-modal="false"-->
-    <!--    >-->
-    <!--      <el-form-->
-    <!--        :model="dataForm"-->
-    <!--        label-width="80px"-->
-    <!--        :rules="dataFormRules"-->
-    <!--        ref="dataFormRef"-->
-    <!--        :size="size"-->
-    <!--        label-position="right"-->
-    <!--      >-->
-    <!--        <el-form-item label="ID" prop="id" v-if="false">-->
-    <!--          <el-input-->
-    <!--            v-model="dataForm.id"-->
-    <!--            :disabled="true"-->
-    <!--            auto-complete="off"-->
-    <!--          ></el-input>-->
-    <!--        </el-form-item>-->
-    <!--        <el-form-item label="用户名" prop="name">-->
-    <!--          <el-input v-model="dataForm.name" auto-complete="off"></el-input>-->
-    <!--        </el-form-item>-->
-    <!--        <el-form-item label="昵称" prop="nickName">-->
-    <!--          <el-input v-model="dataForm.nickName" auto-complete="off"></el-input>-->
-    <!--        </el-form-item>-->
-    <!--        <el-form-item label="密码" prop="password">-->
-    <!--          <el-input-->
-    <!--            v-model="dataForm.password"-->
-    <!--            type="password"-->
-    <!--            auto-complete="off"-->
-    <!--          ></el-input>-->
-    <!--        </el-form-item>-->
-    <!--        <el-form-item label="机构" prop="deptName">-->
-    <!--          <popover-tree-input-->
-    <!--            :data="deptData"-->
-    <!--            :props="deptTreeProps"-->
-    <!--            :prop="dataForm.deptName"-->
-    <!--            :nodeKey="'' + dataForm.deptId"-->
-    <!--            :currentChangeHandle="deptTreeCurrentChangeHandle"-->
-    <!--          >-->
-    <!--          </popover-tree-input>-->
-    <!--        </el-form-item>-->
-    <!--        <el-form-item label="邮箱" prop="email">-->
-    <!--          <el-input v-model="dataForm.email" auto-complete="off"></el-input>-->
-    <!--        </el-form-item>-->
-    <!--        <el-form-item label="手机" prop="mobile">-->
-    <!--          <el-input v-model="dataForm.mobile" auto-complete="off"></el-input>-->
-    <!--        </el-form-item>-->
-    <!--        <el-form-item label="角色" prop="userRoles" v-if="!operation">-->
-    <!--          <el-select-->
-    <!--            v-model="dataForm.userRoles"-->
-    <!--            multiple-->
-    <!--            placeholder="请选择"-->
-    <!--            style="width: 100%"-->
-    <!--          >-->
-    <!--            <el-option-->
-    <!--              v-for="item in roles"-->
-    <!--              :key="item.id"-->
-    <!--              :label="item.remark"-->
-    <!--              :value="item.id"-->
-    <!--            >-->
-    <!--            </el-option>-->
-    <!--          </el-select>-->
-    <!--        </el-form-item>-->
-    <!--      </el-form>-->
-    <!--      <template v-slot:footer>-->
-    <!--        <div class="dialog-footer">-->
-    <!--          <el-button :size="size" @click.native="dialogVisible = false"-->
-    <!--            >{{ t("action.cancel") }}-->
-    <!--          </el-button>-->
-    <!--          <el-button-->
-    <!--            :size="size"-->
-    <!--            type="primary"-->
-    <!--            @click.native="submitForm"-->
-    <!--            :loading="editLoading"-->
-    <!--          >-->
-    <!--            {{ t("action.submit") }}-->
-    <!--          </el-button>-->
-    <!--        </div>-->
-    <!--      </template>-->
-    <!--    </el-dialog>-->
+    <el-dialog
+      :title="operation ? '新增' : '编辑'"
+      width="40%"
+      v-model="dialogVisible"
+      :close-on-click-modal="false"
+    >
+      <el-form
+        :model="dataForm"
+        label-width="80px"
+        :rules="dataFormRules"
+        ref="dataFormRef"
+        :size="size"
+        label-position="right"
+      >
+        <el-form-item label="ID" prop="id" v-if="false">
+          <el-input
+            v-model="dataForm.id"
+            :disabled="true"
+            auto-complete="off"
+          ></el-input>
+        </el-form-item>
+        <el-form-item label="用户名" prop="name">
+          <el-input v-model="dataForm.name" auto-complete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="昵称" prop="nickName">
+          <el-input v-model="dataForm.nickName" auto-complete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="密码" prop="password">
+          <el-input
+            v-model="dataForm.password"
+            type="password"
+            auto-complete="off"
+          ></el-input>
+        </el-form-item>
+        <el-form-item label="机构" prop="deptName">
+          <popover-tree-input
+            :data="deptData"
+            :props="deptTreeProps"
+            :prop="dataForm.deptName"
+            :nodeKey="'' + dataForm.deptId"
+            @currentChangeHandle="deptTreeCurrentChangeHandle"
+          >
+          </popover-tree-input>
+        </el-form-item>
+        <el-form-item label="邮箱" prop="email">
+          <el-input v-model="dataForm.email" auto-complete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="手机" prop="mobile">
+          <el-input v-model="dataForm.mobile" auto-complete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="角色" prop="userRoles" v-if="!operation">
+          <el-select
+            v-model="dataForm.userRoles"
+            multiple
+            placeholder="请选择"
+            style="width: 100%"
+          >
+            <el-option
+              v-for="item in roles"
+              :key="item.id"
+              :label="item.remark"
+              :value="item.id"
+            >
+            </el-option>
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <template v-slot:footer>
+        <div class="dialog-footer">
+          <el-button :size="size" @click.native="dialogVisible = false"
+            >{{ t("action.cancel") }}
+          </el-button>
+          <el-button
+            :size="size"
+            type="primary"
+            @click.native="submitForm"
+            :loading="editLoading"
+          >
+            {{ t("action.submit") }}
+          </el-button>
+        </div>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
 <script setup lang="ts">
 import PopoverTreeInput from "@/components/PopupTreeInput/index.vue";
-import {IPageRequest} from "@/interface/pageRequest.ts";
+import { IPageRequest } from "@/interface/pageRequest.ts";
 import KtTable from "@/views/Core/KtTable.vue";
 import KtButton from "@/views/Core/KtButton.vue";
 import TableColumnFilterDialog from "@/views/Core/TableColumnFilterDialog.vue";
@@ -236,21 +210,24 @@ let filters = reactive({
   name: "",
 });
 
-// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-const dataFormRef = ref<FormInstance>();
-const tableColumnFilterDialogRef = ref();
+let dataFormRef = ref<FormInstance>();
+let tableColumnFilterDialogRef = ref();
 
 let disabled = ref(true);
 let size = ref<"large" | "default" | "small">("small");
 
 let columns = reactive<any[]>([]);
 let filterColumns = reactive([]);
-let pageRequest = reactive<IPageRequest>({ pageNum: 1, pageSize: 8, params: {} });
+let pageRequest = reactive<IPageRequest>({
+  pageNum: 1,
+  pageSize: 8,
+  params: {},
+});
 
-let operation = ref(false); // true:新增, false:编辑
+let operation = ref<boolean>(false); // true:新增, false:编辑
 let dialogVisible = ref(false); // 新增编辑界面是否显示
 let editLoading = ref(false);
-let loading = true
+let loading = true;
 let dataFormRules = {
   name: [{ required: true, message: "请输入用户名", trigger: "blur" }],
 };
@@ -287,13 +264,11 @@ let deptTreeProps = reactive({
 // 获取分页数据
 function findPage(pageRequest: IPageRequest) {
   pageRequest.params = { name: filters.name, email: "" };
-  api.user
-    .findPage({ params: { name: "admin", email: "" } })
-    .then((res: any) => {
-      pageResult = Object.assign(pageResult, res.data);
-      findUserRoles(); // 有啥用???????????
-      loading = false
-    })
+  api.user.findPage(pageRequest).then((res: any) => {
+    pageResult = Object.assign(pageResult, res.data);
+    findUserRoles(); // 有啥用???????????
+    loading = false;
+  });
 }
 
 // 导出Excel用户信息
@@ -374,7 +349,7 @@ function submitForm() {
 // 获取部门列表
 function findDeptTree() {
   api.dept.findDeptTree().then((res: any) => {
-    deptData = res.data;
+    deptData = Object.assign(deptData, res.data);
   });
 }
 
@@ -382,6 +357,7 @@ function findDeptTree() {
 function deptTreeCurrentChangeHandle(data) {
   dataForm.deptId = data.id;
   dataForm.deptName = data.name;
+  console.log(dataForm);
 }
 
 // 处理表格列过滤显示

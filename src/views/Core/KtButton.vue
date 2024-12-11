@@ -38,7 +38,7 @@ let props = withDefaults(
 );
 
 function hasPerm(perms: string) {
-  return hasPermission(perms) && !props.disabled;
+  return hasPermission(perms) && props.disabled;
 }
 </script>
 
