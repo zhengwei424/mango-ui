@@ -8,47 +8,49 @@
         </el-form-item>
         <el-form-item>
           <kt-button
-            icon="fa fa-search"
-            :label="t('action.search')"
-            perms="sys:loginlog:view"
-            type="primary"
-            @click="findPage(null)"
+              icon="fa fa-search"
+              :label="t('action.search')"
+              perms="sys:loginlog:view"
+              type="primary"
+              @click="findPage(null)"
           />
         </el-form-item>
       </el-form>
     </div>
     <!--表格内容栏-->
     <kt-table
-      :data="pageResult"
-      :columns="columns"
-      :showOperation="showOperation"
-      @findPage="findPage"
+        :loading="loading"
+        :data="pageResult"
+        :columns="columns"
+        :showOperation="showOperation"
+        @findPage="findPage"
     >
     </kt-table>
   </div>
 </template>
 
 <script setup lang="ts">
+import {IPageRequest} from "@/interface/pageRequest.ts";
 import KtTable from "@/views/Core/KtTable.vue";
 import KtButton from "@/views/Core/KtButton.vue";
-import { format } from "@/utils/datetime";
-import { inject, reactive, ref } from "vue";
-import { useI18n } from "vue-i18n";
+import {format} from "@/utils/datetime";
+import {inject, reactive, ref} from "vue";
+import {useI18n} from "vue-i18n";
 
 const api = inject("api");
-const { t } = useI18n();
+const {t} = useI18n();
 
 let size = ref("small");
 let filters = reactive({
   name: "",
 });
 let columns = reactive([
-  { prop: "id", label: "ID", minWidth: 60 },
-  { prop: "userName", label: "用户名", minWidth: 100 },
-  { prop: "status", label: "状态", minWidth: 120 },
-  { prop: "ip", label: "IP", minWidth: 120 },
-  { prop: "time", label: "耗时", minWidth: 80 },
-  { prop: "createBy", label: "创建人", minWidth: 100 },
+  {prop: "id", label: "ID", minWidth: 60},
+  {prop: "userName", label: "用户名", minWidth: 100},
+  {prop: "status", label: "状态", minWidth: 120},
+  {prop: "ip", label: "IP", minWidth: 120},
+  {prop: "time", label: "耗时", minWidth: 80},
+  {prop: "createBy", label: "创建人", minWidth: 100},
   {
     prop: "createTime",
     label: "创建时间",
@@ -58,29 +60,21 @@ let columns = reactive([
   // {prop:"lastUpdateBy", label:"更新人", minWidth:100},
   // {prop:"lastUpdateTime", label:"更新时间", minWidth:120, formatter:this.dateFormat}
 ]);
-let pageRequest = reactive<{
-  pageNum: number;
-  pageSize: number;
-  params: any[];
-}>({ pageNum: 1, pageSize: 10, params: [] });
+let pageRequest = reactive<IPageRequest>({pageNum: 1, pageSize: 10, params: []});
 let pageResult = reactive({});
 let showOperation = ref(false);
+let loading = true
+
 
 // 获取分页数据
-function findPage(data: any) {
-  if (data !== null) {
-    pageRequest = data.pageRequest;
-  }
-  pageRequest.params = [
-    { name: "userName", value: filters.name },
-    { name: "status", value: "online" },
-  ];
+function findPage(pageRequest: IPageRequest) {
+  pageRequest.params = {userName: filters.name, status: "online"};
   api.loginlog
-    .findPage({ params: { username: "", status: "online" } })
-    .then((res: any) => {
-      pageResult = res.data;
-    })
-    .then(data != null ? data.callback : "");
+      .findPage({params: {username: "", status: "online"}})
+      .then((res: any) => {
+        pageResult = res.data;
+        loading = false
+      })
 }
 
 // 时间格式化

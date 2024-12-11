@@ -34,7 +34,7 @@
       style="width: 100%"
       v-loading="loading"
       rowKey="id"
-      element-loading-text="t('action.loading')"
+      :element-loading-text="t('action.loading')"
     >
       <el-table-column
         prop="id"

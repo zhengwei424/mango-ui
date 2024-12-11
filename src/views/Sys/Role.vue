@@ -2,7 +2,7 @@
   <div class="page-container">
     <!--工具栏-->
     <div>
-      <el-form :inline="true" :model="filters" :size="size">
+      <el-form :inline="true" :model="filters" size="small">
         <el-form-item>
           <el-input v-model="filters.name" placeholder="角色名"></el-input>
         </el-form-item>
@@ -31,14 +31,15 @@
       permsEdit="sys:role:edit"
       permsDelete="sys:role:delete"
       :highlightCurrentRow="true"
+      :loading="loading"
       :stripe="false"
       :data="pageResult"
       :columns="columns"
       :showBatchDelete="false"
-      @handleCurrentChange="handleRoleSelectChange"
-      @findPage="findPage"
-      @handleEdit="handleEdit"
-      @handleDelete="handleDelete"
+      @handle-current-change="handleRoleSelectChange"
+      @find-page="findPage"
+      @handle-edit="handleEdit"
+      @handle-delete="handleDelete"
     >
     </kt-table>
     <!--新增编辑界面-->
@@ -153,6 +154,7 @@
 </template>
 
 <script setup lang="ts">
+import {IPageRequest} from "@/interface/pageRequest.ts";
 import KtTable from "@/views/Core/KtTable.vue";
 import KtButton from "@/views/Core/KtButton.vue";
 import { format } from "@/utils/datetime";
@@ -175,7 +177,6 @@ interface Tree {
 const menuTreeRef = ref();
 const dataFormRef = ref<FormInstance>();
 
-let size = ref("small");
 let filters = reactive({
   name: "",
 });
@@ -196,7 +197,7 @@ let columns = reactive([
 let pageRequest = reactive<{
   pageNum: number;
   pageSize: number;
-  params: any[];
+  params: any;
 }>({ pageNum: 1, pageSize: 10, params: [] });
 let pageResult = reactive<any>({});
 let operation = ref(false); // true:新增, false:编辑
@@ -223,18 +224,17 @@ let defaultProps = reactive({
   label: "name",
 });
 
+let loading= true
+
 // 获取分页数据
-function findPage(data: any) {
-  // if (data !== null) {
-  //   pageRequest = data.pageRequest;
-  // }
+function findPage(pageRequest: IPageRequest) {
   // pageRequest.params = [{name: "name", value: filters.name}];
+  pageRequest.params = {name: filters.name};
   api.role.findPage({ params: { name: "" } }).then((res: any) => {
     pageResult = res.data;
-    console.log("role pageResult:", pageResult);
     findTreeData();
-  });
-  // .then(data != null ? data.callback : "");
+    loading = false
+  })
 }
 
 // 批量删除
@@ -432,7 +432,7 @@ function dateFormat(row: any, column: any, cellValue: any, index: number) {
 }
 
 onMounted(() => {
-  findPage("");
+  findPage();
 });
 </script>
 <style scoped>

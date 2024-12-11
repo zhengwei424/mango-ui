@@ -101,8 +101,8 @@ export default function $axios(options: unknown) {
     // @ts-expect-error
     instance(options)
       .then((res) => {
+        console.log("axios then: ", res)
         resolve(res);
-        return false;
       })
       .catch((error) => {
         reject(error);

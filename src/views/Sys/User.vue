@@ -94,6 +94,7 @@
     <kt-table
       permsEdit="sys:user:edit"
       permsDelete="sys:user:delete"
+      :loading="loading"
       :data="pageResult"
       :columns="filterColumns"
       @findPage="findPage"
@@ -190,6 +191,7 @@
 
 <script setup lang="ts">
 import PopoverTreeInput from "@/components/PopupTreeInput/index.vue";
+import {IPageRequest} from "@/interface/pageRequest.ts";
 import KtTable from "@/views/Core/KtTable.vue";
 import KtButton from "@/views/Core/KtButton.vue";
 import TableColumnFilterDialog from "@/views/Core/TableColumnFilterDialog.vue";
@@ -243,15 +245,12 @@ let size = ref<"large" | "default" | "small">("small");
 
 let columns = reactive<any[]>([]);
 let filterColumns = reactive([]);
-let pageRequest = reactive<{
-  pageNum: number;
-  pageSize: number;
-  params: {};
-}>({ pageNum: 1, pageSize: 8, params: {} });
+let pageRequest = reactive<IPageRequest>({ pageNum: 1, pageSize: 8, params: {} });
 
 let operation = ref(false); // true:新增, false:编辑
 let dialogVisible = ref(false); // 新增编辑界面是否显示
 let editLoading = ref(false);
+let loading = true
 let dataFormRules = {
   name: [{ required: true, message: "请输入用户名", trigger: "blur" }],
 };
@@ -286,18 +285,15 @@ let deptTreeProps = reactive({
 });
 
 // 获取分页数据
-function findPage(data: any) {
-  if (data !== null) {
-    pageRequest = data.pageRequest;
-  }
+function findPage(pageRequest: IPageRequest) {
   pageRequest.params = { name: filters.name, email: "" };
   api.user
     .findPage({ params: { name: "admin", email: "" } })
     .then((res: any) => {
       pageResult = Object.assign(pageResult, res.data);
       findUserRoles(); // 有啥用???????????
+      loading = false
     })
-    .then(data != null ? data.callback : "");
 }
 
 // 导出Excel用户信息

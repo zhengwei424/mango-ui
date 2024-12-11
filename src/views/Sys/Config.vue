@@ -32,6 +32,7 @@
       permsDelete="sys:config:delete"
       :data="pageResult"
       :columns="columns"
+      :loading="loading"
       @findPage="findPage"
       @handleEdit="handleEdit"
       @handleDelete="handleDelete"
@@ -105,6 +106,7 @@
 </template>
 
 <script setup lang="ts">
+import {IPageRequest} from "@/interface/pageRequest.ts";
 import KtTable from "@/views/Core/KtTable.vue";
 import KtButton from "@/views/Core/KtButton.vue";
 import { format } from "@/utils/datetime";
@@ -159,16 +161,15 @@ let dataFormRules = reactive({
   label: [{ required: true, message: "请输入名称", trigger: "blur" }],
 });
 
+let loading = true
+
 // 获取分页数据
-function findPage(data: any) {
-  // if (data !== null) {
-  //   pageRequest = data.pageRequest;
-  // }
-  // pageRequest.params = [{ name: "label", value: filters.label }];
+function findPage(pageRequest: IPageRequest) {
+  pageRequest.params = { label: filters.label };
   api.config.findPage({ params: { label: "" } }).then((res: any) => {
     pageResult = res.data;
+    loading=false
   });
-  // .then(data != null ? data.callback : "");
 }
 
 // 批量删除

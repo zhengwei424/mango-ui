@@ -106,6 +106,7 @@ function login() {
     .login(userInfo)
     .then((res: any) => {
       if (res.msg != null) {
+        console.log("login res:", res.msg);
         ElMessage({
           message: res.msg,
           type: "error",

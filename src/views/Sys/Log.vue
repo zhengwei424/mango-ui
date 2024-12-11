@@ -21,6 +21,7 @@
     <kt-table
       :data="pageResult"
       :columns="columns"
+      :loading="loading"
       :showOperation="showOperation"
       @findPage="findPage"
     >
@@ -29,6 +30,7 @@
 </template>
 
 <script setup lang="ts">
+import {IPageRequest} from "@/interface/pageRequest.ts";
 import KtTable from "@/views/Core/KtTable.vue";
 import KtButton from "@/views/Core/KtButton.vue";
 import { format } from "@/utils/datetime";
@@ -71,17 +73,15 @@ let pageRequest = reactive<{
 });
 let pageResult = reactive({});
 let showOperation = ref(false);
+let loading = true
 
 // 获取分页数据
-function findPage(data: any) {
-  // if (data !== null) {
-  //   pageRequest = data.pageRequest;
-  // }
-  // pageRequest.params = [{ name: "userName", value: filters.name }];
+function findPage(pageRequest: IPageRequest) {
+  pageRequest.params = { userName: filters.name };
   api.log.findPage({ params: { username: "admin" } }).then((res: any) => {
     pageResult = res.data;
+    loading=false
   });
-  // .then(data != null ? data.callback : "");
 }
 
 // 时间格式化

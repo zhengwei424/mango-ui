@@ -1,10 +1,7 @@
 <template>
   <div class="page-container">
     <!--工具栏-->
-    <div
-      class="toolbar"
-      style="float: left; padding-top: 10px; padding-left: 15px"
-    >
+    <div class="toolbar">
       <el-form :inline="true" :model="filters" :size="size">
         <el-form-item>
           <el-input v-model="filters.name" placeholder="名称"></el-input>
@@ -43,18 +40,25 @@
         prop="id"
         header-align="center"
         align="center"
-        width="80"
         label="ID"
       >
       </el-table-column>
-      <table-tree-column
-        prop="name"
-        header-align="center"
-        treeKey="id"
-        width="150"
-        label="名称"
+      <el-table-column
+      prop="name"
+      header-align="center"
+      align="center"
+      label="名称"
       >
-      </table-tree-column>
+
+      </el-table-column>
+<!--      <table-tree-column-->
+<!--        prop="name"-->
+<!--        header-align="center"-->
+<!--        treeKey="id"-->
+<!--        width="150"-->
+<!--        label="名称"-->
+<!--      >-->
+<!--      </table-tree-column>-->
       <el-table-column
         prop="parentName"
         header-align="center"
@@ -87,7 +91,6 @@
       </el-table-column>
       <el-table-column
         align="center"
-        width="185"
         :label="t('action.operation')"
       >
         <template #default="scope">
