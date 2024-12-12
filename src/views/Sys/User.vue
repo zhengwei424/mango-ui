@@ -9,20 +9,20 @@
           </el-form-item>
           <el-form-item>
             <kt-button
-                icon="fa fa-search"
-                :label="t('action.search')"
-                perms="sys:role:view"
-                type="primary"
-                @click="findPage"
+              icon="fa fa-search"
+              :label="t('action.search')"
+              perms="sys:role:view"
+              type="primary"
+              @click="findPage"
             />
           </el-form-item>
           <el-form-item>
             <kt-button
-                icon="fa fa-plus"
-                :label="t('action.add')"
-                perms="sys:user:add"
-                type="primary"
-                @click="handleAdd"
+              icon="fa fa-plus"
+              :label="t('action.add')"
+              perms="sys:user:add"
+              type="primary"
+              @click="handleAdd"
             />
           </el-form-item>
         </el-form>
@@ -57,9 +57,9 @@
         </el-form>
         <!--------------------------表格显示列界面--------------------------->
         <table-column-filter-dialog
-            ref="tableColumnFilterDialogRef"
-            :columns="columns"
-            @handleFilterColumns="handleFilterColumns"
+          ref="tableColumnFilterDialogRef"
+          :columns="columns"
+          @handleFilterColumns="handleFilterColumns"
         >
         </table-column-filter-dialog>
       </div>
@@ -67,36 +67,36 @@
 
     <!-----------------------------------表格内容栏----------------------------------->
     <kt-table
-        ref="userTableRef"
-        permsEdit="sys:user:edit"
-        permsDelete="sys:user:delete"
-        :data="pageResult"
-        :columns="filterColumns"
-        @findPage="findPage"
-        @handleEdit="handleEdit"
-        @handleDelete="handleDelete"
+      ref="userTableRef"
+      permsEdit="sys:user:edit"
+      permsDelete="sys:user:delete"
+      :data="pageResult"
+      :columns="filterColumns"
+      @findPage="findPage"
+      @handleEdit="handleEdit"
+      @handleDelete="handleDelete"
     >
     </kt-table>
     <!-----------------------新增编辑界面----------------------->
     <el-dialog
-        :title="operation ? '新增' : '编辑'"
-        width="40%"
-        v-model="dialogVisible"
-        :close-on-click-modal="false"
+      :title="operation ? '新增' : '编辑'"
+      width="40%"
+      v-model="dialogVisible"
+      :close-on-click-modal="false"
     >
       <el-form
-          :model="dataForm"
-          label-width="80px"
-          :rules="dataFormRules"
-          ref="dataFormRef"
-          :size="size"
-          label-position="right"
+        :model="dataForm"
+        label-width="80px"
+        :rules="dataFormRules"
+        ref="dataFormRef"
+        :size="size"
+        label-position="right"
       >
         <el-form-item label="ID" prop="id" v-if="false">
           <el-input
-              v-model="dataForm.id"
-              :disabled="true"
-              auto-complete="off"
+            v-model="dataForm.id"
+            :disabled="true"
+            auto-complete="off"
           ></el-input>
         </el-form-item>
         <el-form-item label="用户名" prop="name">
@@ -107,20 +107,27 @@
         </el-form-item>
         <el-form-item label="密码" prop="password">
           <el-input
-              v-model="dataForm.password"
-              type="password"
-              auto-complete="off"
+            v-model="dataForm.password"
+            type="password"
+            auto-complete="off"
           ></el-input>
         </el-form-item>
         <el-form-item label="机构" prop="deptName">
-          <popover-tree-input
-              :data="deptData"
-              :props="deptTreeProps"
-              :prop="dataForm.deptName"
-              :nodeKey="'' + dataForm.deptId"
-              @currentChangeHandle="deptTreeCurrentChangeHandle"
-          >
-          </popover-tree-input>
+          <tree-select
+            :data="deptData"
+            :props="deptTreeProps"
+            :prop="dataForm.deptName"
+            :nodeKey="'' + dataForm.deptId"
+            @currentChangeHandle="deptTreeCurrentChangeHandle"
+          ></tree-select>
+          <!--          <popover-tree-input-->
+          <!--              :data="deptData"-->
+          <!--              :props="deptTreeProps"-->
+          <!--              :prop="dataForm.deptName"-->
+          <!--              :nodeKey="'' + dataForm.deptId"-->
+          <!--              @currentChangeHandle="deptTreeCurrentChangeHandle"-->
+          <!--          >-->
+          <!--          </popover-tree-input>-->
         </el-form-item>
         <el-form-item label="邮箱" prop="email">
           <el-input v-model="dataForm.email" auto-complete="off"></el-input>
@@ -132,16 +139,16 @@
         <el-form-item label="角色" prop="userRoles" v-if="!operation">
           <!-- el-select v-model -->
           <el-select
-              v-model="selectedRoles"
-              multiple
-              placeholder="请选择"
-              style="width: 426px"
+            v-model="selectedRoles"
+            multiple
+            placeholder="请选择"
+            style="width: 426px"
           >
             <el-option
-                v-for="item in roles"
-                :key="item.id"
-                :label="item.remark"
-                :value="item.id"
+              v-for="item in roles"
+              :key="item.id"
+              :label="item.remark"
+              :value="item.id"
             >
             </el-option>
           </el-select>
@@ -150,13 +157,13 @@
       <template v-slot:footer>
         <div class="dialog-footer">
           <el-button :size="size" @click.native="dialogVisible = false"
-          >{{ t("action.cancel") }}
+            >{{ t("action.cancel") }}
           </el-button>
           <el-button
-              :size="size"
-              type="primary"
-              @click.native="submitForm"
-              :loading="editLoading"
+            :size="size"
+            type="primary"
+            @click.native="submitForm"
+            :loading="editLoading"
           >
             {{ t("action.submit") }}
           </el-button>
@@ -168,19 +175,20 @@
 
 <script setup lang="ts">
 import PopoverTreeInput from "@/components/PopupTreeInput/index.vue";
-import {IPageRequest} from "@/interface/pageRequest.ts";
-import {IRole} from "@/interface/role.ts";
-import {IUserRoleManagement} from "@/interface/user.ts";
+import TreeSelect from "@/components/TreeSelect/index.vue";
+import { IPageRequest } from "@/interface/pageRequest.ts";
+import { IRole } from "@/interface/role.ts";
+import { IUserRoleManagement } from "@/interface/user.ts";
 import KtTable from "@/views/Core/KtTable.vue";
 import KtButton from "@/views/Core/KtButton.vue";
 import TableColumnFilterDialog from "@/views/Core/TableColumnFilterDialog.vue";
-import {format} from "@/utils/datetime";
-import {ElMessage, ElMessageBox, FormInstance} from "element-plus";
-import {inject, onMounted, reactive, ref, toRef} from "vue";
-import {useI18n} from "vue-i18n";
+import { format } from "@/utils/datetime";
+import { ElMessage, ElMessageBox, FormInstance } from "element-plus";
+import { inject, onMounted, reactive, ref, toRef } from "vue";
+import { useI18n } from "vue-i18n";
 
 const api = inject("api");
-const {t} = useI18n();
+const { t } = useI18n();
 
 // 组件的ref 用于调用组件暴露的属性和方法
 let dataFormRef = ref<FormInstance>();
@@ -192,7 +200,7 @@ let operation = ref<boolean>(false); // true:新增, false:编辑
 let dialogVisible = ref(false); // 新增编辑界面是否显示
 let editLoading = ref(false);
 let dataFormRules = {
-  name: [{required: true, message: "请输入用户名", trigger: "blur"}],
+  name: [{ required: true, message: "请输入用户名", trigger: "blur" }],
 };
 
 let columns = reactive<any[]>([]);
@@ -217,15 +225,14 @@ let deptTreeProps = reactive<any>({
   children: "children",
 });
 
-
 // 获取分页数据
 function findPage(val: IPageRequest) {
   // TODO: pageNum 和 pageSize请求值优化
-  pageRequest = val
-  pageRequest.params = {name: filters.name, email: ""};
+  pageRequest = val;
+  pageRequest.params = { name: filters.name, email: "" };
   api.user.findPage(pageRequest).then((res: any) => {
     Object.assign(pageResult, res.data);
-    userTableRef.value.loading = false
+    userTableRef.value.loading = false;
   });
 }
 
@@ -233,12 +240,11 @@ function findPage(val: IPageRequest) {
 function exportUserExcelFile() {
   // TODO: 导出所有 如何优化
   pageRequest.pageSize = 100000;
-  pageRequest.params = {name: filters.name};
+  pageRequest.params = { name: filters.name };
   api.user.exportUserExcelFile(pageRequest).then((res: any) => {
     ElMessageBox.alert(res.data, "导出成功", {
       confirmButtonText: "确定",
-      callback: () => {
-      },
+      callback: () => {},
     });
   });
 }
@@ -252,11 +258,16 @@ function findUserRoles() {
 
 // 批量删除
 function handleDelete(data: any) {
-  api.user.batchDelete(data.params).then(data ? userTableRef.value.loading = false : "");
+  api.user
+    .batchDelete(data.params)
+    .then(data ? (userTableRef.value.loading = false) : "");
 }
 
 // 显示新增界面
 function handleAdd() {
+  // dataForm初始化
+  Object.assign(dataForm, {});
+
   dialogVisible.value = true;
   operation.value = true;
   findDeptTree();
@@ -264,6 +275,9 @@ function handleAdd() {
 
 // 显示编辑界面
 function handleEdit(currentRow: any) {
+  // dataForm初始化
+  Object.assign(dataForm, {});
+
   dialogVisible.value = true;
   operation.value = false;
 
@@ -271,13 +285,13 @@ function handleEdit(currentRow: any) {
   findUserRoles();
 
   // 展示当前用户的角色信息到编辑界面
-  let tmp = []
+  let tmp = [];
   Object.assign(dataForm, currentRow);
   for (let i = 0, len = currentRow.userRoles.length; i < len; i++) {
     // TODO: 有时候只出现角色id，不显示角色标签 (v-loading???)
     tmp.push(currentRow.userRoles[i].roleId);
   }
-  selectedRoles.value = tmp
+  selectedRoles.value = tmp;
 }
 
 // 编辑 -> 提交
@@ -286,7 +300,7 @@ function submitForm() {
     if (valid) {
       ElMessageBox.confirm("确认提交吗？", "提示", {}).then(() => {
         editLoading.value = true;
-        let params = dataForm
+        let params = dataForm;
         let tmp = [];
         for (let i = 0, len = selectedRoles.value.length; i < len; i++) {
           let userRole = {
@@ -299,11 +313,11 @@ function submitForm() {
         api.user.save(params).then((res: any) => {
           editLoading.value = false;
           if (res.code == 200) {
-            ElMessage({message: "操作成功", type: "success"});
+            ElMessage({ message: "操作成功", type: "success" });
             dialogVisible.value = false;
             dataFormRef.value?.resetFields();
           } else {
-            ElMessage({message: "操作失败, " + res.msg, type: "error"});
+            ElMessage({ message: "操作失败, " + res.msg, type: "error" });
           }
           findPage(pageRequest);
         });
@@ -320,13 +334,14 @@ function findDeptTree() {
 }
 
 // 菜单树选中
+// TODO: handleEdit 和 handleAdd清空dataForm无效
 function deptTreeCurrentChangeHandle(data) {
   dataForm.deptId = data.id;
   dataForm.deptName = data.name;
 }
 
 function handNodeClick(data: any) {
-  console.log("当前机构：", data)
+  console.log("当前机构：", data);
 }
 
 // 处理表格列过滤显示
@@ -343,14 +358,14 @@ function handleFilterColumns(data: unknown) {
 // 设置列标题
 function initColumns() {
   columns = [
-    {prop: "id", label: "ID", minWidth: 50},
-    {prop: "name", label: "用户名", minWidth: 120},
-    {prop: "nickName", label: "昵称", minWidth: 120},
-    {prop: "deptName", label: "机构", minWidth: 120},
-    {prop: "roleNames", label: "角色", minWidth: 100},
-    {prop: "email", label: "邮箱", minWidth: 120},
-    {prop: "mobile", label: "手机", minWidth: 100},
-    {prop: "status", label: "状态", minWidth: 70},
+    { prop: "id", label: "ID", minWidth: 50 },
+    { prop: "name", label: "用户名", minWidth: 120 },
+    { prop: "nickName", label: "昵称", minWidth: 120 },
+    { prop: "deptName", label: "机构", minWidth: 120 },
+    { prop: "roleNames", label: "角色", minWidth: 100 },
+    { prop: "email", label: "邮箱", minWidth: 120 },
+    { prop: "mobile", label: "手机", minWidth: 100 },
+    { prop: "status", label: "状态", minWidth: 70 },
     // { prop: "createBy", label: "创建人", minWidth: 120 },
     // {
     //   prop: "createTime",
@@ -373,13 +388,9 @@ function dateFormat(row: any, column: any, cellValue: any, index: number) {
   return format(cellValue);
 }
 
-onMounted( () => {
+onMounted(() => {
+  findDeptTree();
   initColumns();
-  //  findPage({
-  //   pageNum: 1,
-  //   pageSize: 9,
-  //   params: {name: '', email: ''}
-  // })
 });
 </script>
 
