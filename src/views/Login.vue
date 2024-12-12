@@ -106,12 +106,12 @@ function login() {
     .login(userInfo)
     .then((res: any) => {
       if (res.msg != null) {
-        console.log("login res:", res.msg);
         ElMessage({
           message: res.msg,
           type: "error",
         });
       } else {
+        Cookies.remove("token"); // 清理一次token，比秒
         Cookies.set("token", res.data.token); // 放置token到Cookie
         sessionStorage.setItem("user", userInfo.account); // 保存用户到本地会话
         store.useAppStore().changeMenuRouteLoaded(false); // 要求重新加载导航菜单

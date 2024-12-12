@@ -108,23 +108,21 @@ const emit = defineEmits([
 /* props */
 let props = withDefaults(
   defineProps<{
-    loading: boolean;
-    columns: any; // 表格列配置
-    data: any; // 表格分页数据
-    permsEdit: string; // 编辑权限标识
-    permsDelete: string; // 删除权限标识
-    size: any; // 尺寸样式
-    align: string; // 文本对齐方式
-    maxHeight: number; // 表格最大高度
-    showOperation: boolean; // 是否显示操作组件
-    border: boolean; // 是否显示边框
-    stripe: boolean; // 是否显示斑马线
-    highlightCurrentRow: boolean; // // 是否高亮当前行
-    showOverflowTooltip: boolean; // 是否单行显示
-    showBatchDelete: boolean; // 是否显示操作组件
+    columns?: any; // 表格列配置
+    data?: any; // 表格分页数据
+    permsEdit?: string; // 编辑权限标识
+    permsDelete?: string; // 删除权限标识
+    size?: any; // 尺寸样式
+    align?: string; // 文本对齐方式
+    maxHeight?: number; // 表格最大高度
+    showOperation?: boolean; // 是否显示操作组件
+    border?: boolean; // 是否显示边框
+    stripe?: boolean; // 是否显示斑马线
+    highlightCurrentRow?: boolean; // // 是否高亮当前行
+    showOverflowTooltip?: boolean; // 是否单行显示
+    showBatchDelete?: boolean; // 是否显示操作组件
   }>(),
   {
-    loading: true,
     columns: [{}],
     data: {},
     permsEdit: "",
@@ -140,6 +138,8 @@ let props = withDefaults(
     showBatchDelete: true,
   },
 );
+
+let loading = ref<boolean>(true)
 
 /* 响应式数据 */
 let pageRequest = reactive<IPageRequest>({
@@ -223,6 +223,11 @@ function dateFormat(row: any, column: any, cellValue: any, index: number) {
 onMounted(() => {
   refreshPageRequest(1);
 });
+
+
+// 暴露给父组件使用
+defineExpose({loading})
+
 </script>
 
 <style scoped></style>

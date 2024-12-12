@@ -55,9 +55,9 @@ import { useI18n } from "vue-i18n";
 const { t } = useI18n();
 const emit = defineEmits(["handleFilterColumns"]);
 
-let props = withDefaults(defineProps<{ columns: any; size: string }>(), {
+let props = withDefaults(defineProps<{ columns?: any; size?: any }>(), {
   columns: () => [],
-  size: "mini",
+  size: "small",
 });
 
 let selections: Array<any> = reactive<Array<any>>([]);

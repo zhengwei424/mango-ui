@@ -18,13 +18,13 @@ import { defineProps } from "vue";
 
 let props = withDefaults(
   defineProps<{
-    label: string; // 按钮显示文本
-    icon: string; // 按钮显示图标
+    label?: string; // 按钮显示文本
+    icon?: string; // 按钮显示图标
     size?: any; // 按钮尺寸
-    type: any; // 按钮类型
+    type?: any; // 按钮类型
     loading?: boolean; // 按钮加载标识
     disabled?: boolean; // 按钮是否禁用
-    perms: string; // 按钮权限标识，外部使用者传入
+    perms?: string; // 按钮权限标识，外部使用者传入
   }>(),
   {
     label: "Button",
