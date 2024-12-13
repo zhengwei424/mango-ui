@@ -63,8 +63,6 @@ import { ArrowDown } from "@element-plus/icons-vue";
 const router = useRouter();
 const { mainTabs, mainTabsActiveName } = storeToRefs(store.useTabStore());
 
-console.log("maincontent_maintabs:", mainTabs);
-
 // tabs, 选中tab
 function selectedTabHandle(tab) {
   tab = mainTabs.filter((item) => item.name === tab.name);
