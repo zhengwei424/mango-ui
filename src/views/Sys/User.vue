@@ -235,15 +235,17 @@ let deptTreeProps = reactive<any>({
 });
 
 // 获取分页数据
-function findPage(data: any) {
+function findPage(val: IPageRequest) {
   // TODO: pageNum 和 pageSize请求值优化
-  if (data) {
-    Object.assign(pageRequest, data.pageRequest);
+  if (val) {
+    Object.assign(pageRequest, val);
   }
   pageRequest.params = {name: filters.name, email: ""};
   api.user.findPage(pageRequest).then((res: any) => {
     Object.assign(pageResult, res.data);
-  }).then(data ? data.callback : '');
+  }).then(() => {
+    loading.value = false;
+  });
 }
 
 // 导出Excel用户信息
@@ -394,6 +396,7 @@ function initColumns() {
   ];
   filterColumns = JSON.parse(JSON.stringify(columns));
 }
+
 // 初始化列标题
 initColumns();
 

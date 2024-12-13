@@ -163,10 +163,7 @@ let selections = reactive<any[]>([]);
 
 /* 方法 */
 function findPage() {
-  const callback = () => {
-    loading.value = false
-  }
-  emit("findPage", {pageRequest: pageRequest, callback: callback});
+  emit("findPage", pageRequest);
 }
 
 // 行被勾选时触发
