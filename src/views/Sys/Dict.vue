@@ -12,7 +12,7 @@
             :label="t('action.search')"
             perms="sys:dict:view"
             type="primary"
-            @click="findPage(null)"
+            @click="findPage({})"
           />
         </el-form-item>
         <el-form-item>
@@ -42,7 +42,7 @@
     <el-dialog
       :title="operation ? '新增' : '编辑'"
       width="40%"
-      v-model:visible="editDialogVisible"
+      v-model="editDialogVisible"
       :close-on-click-modal="false"
     >
       <el-form
@@ -106,13 +106,14 @@
 </template>
 
 <script setup lang="ts">
-import {IPageRequest} from "@/interface/pageRequest.ts";
+import { IPageRequest } from "@/interface/pageRequest.ts";
 import KtTable from "@/views/Core/KtTable.vue";
 import KtButton from "@/views/Core/KtButton.vue";
 import { format } from "@/utils/datetime";
 import { ElMessage, ElMessageBox, FormInstance } from "element-plus";
 import { inject, onMounted, reactive, ref } from "vue";
 import { useI18n } from "vue-i18n";
+import { IDict } from "@/interface/dict.ts";
 
 const api = inject("api");
 const { t } = useI18n();
@@ -122,7 +123,7 @@ let size = ref("small");
 let filters = reactive({
   label: "",
 });
-let columns = reactive([
+let columns = ref([
   { prop: "id", label: "ID", minWidth: 50 },
   { prop: "label", label: "名称", minWidth: 100 },
   { prop: "value", label: "值", minWidth: 100 },
@@ -140,14 +141,10 @@ let columns = reactive([
   // {prop:"lastUpdateBy", label:"更新人", minWidth:100},
   // {prop:"lastUpdateTime", label:"更新时间", minWidth:120, formatter:this.dateFormat}
 ]);
-let pageRequest = reactive<{
-  pageNum: number;
-  pageSize: number;
-  params: any[];
-}>({
+let pageRequest = reactive<IPageRequest>({
   pageNum: 1,
   pageSize: 10,
-  params: [{}],
+  params: {},
 });
 let pageResult = reactive<any>({});
 
@@ -158,39 +155,31 @@ let dataFormRules = {
   label: [{ required: true, message: "请输入名称", trigger: "blur" }],
 };
 // 新增编辑界面数据
-let dataForm = reactive({
-  id: 0,
-  label: "",
-  value: "",
-  type: "",
-  sort: 0,
-  description: "",
-  remarks: "",
-});
+let dataForm: IDict = reactive<IDict>({});
 
-let loading = true
-
+let loading = ref(true);
 
 // 获取分页数据
-function findPage(pageRequest: IPageRequest) {
+function findPage(val: IPageRequest) {
+  if (val) {
+    Object.assign(pageRequest, val);
+  }
   pageRequest.params = { label: filters.label };
-  api.dict.findPage({ params: { label: "" } }).then((res: any) => {
-    pageResult = res.data;
-    loading = false
+  api.dict.findPage(pageRequest).then((res: any) => {
+    Object.assign(pageResult, res.data);
+    loading.value = false;
   });
 }
 
-// 批量删除
-function handleDelete(data: any) {
-  api.dict.batchDelete(data.params).then(data ? data.callback : "");
-}
+// 删除
+function handleDelete(row: any) {}
 
 // 显示新增界面
 function handleAdd() {
   editDialogVisible.value = true;
   operation.value = true;
   dataForm = {
-    id: 0,
+    id: undefined,
     label: "",
     value: "",
     type: "",
@@ -223,7 +212,7 @@ function submitForm() {
           editLoading.value = false;
           dataFormRef.value?.resetFields();
           editDialogVisible.value = false;
-          findPage(null);
+          findPage({});
         });
       });
     }
@@ -239,8 +228,8 @@ function dateFormat(row: any, column: any, cellValue: any, index: number) {
   return format(cellValue);
 }
 
-onMounted(() => {
-  findPage("");
+onMounted(async () => {
+  await findPage({});
 });
 </script>
 

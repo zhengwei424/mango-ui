@@ -3,7 +3,7 @@
   <el-dialog
     title="表格显示列"
     width="40%"
-    v-model:visible="dialogVisible"
+    v-model="dialogVisible"
     :close-on-click-modal="false"
   >
     <el-table
@@ -33,23 +33,30 @@
       </el-table-column>
     </el-table>
     <template v-slot:footer>
-<div  class="dialog-footer">
-      <el-button :size="size" @click.native="dialogVisible = false">{{
-        t("action.cancel")
-      }}</el-button>
-      <el-button
-        :size="size"
-        type="primary"
-        @click.native="handleFilterColumns"
-        >{{ t("action.confirm") }}</el-button
-      >
-    </div>
-</template>
+      <div class="dialog-footer">
+        <el-button :size="size" @click.native="dialogVisible = false">{{
+          t("action.cancel")
+        }}</el-button>
+        <el-button
+          :size="size"
+          type="primary"
+          @click.native="handleFilterColumns"
+          >{{ t("action.confirm") }}</el-button
+        >
+      </div>
+    </template>
   </el-dialog>
 </template>
 
 <script setup lang="ts">
-import { defineProps, withDefaults, ref, reactive, defineEmits } from "vue";
+import {
+  defineProps,
+  withDefaults,
+  ref,
+  reactive,
+  defineEmits,
+  watch,
+} from "vue";
 import { useI18n } from "vue-i18n";
 
 const { t } = useI18n();
@@ -79,8 +86,9 @@ function handleFilterColumns() {
       filterColumns.push(column);
     }
   }
+  console.log("filterColumns table columns filter: ", filterColumns);
   emit("handleFilterColumns", {
-    filterColumns: JSON.parse(JSON.stringify(filterColumns)),
+    filterColumns: filterColumns,
   });
 }
 
@@ -93,6 +101,8 @@ function hasColumn(column: any): boolean {
   }
   return false;
 }
+
+defineExpose({ setDialogVisible });
 </script>
 
 <style scoped></style>
