@@ -24,7 +24,7 @@ let props = withDefaults(
       size?: any; // 按钮尺寸
       type?: any; // 按钮类型
       loading?: boolean; // 按钮加载标识
-      disabled?: boolean; // 按钮是否禁用
+      disabled?: boolean;
       perms?: string; // 按钮权限标识，外部使用者传入
     }>(),
     {
@@ -32,14 +32,14 @@ let props = withDefaults(
       icon: "",
       size: "default",
       type: "primary",
+      disabled: false,
       loading: false,
-      disabled: true,
       perms: "",
     },
 );
 
 function hasPerm(perms: string) {
-  return hasPermission(perms) && props.disabled;
+  return hasPermission(perms) && !props.disabled;
 }
 </script>
 

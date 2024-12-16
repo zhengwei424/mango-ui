@@ -29,3 +29,26 @@ export interface IUserRoleManagement {
     roleNames?: any;
     userRoles?: IUserRole[];
 }
+
+export function createIUserRoleManagement(): IUserRoleManagement {
+    return {
+        id: undefined,
+        createBy: sessionStorage.getItem('user'),
+        createTime: new Date().toISOString(),
+        lastUpdateBy: '',
+        lastUpdateTime: '',
+        name: '',
+        nickName: '',
+        avatar: '',
+        password: '',
+        salt: '',
+        email: '',
+        mobile: '',
+        status: '',
+        deptId: 0,
+        delFlag: 0,
+        deptName: '',
+        roleNames: '',
+        userRoles: [],
+    }
+}

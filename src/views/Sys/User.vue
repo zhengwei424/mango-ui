@@ -11,7 +11,7 @@
             <kt-button
               icon="fa fa-search"
               :label="t('action.search')"
-              perms="sys:role:view"
+              perms="sys:user:view"
               type="primary"
               @click="findPage"
             />
@@ -120,14 +120,6 @@
             :nodeKey="'' + dataForm.deptId"
             @currentChangeHandle="deptTreeCurrentChangeHandle"
           ></tree-select>
-          <!--          <popover-tree-input-->
-          <!--              :data="deptData"-->
-          <!--              :props="deptTreeProps"-->
-          <!--              :prop="dataForm.deptName"-->
-          <!--              :nodeKey="'' + dataForm.deptId"-->
-          <!--              @currentChangeHandle="deptTreeCurrentChangeHandle"-->
-          <!--          >-->
-          <!--          </popover-tree-input>-->
         </el-form-item>
         <el-form-item label="邮箱" prop="email">
           <el-input v-model="dataForm.email" auto-complete="off"></el-input>
@@ -178,7 +170,7 @@ import PopoverTreeInput from "@/components/PopupTreeInput/index.vue";
 import TreeSelect from "@/components/TreeSelect/index.vue";
 import { IPageRequest } from "@/interface/pageRequest.ts";
 import { IRole } from "@/interface/role.ts";
-import { IUserRoleManagement } from "@/interface/user.ts";
+import {createIUserRoleManagement, IUserRoleManagement} from "@/interface/user.ts";
 import KtTable from "@/views/Core/KtTable.vue";
 import KtButton from "@/views/Core/KtButton.vue";
 import TableColumnFilterDialog from "@/views/Core/TableColumnFilterDialog.vue";
@@ -301,7 +293,7 @@ function handleDeleteRecord(ids: string) {
           ElMessage({ message: "删除成功", type: "success" });
           findPage({});
         } else {
-          ElMessage({ message: "操作失败, " + res.msg, type: "error" });
+          ElMessage({ message: "删除失败, " + res.msg, type: "error" });
         }
         loading.value = false;
       });
@@ -311,11 +303,11 @@ function handleDeleteRecord(ids: string) {
 
 // 显示编辑界面
 function handleEdit(row: any) {
-  // dataForm初始化
-  Object.assign(dataForm, {});
-
   dialogVisible.value = true;
   operation.value = false;
+
+  row.lastUpdateBy = sessionStorage.getItem("user");
+  row.lastUpdateTime = new Date().toISOString();
 
   // 从数据库中查询到所有角色信息
   findUserRoles();
@@ -332,12 +324,10 @@ function handleEdit(row: any) {
 
 // 显示新增界面
 function handleAdd() {
-  // dataForm初始化
-  Object.assign(dataForm, {});
-
   dialogVisible.value = true;
   operation.value = true;
   findDeptTree();
+  Object.assign(dataForm, createIUserRoleManagement())
 }
 
 // 编辑 -> 提交

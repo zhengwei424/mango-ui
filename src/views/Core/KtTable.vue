@@ -76,6 +76,7 @@
         style="float: left"
         v-if="showBatchDelete && showOperation"
       />
+      <div v-else></div>
       <!-- 分页 -->
       <el-pagination
         v-model:current-page="pageRequest.pageNum"
@@ -92,6 +93,7 @@
 
 <script setup lang="ts">
 import { IPageRequest } from "@/interface/pageRequest.ts";
+import {hasPermission} from "@/permission";
 import { ElMessage, ElMessageBox } from "element-plus";
 import KtButton from "./KtButton.vue";
 import { reactive, ref, defineEmits, watch, inject } from "vue";
@@ -102,7 +104,6 @@ const { t } = useI18n();
 /* emit */
 const emit = defineEmits([
   "findPage",
-  "handleCurrentChange",
   "handleEdit",
   "handleDelete",
   "handleBatchDelete",

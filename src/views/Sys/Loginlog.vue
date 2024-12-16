@@ -12,7 +12,7 @@
             :label="t('action.search')"
             perms="sys:loginlog:view"
             type="primary"
-            @click="findPage(null)"
+            @click="findPage({})"
           />
         </el-form-item>
       </el-form>
@@ -34,7 +34,7 @@ import {IPageRequest} from "@/interface/pageRequest.ts";
 import KtTable from "@/views/Core/KtTable.vue";
 import KtButton from "@/views/Core/KtButton.vue";
 import { format } from "@/utils/datetime";
-import { inject, onMounted, reactive, ref } from "vue";
+import {inject, onMounted, provide, reactive, ref} from "vue";
 import { useI18n } from "vue-i18n";
 
 const api = inject("api");
@@ -60,27 +60,27 @@ let columns = reactive([
   // {prop:"lastUpdateBy", label:"更新人", minWidth:100},
   // {prop:"lastUpdateTime", label:"更新时间", minWidth:120, formatter:this.dateFormat}
 ]);
-let pageRequest = reactive<{
-  pageNum: number;
-  pageSize: number;
-  params: any[];
-}>({
+let pageRequest = reactive<IPageRequest>({
   pageNum: 1,
   pageSize: 10,
-  params: [{}],
+  params: {},
 });
 let pageResult = reactive({});
 let showOperation = ref(false);
-let loading = true
+let loading = ref(true);
+provide('loading',loading);
 
 // 获取分页数据
-function findPage(pageRequest: IPageRequest) {
-  pageRequest.params = {userName: filters.name};
+function findPage(val: IPageRequest) {
+  if (val) {
+    Object.assign(pageRequest, val);
+  }
+  pageRequest.params = {username: filters.name, status: "online"};
   api.loginlog
-    .findPage({ params: { username: "admin", status: "" } })
+    .findPage(pageRequest)
     .then((res: any) => {
-      pageResult = res.data;
-      loading=false
+      Object.assign(pageResult, res.data);
+      loading.value=false
     });
 }
 

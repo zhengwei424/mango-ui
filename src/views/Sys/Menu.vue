@@ -110,7 +110,7 @@
         fixed="right"
         header-align="center"
         align="center"
-        width="185"
+        width="auto"
         :label="t('action.operation')"
       >
         <template #default="scope">

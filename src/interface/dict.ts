@@ -7,8 +7,25 @@ export interface IDict {
   description?: string;
   remarks?: string;
   delFlag?: number;
-  createBy?: string;
+  createBy?: any;
   createTime?: string;
-  lastUpdateBy?: string;
+  lastUpdateBy?: any;
   lastUpdateTime?: string;
+}
+
+export function createIDict(): IDict {
+  return {
+    id: undefined,
+    label: '',
+    value: '',
+    type: '',
+    sort: 0,
+    description: '',
+    remarks: '',
+    delFlag: 0,
+    createBy: sessionStorage.getItem('user'),
+    createTime: new Date().toISOString(),
+    lastUpdateBy: '',
+    lastUpdateTime: '',
+  }
 }

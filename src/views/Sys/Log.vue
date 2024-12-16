@@ -8,22 +8,22 @@
         </el-form-item>
         <el-form-item>
           <kt-button
-            icon="fa fa-search"
-            :label="t('action.search')"
-            perms="sys:log:view"
-            type="primary"
-            @click="findPage(null)"
+              icon="fa fa-search"
+              :label="t('action.search')"
+              perms="sys:log:view"
+              type="primary"
+              @click="findPage({})"
           />
         </el-form-item>
       </el-form>
     </div>
     <!--表格内容栏-->
     <kt-table
-      :data="pageResult"
-      :columns="columns"
-      :loading="loading"
-      :showOperation="showOperation"
-      @findPage="findPage"
+        :data="pageResult"
+        :columns="columns"
+        :loading="loading"
+        :showOperation="showOperation"
+        @findPage="findPage"
     >
     </kt-table>
   </div>
@@ -33,26 +33,26 @@
 import {IPageRequest} from "@/interface/pageRequest.ts";
 import KtTable from "@/views/Core/KtTable.vue";
 import KtButton from "@/views/Core/KtButton.vue";
-import { format } from "@/utils/datetime";
-import { inject, onMounted, reactive, ref } from "vue";
-import { useI18n } from "vue-i18n";
+import {format} from "@/utils/datetime";
+import {inject, onMounted, provide, reactive, ref} from "vue";
+import {useI18n} from "vue-i18n";
 
 const api = inject("api");
-const { t } = useI18n();
+const {t} = useI18n();
 
 let size = ref("small");
 let filters = reactive({
   name: "",
 });
 let columns = reactive([
-  { prop: "id", label: "ID", minWidth: 60 },
-  { prop: "userName", label: "用户名", minWidth: 100 },
+  {prop: "id", label: "ID", minWidth: 60},
+  {prop: "userName", label: "用户名", minWidth: 100},
   // {prop:"operation", label:"操作", minWidth:120},
-  { prop: "method", label: "方法", minWidth: 180 },
-  { prop: "params", label: "参数", minWidth: 220 },
-  { prop: "ip", label: "IP", minWidth: 120 },
-  { prop: "time", label: "耗时", minWidth: 80 },
-  { prop: "createBy", label: "创建人", minWidth: 100 },
+  {prop: "method", label: "方法", minWidth: 180},
+  {prop: "params", label: "参数", minWidth: 220},
+  {prop: "ip", label: "IP", minWidth: 120},
+  {prop: "time", label: "耗时", minWidth: 80},
+  {prop: "createBy", label: "创建人", minWidth: 100},
   {
     prop: "createTime",
     label: "创建时间",
@@ -62,25 +62,25 @@ let columns = reactive([
   // {prop:"lastUpdateBy", label:"更新人", minWidth:100},
   // {prop:"lastUpdateTime", label:"更新时间", minWidth:120, formatter:this.dateFormat}
 ]);
-let pageRequest = reactive<{
-  pageNum: number;
-  pageSize: number;
-  params: any[];
-}>({
+let pageRequest = reactive<IPageRequest>({
   pageNum: 1,
   pageSize: 10,
-  params: [],
+  params: {},
 });
 let pageResult = reactive({});
 let showOperation = ref(false);
-let loading = true
+let loading = ref(true)
+provide('loading', loading)
 
 // 获取分页数据
-function findPage(pageRequest: IPageRequest) {
-  pageRequest.params = { userName: filters.name };
-  api.log.findPage({ params: { username: "admin" } }).then((res: any) => {
-    pageResult = res.data;
-    loading=false
+function findPage(val: IPageRequest) {
+  if (val) {
+    Object.assign(pageRequest, val);
+  }
+  pageRequest.params = {username: filters.name};
+  api.log.findPage(pageRequest).then((res: any) => {
+    Object.assign(pageResult, res.data);
+    loading.value = false
   });
 }
 
@@ -94,7 +94,7 @@ function dateFormat(row: any, column: any, cellValue: any, index: number) {
 }
 
 onMounted(() => {
-  findPage("");
+  findPage({});
 });
 </script>
 

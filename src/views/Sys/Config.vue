@@ -12,7 +12,7 @@
             :label="t('action.search')"
             perms="sys:config:view"
             type="primary"
-            @click="findPage(null)"
+            @click="findPage({})"
           />
         </el-form-item>
         <el-form-item>
@@ -36,13 +36,14 @@
       @findPage="findPage"
       @handleEdit="handleEdit"
       @handleDelete="handleDelete"
+      @handleBatchDelete="handleBatchDelete"
     >
     </kt-table>
     <!--新增编辑界面-->
     <el-dialog
       :title="operation ? '新增' : '编辑'"
       width="40%"
-      v-model:visible="editDialogVisible"
+      v-model="editDialogVisible"
       :close-on-click-modal="false"
     >
       <el-form
@@ -106,11 +107,12 @@
 </template>
 
 <script setup lang="ts">
+import {createIConfig, IConfig} from "@/interface/config.ts";
 import {IPageRequest} from "@/interface/pageRequest.ts";
 import KtTable from "@/views/Core/KtTable.vue";
 import KtButton from "@/views/Core/KtButton.vue";
 import { format } from "@/utils/datetime";
-import { ref, reactive, inject, onMounted } from "vue";
+import {ref, reactive, inject, onMounted, provide} from "vue";
 import { ElMessageBox, ElMessage, FormInstance } from "element-plus";
 import { useI18n } from "vue-i18n";
 
@@ -118,19 +120,11 @@ const api = inject("api");
 const { t } = useI18n();
 
 // 新增编辑界面数据
-let dataForm = reactive({
-  id: 0,
-  label: "",
-  value: "",
-  type: "",
-  sort: 0,
-  description: "",
-  remarks: "",
-});
+let dataForm: IConfig = reactive<IConfig>({});
 const dataFormRef = ref<FormInstance>();
 let size = ref("small");
 let filters = reactive({ label: "" });
-let columns = reactive([
+let columns = ref([
   { prop: "id", label: "ID", minWidth: 50 },
   { prop: "label", label: "名称", minWidth: 100 },
   { prop: "value", label: "值", minWidth: 100 },
@@ -159,44 +153,65 @@ let editDialogVisible = ref(false); // 新增编辑界面是否显示
 let editLoading = ref(false);
 let dataFormRules = reactive({
   label: [{ required: true, message: "请输入名称", trigger: "blur" }],
+  sort: [{type:'number', required: true, message: "请输入名称", trigger: "blur" }]
 });
 
-let loading = true
+let loading = ref(true)
+provide('loading', loading)
 
 // 获取分页数据
-function findPage(pageRequest: IPageRequest) {
+function findPage(val: IPageRequest) {
+  if (val) {
+    Object.assign(pageRequest, val);
+  }
   pageRequest.params = { label: filters.label };
-  api.config.findPage({ params: { label: "" } }).then((res: any) => {
-    pageResult = res.data;
-    loading=false
+  api.config.findPage(pageRequest).then((res: any) => {
+    Object.assign(pageResult, res.data)
+    loading.value=false
   });
 }
 
-// 批量删除
-function handleDelete(data: any) {
-  api.config.batchDelete(data.params).then(data ? data.callback : "");
+// 删除
+function handleDelete(row: any) {
+  let params: any = []
+  params.push(row)
+  handleDeleteRecord(params)
+}
+
+function  handleBatchDelete(rows: any) {
+  handleDeleteRecord(rows)
+}
+
+// 删除的实际动作
+function handleDeleteRecord(params: any[]) {
+  ElMessageBox.confirm!("确认删除选中记录吗？", "提示", {
+    confirmButtonText: "删除",
+    cancelButtonText: "取消",
+    type: "warning",
+  }).then(() => {
+    api.config.batchDelete(params).then((res) => {
+      if (res.code === 200) {
+        ElMessage({message: '删除成功', type: "success" });
+        findPage({});
+      } else {
+        ElMessage({message: '删除失败, ' + res.msg, type: "success" });
+      }
+    });
+  })
 }
 
 // 显示新增界面
 function handleAdd() {
   editDialogVisible.value = true;
   operation.value = true;
-  dataForm = Object.assign(dataForm, {
-    id: 0,
-    label: "",
-    value: "",
-    type: "",
-    sort: 0,
-    description: "desc",
-    remarks: "remark",
-  });
+  Object.assign(dataForm, createIConfig());
 }
 
 // 显示编辑界面
-function handleEdit(params: any) {
+function handleEdit(row: any) {
   editDialogVisible.value = true;
   operation.value = false;
-  dataForm = Object.assign({}, params.row);
+  Object.assign(dataForm, row);
 }
 
 // 编辑
@@ -205,7 +220,7 @@ function submitForm() {
     if (valid) {
       ElMessageBox.confirm("确认提交吗？", "提示", {}).then(() => {
         editLoading.value = true;
-        let params = Object.assign({}, dataForm);
+        let params: any = dataForm;
         api.config.save(params).then((res: any) => {
           if (res.code == 200) {
             ElMessage({ message: "操作成功", type: "success" });
@@ -215,7 +230,7 @@ function submitForm() {
           editLoading.value = false;
           dataFormRef.value?.resetFields();
           editDialogVisible.value = false;
-          findPage(null);
+          findPage({});
         });
       });
     }
@@ -230,8 +245,8 @@ function dateFormat(row: any, column: any, cellValue: any, index: number) {
   return format(cellValue);
 }
 
-onMounted(() => {
-  findPage("");
+onMounted(async () => {
+  await findPage({});
 });
 </script>
 

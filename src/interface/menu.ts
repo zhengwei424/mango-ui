@@ -1,18 +1,18 @@
 export interface IMenu {
-  id: unknown;
-  createBy: unknown;
-  createTime: unknown;
-  lastUpdateBy: unknown;
-  lastUpdateTime: unknown;
-  name: unknown;
-  parentId: unknown;
-  url: unknown;
-  perms: unknown;
-  type: unknown;
-  icon: unknown;
-  orderNum: unknown;
-  delFlag: unknown;
-  parentName: unknown;
-  level: unknown;
-  children: IMenu[];
+  id?: any;
+  createBy?: any;
+  createTime?: any;
+  lastUpdateBy?: any;
+  lastUpdateTime?: any;
+  name?: any;
+  parentId?: any;
+  url?: any;
+  perms?: any;
+  type?: any;
+  icon?: any;
+  orderNum?: any;
+  delFlag?: any;
+  parentName?: any;
+  level?: any;
+  children?: IMenu[];
 }

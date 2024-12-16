@@ -51,14 +51,6 @@
       >
 
       </el-table-column>
-<!--      <table-tree-column-->
-<!--        prop="name"-->
-<!--        header-align="center"-->
-<!--        treeKey="id"-->
-<!--        width="150"-->
-<!--        label="名称"-->
-<!--      >-->
-<!--      </table-tree-column>-->
       <el-table-column
         prop="parentName"
         header-align="center"
@@ -111,92 +103,88 @@
       </el-table-column>
     </el-table>
     <!-- 新增修改界面 -->
-    <!--    <el-dialog-->
-    <!--      :title="!dataForm.id ? '新增' : '修改'"-->
-    <!--      width="40%"-->
-    <!--      v-model:visible="dialogVisible"-->
-    <!--      :close-on-click-modal="false"-->
-    <!--    >-->
-    <!--      <el-form-->
-    <!--        :model="dataForm"-->
-    <!--        :rules="dataRule"-->
-    <!--        ref="dataFormRef"-->
-    <!--        @keyup.enter.native="submitForm()"-->
-    <!--        label-width="80px"-->
-    <!--        :size="size"-->
-    <!--        style="text-align: left"-->
-    <!--      >-->
-    <!--        <el-form-item label="名称" prop="name">-->
-    <!--          <el-input v-model="dataForm.name" placeholder="名称"></el-input>-->
-    <!--        </el-form-item>-->
-    <!--        <el-form-item label="上级机构" prop="parentName">-->
-    <!--          <popover-tree-input-->
-    <!--            :data="popupTreeData"-->
-    <!--            :props="popupTreeProps"-->
-    <!--            :prop="-->
-    <!--              dataForm.parentName == null ? '顶级菜单' : dataForm.parentName-->
-    <!--            "-->
-    <!--            :nodeKey="'' + dataForm.parentId"-->
-    <!--            :currentChangeHandle="handleTreeSelectChange"-->
-    <!--          >-->
-    <!--          </popover-tree-input>-->
-    <!--        </el-form-item>-->
-    <!--        <el-form-item v-if="dataForm.id !== 2" label="排序编号" prop="orderNum">-->
-    <!--          <el-input-number-->
-    <!--            v-model="dataForm.orderNum"-->
-    <!--            controls-position="right"-->
-    <!--            :min="0"-->
-    <!--            label="排序编号"-->
-    <!--          ></el-input-number>-->
-    <!--        </el-form-item>-->
-    <!--      </el-form>-->
-    <!--      <template v-slot:footer>-->
-    <!--        <span class="dialog-footer">-->
-    <!--          <el-button :size="size" @click="dialogVisible = false">{{-->
-    <!--            t("action.cancel")-->
-    <!--          }}</el-button>-->
-    <!--          <el-button :size="size" type="primary" @click="submitForm()">{{-->
-    <!--            t("action.confirm")-->
-    <!--          }}</el-button>-->
-    <!--        </span>-->
-    <!--      </template>-->
-    <!--    </el-dialog>-->
+        <el-dialog
+          :title="!dataForm.id ? '新增' : '修改'"
+          width="40%"
+          v-model="dialogVisible"
+          :close-on-click-modal="false"
+        >
+          <el-form
+            :model="dataForm"
+            :rules="dataRule"
+            ref="dataFormRef"
+            @keyup.enter.native="submitForm()"
+            label-width="80px"
+            :size="size"
+            style="text-align: left"
+          >
+            <el-form-item label="名称" prop="name">
+              <el-input v-model="dataForm.name" placeholder="名称"></el-input>
+            </el-form-item>
+            <el-form-item label="上级机构" prop="parentName">
+              <tree-select
+                  :data="popupTreeData"
+                  :props="popupTreeProps"
+                  :prop="
+                  dataForm.parentName == null ? '顶级菜单' : dataForm.parentName
+                "
+                  :nodeKey="'' + dataForm.parentId"
+                  @currentChangeHandle="handleTreeSelectChange"
+              ></tree-select>
+            </el-form-item>
+            <el-form-item v-if="dataForm.id !== 2" label="排序编号" prop="orderNum">
+              <el-input-number
+                v-model="dataForm.orderNum"
+                controls-position="right"
+                :min="0"
+                label="排序编号"
+              ></el-input-number>
+            </el-form-item>
+          </el-form>
+          <template v-slot:footer>
+            <span class="dialog-footer">
+              <el-button :size="size" @click="dialogVisible = false">{{
+                t("action.cancel")
+              }}</el-button>
+              <el-button :size="size" type="primary" @click="submitForm()">{{
+                t("action.confirm")
+              }}</el-button>
+            </span>
+          </template>
+        </el-dialog>
   </div>
 </template>
 
 <script setup lang="ts">
+import {createIDept, IDept} from "@/interface/dept.ts";
 import KtButton from "@/views/Core/KtButton.vue";
-import TableTreeColumn from "@/views/Core/TableTreeColumn.vue";
+import TreeSelect from '@/components/TreeSelect/index.vue'
 import PopoverTreeInput from "@/components/PopupTreeInput/index.vue";
 import { format } from "@/utils/datetime";
 import { ElMessage, ElMessageBox, FormInstance } from "element-plus";
-import { inject, onMounted, reactive, ref } from "vue";
+import {inject, onMounted, provide, reactive, ref} from "vue";
 import { useI18n } from "vue-i18n";
 
 const api = inject("api");
 const dataFormRef = ref<FormInstance>();
 const { t } = useI18n();
-let size = ref("small");
+let size = ref<any>("small");
+
 let loading = ref(false);
+
 let filters = reactive({
   name: "",
 });
-let tableTreeData = reactive([]);
+let tableTreeData = ref<IDept[]>([]);
 let dialogVisible = ref(false);
-let dataForm = reactive({
-  id: 0,
-  name: "",
-  parentId: 0,
-  parentName: "",
-  orderNum: 0,
-});
+let dataForm = reactive<IDept>({});
 let dataRule = {
   name: [{ required: true, message: "机构名称不能为空", trigger: "blur" }],
   parentName: [
-    { required: true, message: "上级机构不能为空", trigger: "change" },
+    { required: true, message: "上级机构不能为空", trigger: "blur" },
   ],
 };
-let popupTreeData = reactive<any[]>([]);
+let popupTreeData = ref<any[]>([]);
 let popupTreeProps = reactive({
   label: "name",
   children: "children",
@@ -206,8 +194,8 @@ let popupTreeProps = reactive({
 function findTreeData() {
   loading.value = true;
   api.dept.findDeptTree().then((res: any) => {
-    tableTreeData = res.data;
-    popupTreeData = getParentMenuTree(res.data);
+    tableTreeData.value = res.data;
+    popupTreeData.value = getParentMenuTree(res.data);
     loading.value = false;
   });
 }
@@ -225,13 +213,7 @@ function getParentMenuTree(tableTreeData: any) {
 // 显示新增界面
 function handleAdd() {
   dialogVisible.value = true;
-  dataForm = {
-    id: 0,
-    name: "",
-    parentId: 0,
-    parentName: "",
-    orderNum: 0,
-  };
+  Object.assign(dataForm, createIDept());
 }
 
 // 显示编辑界面
@@ -242,7 +224,7 @@ function handleEdit(row: any) {
 
 // 删除
 function handleDelete(row: any) {
-  ElMessageBox.confirm("确认删除选中记录吗？", "提示", {
+  ElMessageBox.confirm!("确认删除选中记录吗？", "提示", {
     type: "warning",
   }).then(() => {
     let params = getDeleteIds([], row);
@@ -266,6 +248,7 @@ function getDeleteIds(ids: any, row: any) {
 
 // 机构树选中
 function handleTreeSelectChange(data: any) {
+  console.log('机构选择：', data)
   dataForm.parentId = data.id;
   dataForm.parentName = data.name;
 }
@@ -276,7 +259,8 @@ function submitForm() {
     if (valid) {
       ElMessageBox.confirm("确认提交吗？", "提示", {}).then(() => {
         loading.value = true;
-        let params = Object.assign({}, dataForm);
+        let params: any = dataForm;
+        console.log('params:', params);
         api.dept.save(params).then((res: any) => {
           loading.value = false;
           if (res.code == 200) {
