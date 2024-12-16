@@ -4,9 +4,11 @@
     :index="'' + menu.id"
   >
     <template v-slot:title>
-      <el-icon>
-        <component :is="menu.icon" />
-      </el-icon>
+      <!--      <el-icon>-->
+      <!--        <component :is="menu.icon" />-->
+      <!--      </el-icon>-->
+      <!--      <i :class="menu.icon"></i>-->
+      <i :class="'fa ' + menu.icon + ' fa-fw'"></i>
       <span slot="title">{{ menu.name }}</span>
     </template>
     <MenuTree
@@ -16,9 +18,10 @@
     ></MenuTree>
   </el-sub-menu>
   <el-menu-item v-else :index="'' + menu.id" @click="handleRoute(menu)">
-    <el-icon>
-      <component :is="menu.icon" />
-    </el-icon>
+    <!--    <el-icon>-->
+    <!--      <component :is="menu.icon" />-->
+    <!--    </el-icon>-->
+    <i :class="'fa ' + menu.icon + ' fa-fw'"></i>
     <template v-slot:title>
       <span>{{ menu.name }}</span>
     </template>

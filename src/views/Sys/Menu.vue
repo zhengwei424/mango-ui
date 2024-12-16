@@ -3,18 +3,18 @@
     <!--工具栏-->
     <div class="toolbar">
       <el-form :inline="true" :model="filters" :size="size">
-        <el-form-item>
-          <el-input v-model="filters.name" placeholder="名称"></el-input>
-        </el-form-item>
-        <el-form-item>
-          <kt-button
-            icon="fa fa-search"
-            :label="t('action.search')"
-            perms="sys:menu:view"
-            type="primary"
-            @click="findTreeData()"
-          />
-        </el-form-item>
+        <!--        <el-form-item>-->
+        <!--          <el-input v-model="filters.name" placeholder="名称"></el-input>-->
+        <!--        </el-form-item>-->
+        <!--        <el-form-item>-->
+        <!--          <kt-button-->
+        <!--            icon="fa fa-search"-->
+        <!--            :label="t('action.search')"-->
+        <!--            perms="sys:menu:view"-->
+        <!--            type="primary"-->
+        <!--            @click="findTreeData()"-->
+        <!--          />-->
+        <!--        </el-form-item>-->
         <el-form-item>
           <kt-button
             icon="fa fa-plus"
@@ -54,7 +54,7 @@
       </table-tree-column>
       <el-table-column header-align="center" align="center" label="图标">
         <template #default="scope">
-          <i :class="scope.row.icon || ''"></i>
+          <i :class="'fa ' + scope.row.icon + ' fa-fw'"></i>
         </template>
       </el-table-column>
       <el-table-column
@@ -134,7 +134,7 @@
     <el-dialog
       :title="!dataForm.id ? '新增' : '修改'"
       width="40%"
-      v-model:visible="dialogVisible"
+      v-model="dialogVisible"
       :close-on-click-modal="false"
     >
       <el-form
@@ -150,7 +150,7 @@
           <el-radio-group v-model="dataForm.type">
             <el-radio
               v-for="(type, index) in menuTypeList"
-              :label="index"
+              :value="index"
               :key="index"
               >{{ type }}
             </el-radio>
@@ -163,7 +163,7 @@
           ></el-input>
         </el-form-item>
         <el-form-item label="上级菜单" prop="parentName">
-          <popup-tree-input
+          <popover-tree-input
             :data="popupTreeData"
             :props="popupTreeProps"
             :prop="
@@ -174,7 +174,7 @@
             :nodeKey="'' + dataForm.parentId"
             :currentChangeHandle="handleTreeSelectChange"
           >
-          </popup-tree-input>
+          </popover-tree-input>
         </el-form-item>
         <el-form-item v-if="dataForm.type !== 0" label="授权标识" prop="perms">
           <el-input
@@ -246,7 +246,6 @@
               </el-popover> -->
               <el-input
                 v-model="dataForm.icon"
-                v-popover:iconListPopover
                 :readonly="false"
                 placeholder="菜单图标名称（如：fa fa-home fa-lg）"
                 class="icon-list__input"
@@ -280,36 +279,26 @@ import FaIconTooltip from "@/components/FaIconTooltip/index.vue";
 import { ElMessage, ElMessageBox, FormInstance } from "element-plus";
 import { inject, onMounted, reactive, ref } from "vue";
 import { useI18n } from "vue-i18n";
+import { createIMenu, IMenu } from "@/interface/menu.ts";
 
 const api = inject("api");
 const { t } = useI18n();
 
 const dataFormRef = ref<FormInstance>();
 
-let size = ref("small");
+let size = ref<any>("small");
 let loading = ref(false);
 let filters = reactive({
   name: "",
 });
-let tableTreeData = reactive([]);
+let tableTreeData = ref([]);
 let dialogVisible = ref(false);
 let menuTypeList = reactive(["目录", "菜单", "按钮"]);
-let dataForm = reactive({
-  id: 0,
-  type: 1,
-  name: "",
-  parentId: 0,
-  parentName: "",
-  url: "",
-  perms: "",
-  orderNum: 0,
-  icon: "",
-  iconList: [],
-});
+let dataForm = reactive<IMenu>({});
 let dataRule = {
   name: [{ required: true, message: "菜单名称不能为空", trigger: "blur" }],
 };
-let popupTreeData = reactive<any[]>([]);
+let popupTreeData = ref<any[]>([]);
 let popupTreeProps = reactive({
   label: "name",
   children: "children",
@@ -319,8 +308,8 @@ let popupTreeProps = reactive({
 function findTreeData() {
   loading.value = true;
   api.menu.findMenuTree().then((res: any) => {
-    tableTreeData = res.data;
-    popupTreeData = getParentMenuTree(res.data);
+    tableTreeData.value = res.data;
+    popupTreeData.value = getParentMenuTree(res.data);
     loading.value = false;
   });
 }
@@ -338,18 +327,7 @@ function getParentMenuTree(tableTreeData: any) {
 // 显示新增界面
 function handleAdd() {
   dialogVisible.value = true;
-  dataForm = {
-    id: 0,
-    type: 1,
-    name: "",
-    parentId: 0,
-    parentName: "",
-    url: "",
-    perms: "",
-    orderNum: 0,
-    icon: "",
-    iconList: [],
-  };
+  Object.assign(dataForm, createIMenu());
 }
 
 // 显示编辑界面
@@ -360,7 +338,7 @@ function handleEdit(row: any) {
 
 // 删除
 function handleDelete(row: any) {
-  ElMessageBox.confirm("确认删除选中记录吗？", "提示", {
+  ElMessageBox.confirm!("确认删除选中记录吗？", "提示", {
     type: "warning",
   }).then(() => {
     let params = getDeleteIds([], row);

@@ -55,7 +55,13 @@ let popoverProps = withDefaults(
 );
 
 let inputValue = ref<string>();
-inputValue.value = popoverProps.prop;
+watch(
+  () => popoverProps.prop,
+  (val) => {
+    inputValue.value = val;
+  },
+  { immediate: true },
+);
 
 function handleNodeClick(data: any) {
   emits("currentChangeHandle", data);

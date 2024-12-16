@@ -3,18 +3,18 @@
     <!--工具栏-->
     <div class="toolbar">
       <el-form :inline="true" :model="filters" :size="size">
-        <el-form-item>
-          <el-input v-model="filters.name" placeholder="名称"></el-input>
-        </el-form-item>
-        <el-form-item>
-          <kt-button
-            icon="fa fa-search"
-            :label="t('action.search')"
-            perms="sys:dept:view"
-            type="primary"
-            @click="findTreeData()"
-          />
-        </el-form-item>
+        <!--        <el-form-item>-->
+        <!--          <el-input v-model="filters.name" placeholder="名称"></el-input>-->
+        <!--        </el-form-item>-->
+        <!--        <el-form-item>-->
+        <!--          <kt-button-->
+        <!--            icon="fa fa-search"-->
+        <!--            :label="t('action.search')"-->
+        <!--            perms="sys:dept:view"-->
+        <!--            type="primary"-->
+        <!--            @click="findTreeData()"-->
+        <!--          />-->
+        <!--        </el-form-item>-->
         <el-form-item>
           <kt-button
             icon="fa fa-plus"
@@ -44,12 +44,11 @@
       >
       </el-table-column>
       <el-table-column
-      prop="name"
-      header-align="center"
-      align="center"
-      label="名称"
+        prop="name"
+        header-align="center"
+        align="center"
+        label="名称"
       >
-
       </el-table-column>
       <el-table-column
         prop="parentName"
@@ -81,10 +80,7 @@
         :formatter="dateFormat"
       >
       </el-table-column>
-      <el-table-column
-        align="center"
-        :label="t('action.operation')"
-      >
+      <el-table-column align="center" :label="t('action.operation')">
         <template #default="scope">
           <kt-button
             icon="fa fa-edit"
@@ -103,66 +99,66 @@
       </el-table-column>
     </el-table>
     <!-- 新增修改界面 -->
-        <el-dialog
-          :title="!dataForm.id ? '新增' : '修改'"
-          width="40%"
-          v-model="dialogVisible"
-          :close-on-click-modal="false"
-        >
-          <el-form
-            :model="dataForm"
-            :rules="dataRule"
-            ref="dataFormRef"
-            @keyup.enter.native="submitForm()"
-            label-width="80px"
-            :size="size"
-            style="text-align: left"
-          >
-            <el-form-item label="名称" prop="name">
-              <el-input v-model="dataForm.name" placeholder="名称"></el-input>
-            </el-form-item>
-            <el-form-item label="上级机构" prop="parentName">
-              <tree-select
-                  :data="popupTreeData"
-                  :props="popupTreeProps"
-                  :prop="
-                  dataForm.parentName == null ? '顶级菜单' : dataForm.parentName
-                "
-                  :nodeKey="'' + dataForm.parentId"
-                  @currentChangeHandle="handleTreeSelectChange"
-              ></tree-select>
-            </el-form-item>
-            <el-form-item v-if="dataForm.id !== 2" label="排序编号" prop="orderNum">
-              <el-input-number
-                v-model="dataForm.orderNum"
-                controls-position="right"
-                :min="0"
-                label="排序编号"
-              ></el-input-number>
-            </el-form-item>
-          </el-form>
-          <template v-slot:footer>
-            <span class="dialog-footer">
-              <el-button :size="size" @click="dialogVisible = false">{{
-                t("action.cancel")
-              }}</el-button>
-              <el-button :size="size" type="primary" @click="submitForm()">{{
-                t("action.confirm")
-              }}</el-button>
-            </span>
-          </template>
-        </el-dialog>
+    <el-dialog
+      :title="!dataForm.id ? '新增' : '修改'"
+      width="40%"
+      v-model="dialogVisible"
+      :close-on-click-modal="false"
+    >
+      <el-form
+        :model="dataForm"
+        :rules="dataRule"
+        ref="dataFormRef"
+        @keyup.enter.native="submitForm()"
+        label-width="80px"
+        :size="size"
+        style="text-align: left"
+      >
+        <el-form-item label="名称" prop="name">
+          <el-input v-model="dataForm.name" placeholder="名称"></el-input>
+        </el-form-item>
+        <el-form-item label="上级机构" prop="parentName">
+          <tree-select
+            :data="popupTreeData"
+            :props="popupTreeProps"
+            :prop="
+              dataForm.parentName == null ? '顶级菜单' : dataForm.parentName
+            "
+            :nodeKey="'' + dataForm.parentId"
+            @currentChangeHandle="handleTreeSelectChange"
+          ></tree-select>
+        </el-form-item>
+        <el-form-item v-if="dataForm.id !== 2" label="排序编号" prop="orderNum">
+          <el-input-number
+            v-model="dataForm.orderNum"
+            controls-position="right"
+            :min="0"
+            label="排序编号"
+          ></el-input-number>
+        </el-form-item>
+      </el-form>
+      <template v-slot:footer>
+        <span class="dialog-footer">
+          <el-button :size="size" @click="dialogVisible = false">{{
+            t("action.cancel")
+          }}</el-button>
+          <el-button :size="size" type="primary" @click="submitForm()">{{
+            t("action.confirm")
+          }}</el-button>
+        </span>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
 <script setup lang="ts">
-import {createIDept, IDept} from "@/interface/dept.ts";
+import { createIDept, IDept } from "@/interface/dept.ts";
 import KtButton from "@/views/Core/KtButton.vue";
-import TreeSelect from '@/components/TreeSelect/index.vue'
+import TreeSelect from "@/components/TreeSelect/index.vue";
 import PopoverTreeInput from "@/components/PopupTreeInput/index.vue";
 import { format } from "@/utils/datetime";
 import { ElMessage, ElMessageBox, FormInstance } from "element-plus";
-import {inject, onMounted, provide, reactive, ref} from "vue";
+import { inject, onMounted, provide, reactive, ref } from "vue";
 import { useI18n } from "vue-i18n";
 
 const api = inject("api");
@@ -248,7 +244,7 @@ function getDeleteIds(ids: any, row: any) {
 
 // 机构树选中
 function handleTreeSelectChange(data: any) {
-  console.log('机构选择：', data)
+  console.log("机构选择：", data);
   dataForm.parentId = data.id;
   dataForm.parentName = data.name;
 }
@@ -260,7 +256,7 @@ function submitForm() {
       ElMessageBox.confirm("确认提交吗？", "提示", {}).then(() => {
         loading.value = true;
         let params: any = dataForm;
-        console.log('params:', params);
+        console.log("params:", params);
         api.dept.save(params).then((res: any) => {
           loading.value = false;
           if (res.code == 200) {
