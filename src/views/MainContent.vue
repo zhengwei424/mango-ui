@@ -3,38 +3,43 @@
     <!-- 标签页 -->
     <div class="tab-container">
       <el-dropdown class="tabs-tools" :show-timeout="0" trigger="hover">
-        <el-icon><arrow-down /></el-icon>
+        <el-icon size="16px">
+          <arrow-down/>
+        </el-icon>
+        标签管理
         <template #dropdown>
           <el-dropdown-menu>
             <el-dropdown-item @click.native="tabsCloseCurrentHandle"
-              >关闭当前标签
+            >关闭当前标签
             </el-dropdown-item>
             <el-dropdown-item @click.native="tabsCloseOtherHandle"
-              >关闭其它标签
+            >关闭其它标签
             </el-dropdown-item>
             <el-dropdown-item @click.native="tabsCloseAllHandle"
-              >关闭全部标签
+            >关闭全部标签
             </el-dropdown-item>
             <el-dropdown-item @click.native="tabsRefreshCurrentHandle"
-              >刷新当前标签
+            >刷新当前标签
             </el-dropdown-item>
           </el-dropdown-menu>
         </template>
       </el-dropdown>
+      <!-- v-model的值必须要和el-tab-pane的name属性的值相同，活动标签的前端渲染才不会有问题。即mainTabsActiveName与当前活动标签的name属性值相同来判断活动标签 -->
       <el-tabs
-        class="tabs"
-        v-model="mainTabsActiveName"
-        @tab-click="selectedTabHandle"
-        @tab-remove="removeTabHandle"
+          class="tabs"
+          v-model="mainTabsActiveName"
+          @tab-click="selectedTabHandle"
+          @tab-remove="removeTabHandle"
+          closable
       >
         <el-tab-pane
-          v-for="item in mainTabs"
-          :key="item.name"
-          :label="item.title"
-          :name="item.name"
+            v-for="item in mainTabs"
+            :key="item.name"
+            :name="item.name"
+            lazy
         >
           <template #label>
-            <span><i :class="item.icon"></i> {{ item.title }} </span>
+            <span><i :class="'fa ' + item.icon + ' fa-fw'"></i> {{ item.name }} </span>
           </template>
         </el-tab-pane>
       </el-tabs>
@@ -45,7 +50,7 @@
       <router-view v-slot="{ Component, route }">
         <transition>
           <keep-alive>
-            <component :is="Component" :key="route.fullPath" />
+            <component :is="Component" :key="route.fullPath"/>
           </keep-alive>
         </transition>
       </router-view>
@@ -54,20 +59,21 @@
 </template>
 
 <script setup lang="ts">
-import { storeToRefs } from "pinia";
-import { useRouter } from "vue-router";
-import { nextTick } from "vue";
+import {storeToRefs} from "pinia";
+import {useRouter} from "vue-router";
+import {nextTick, watch} from "vue";
 import store from "@/store";
-import { ArrowDown } from "@element-plus/icons-vue";
+import {ArrowDown} from "@element-plus/icons-vue";
 
 const router = useRouter();
-const { mainTabs, mainTabsActiveName } = storeToRefs(store.useTabStore());
+let {mainTabs, mainTabsActiveName} = storeToRefs(store.useTabStore());
+
 
 // tabs, 选中tab
-function selectedTabHandle(tab) {
-  tab = mainTabs.filter((item) => item.name === tab.name);
+function selectedTabHandle(currentTabPane) {
+  let tab = mainTabs.value.filter((item) => item.name === currentTabPane.paneName);
   if (tab.length >= 1) {
-    router.push({ name: tab[0].name });
+    router.push({name: tab[0].name});
   }
 }
 
@@ -75,15 +81,10 @@ function selectedTabHandle(tab) {
 function removeTabHandle(tabName) {
   mainTabs.value = mainTabs.value.filter((item) => item.name !== tabName);
   if (mainTabs.value.length >= 1) {
-    // 当前选中tab被删除
-    if (tabName === mainTabsActiveName.value) {
-      // router.push(
-      //   { name: mainTabs[this.mainTabs.length - 1].name },
-      //   () => {
-      //     mainTabsActiveName = this.$route.name;
-      //   },
-      // );
-    }
+    // 当前选中tab被删除,选中最后一个为活动标签
+    let tmp = mainTabs.value[mainTabs.value.length - 1]
+    mainTabsActiveName.value = tmp.name
+    router.push("/" + tmp.routePath)
   } else {
     router.push("/");
   }
@@ -91,12 +92,12 @@ function removeTabHandle(tabName) {
 
 // tabs, 关闭当前
 function tabsCloseCurrentHandle() {
-  removeTabHandle(mainTabsActiveName);
+  removeTabHandle(mainTabsActiveName.value);
 }
 
 // tabs, 关闭其它
 function tabsCloseOtherHandle() {
-  mainTabs.value = mainTabs.filter((item) => item.name === mainTabsActiveName);
+  mainTabs.value = mainTabs.value.filter((item) => item.name === mainTabsActiveName.value);
 }
 
 // tabs, 关闭全部
@@ -107,11 +108,8 @@ function tabsCloseAllHandle() {
 
 // tabs, 刷新当前
 function tabsRefreshCurrentHandle() {
-  let tempTabName = mainTabsActiveName;
-  removeTabHandle(tempTabName);
-  nextTick(() => {
-    router.push({ name: tempTabName });
-  });
+  let tempTabName = mainTabsActiveName.value;
+  router.push({name: tempTabName});
 }
 </script>
 
@@ -126,6 +124,9 @@ function tabsRefreshCurrentHandle() {
 }
 
 .tab-container {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
   width: 100%;
   height: 60px;
 }
@@ -137,6 +138,11 @@ function tabsRefreshCurrentHandle() {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  overflow: auto;
+}
+
+.tabs-tools {
+  margin: auto 20px;
 }
 
 .position-left {

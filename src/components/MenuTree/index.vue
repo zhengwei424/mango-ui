@@ -36,6 +36,7 @@ export default {
 
 <script setup lang="ts">
 import { IMenu } from "@/interface/menu.ts";
+import {ITab} from "@/interface/tab.ts";
 import { getIFrameUrl, getIFramePath } from "@/utils/iframe";
 import { storeToRefs } from "pinia";
 import { withDefaults, defineProps } from "vue";
@@ -44,12 +45,19 @@ import store from "@/store";
 
 const router = useRouter();
 
+let {mainTabs, mainTabsActiveName} = storeToRefs(store.useTabStore())
+
 withDefaults(defineProps<{ menu: IMenu }>(), {});
 
 function handleRoute(menu) {
   // 如果是嵌套页面，转换成iframe的path
   let path = getIFramePath(menu.url);
   store.useIframeStore().setIFrameUrl(menu.url);
+
+  let tab:ITab = {name: menu.name,routePath: menu.url,icon: menu.icon} as ITab;
+  store.useTabStore().setMainTabs(tab);
+  store.useTabStore().setMainTabsActiveName(tab.name);
+
   if (!path) {
     path = menu.url;
   }

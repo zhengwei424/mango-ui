@@ -68,16 +68,16 @@ function handleselect(a, b) {
 // // 路由操作处理
 // function handleRoute(route) {
 //   // tab标签页选中, 如果不存在则先添加
-//   let tab = mainTabs.filter((item) => item.name === route.name)[0];
-//   if (!tab) {
-//     tab = {
+//   let tab.ts = mainTabs.filter((item) => item.name === route.name)[0];
+//   if (!tab.ts) {
+//     tab.ts = {
 //       name: route.name,
 //       title: route.name,
 //       icon: route.meta.icon,
 //     };
-//     mainTabs = mainTabs.concat(tab);
+//     mainTabs = mainTabs.concat(tab.ts);
 //   }
-//   mainTabsActiveName.value = tab.name;
+//   mainTabsActiveName.value = tab.ts.name;
 //   // 切换标签页时同步更新高亮菜单
 //   if (navmenuRef.value != null) {
 //     navmenuRef.value.activeIndex = "" + route.meta.index;

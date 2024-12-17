@@ -27,12 +27,12 @@
         </el-menu-item>
         <el-menu-item
           index="2"
-          @click="openWindow('https://gitee.com/liuge1988/kitty/wikis/Home')"
+          @click="openWindow('https://baidu.com')"
           >{{ t("common.doc") }}
         </el-menu-item>
         <el-menu-item
           index="3"
-          @click="openWindow('https://www.cnblogs.com/xifengxiaoma/')"
+          @click="openWindow('https://bing.com')"
           >{{ t("common.blog") }}
         </el-menu-item>
       </el-menu>
