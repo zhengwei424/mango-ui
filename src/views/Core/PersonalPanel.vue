@@ -121,14 +121,13 @@
 </template>
 
 <script setup lang="ts">
-import Backup from "@/views/Backup/Backup.vue";
-import { format } from "@/utils/datetime";
-import { withDefaults, defineProps, ref, reactive, onMounted } from "vue";
-import { ElMessageBox, ElMessage, FormInstance } from "element-plus";
-import { useRouter } from "vue-router";
 import store from "@/store";
-import { useI18n } from "vue-i18n";
-import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+import {format} from "@/utils/datetime";
+import Backup from "@/views/Backup/Backup.vue";
+import {ElMessage, ElMessageBox, FormInstance} from "element-plus";
+import {defineProps, onMounted, reactive, ref, withDefaults} from "vue";
+import {useI18n} from "vue-i18n";
+import {useRouter} from "vue-router";
 
 const { t } = useI18n();
 const router = useRouter();
@@ -204,7 +203,7 @@ function updatePassword() {
 
 // 退出登录
 function logout() {
-  ElMessageBox.confirm("确认退出吗?", "提示", {
+  ElMessageBox.confirm!("确认退出吗?", "提示", {
     type: "warning",
   })
     .then(() => {
@@ -215,7 +214,7 @@ function logout() {
 
 // 清除缓存并退出登录
 function clearCache() {
-  ElMessageBox.confirm("确认清除缓存并退出登录吗?", "提示", {
+  ElMessageBox.confirm!("确认清除缓存并退出登录吗?", "提示", {
     type: "warning",
   })
     .then(() => {

@@ -59,11 +59,10 @@
 </template>
 
 <script setup lang="ts">
-import {storeToRefs} from "pinia";
-import {useRouter} from "vue-router";
-import {nextTick, watch} from "vue";
 import store from "@/store";
 import {ArrowDown} from "@element-plus/icons-vue";
+import {storeToRefs} from "pinia";
+import {useRouter} from "vue-router";
 
 const router = useRouter();
 let {mainTabs, mainTabsActiveName} = storeToRefs(store.useTabStore());

@@ -6,6 +6,7 @@
     label-position="left"
     label-width="0px"
     class="demo-ruleForm login-container"
+    @keyup.enter="login"
   >
     <span class="tool-bar">
       <!-- 主题切换 -->
@@ -55,13 +56,13 @@
       </el-col>
     </el-form-item>
     <el-form-item style="width: 100%">
-      <el-button type="primary" style="width: 48%" @click.native.prevent="reset"
+      <el-button style="width: 48%" @click.native.prevent="reset"
         >重 置
       </el-button>
       <el-button
         type="primary"
         style="width: 48%"
-        @click.native.prevent="login"
+        @click="login"
         :loading="loading"
         >登 录
       </el-button>
@@ -70,12 +71,12 @@
 </template>
 
 <script setup lang="ts">
-import { useRouter } from "vue-router";
-import store from "@/store";
-import { ElMessage, FormInstance } from "element-plus";
-import { inject, onMounted, reactive, ref } from "vue";
 import ThemePicker from "@/components/ThemePicker/index.vue";
+import store from "@/store";
+import {ElMessage, FormInstance} from "element-plus";
 import Cookies from "js-cookie";
+import {inject, onMounted, reactive, ref} from "vue";
+import {useRouter} from "vue-router";
 
 const global = inject("global");
 const api = inject("api");
@@ -115,6 +116,7 @@ function login() {
         Cookies.set("token", res.data.token); // 放置token到Cookie
         sessionStorage.setItem("user", userInfo.account); // 保存用户到本地会话
         store.useAppStore().changeMenuRouteLoaded(false); // 要求重新加载导航菜单
+        store.useTabStore().init(); // 初始化tab
         router.push("/"); // 登录成功，跳转到主页
       }
       loading.value = false;

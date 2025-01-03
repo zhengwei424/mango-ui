@@ -7,17 +7,17 @@ import {
   RouteLocationNormalizedLoaded,
   RouteRecordRaw,
 } from "vue-router";
-// @ts-ignore
-import Login from "../views/Login.vue";
+import api from "../http/api.ts";
+import store from "../store";
+import {getIFramePath, getIFrameUrl} from "../utils/iframe";
 // @ts-ignore
 import NotFound from "../views/404.vue";
 // @ts-ignore
 import Home from "../views/Home.vue";
 // @ts-ignore
 import Intro from "../views/Intro/Intro.vue";
-import store from "../store";
-import { getIFramePath, getIFrameUrl } from "../utils/iframe";
-import api from "../http/api.ts";
+// @ts-ignore
+import Login from "../views/Login.vue";
 
 const router = createRouter({
   history: createWebHistory(),
@@ -178,7 +178,7 @@ function addDynamicRoutes(menuList: any[] = [], routes: any[] = []) {
       } else {
         try {
           // 根据菜单URL动态加载vue组件，这里要求vue组件须按照url路径存储
-          // 如url="Sys/user"，则组件路径应是"@/views/Sys/user.vue",否则组件加载不到
+          // 如url="Sys/User"，则组件路径应是"../views/Sys/User.vue",否则组件加载不到
           const array = menuList[i].url.split("/");
           let url = "";
           for (let i = 0; i < array.length; i++) {
@@ -189,8 +189,10 @@ function addDynamicRoutes(menuList: any[] = [], routes: any[] = []) {
           }
           url = url.substring(0, url.length - 1);
           // @ts-ignore
-          // route["component"] = () => import(`"./views/${url}.vue"`);  // 不使用这种方式，解析不到组件地址！！！！！
-          /*@vite-ignore*/
+          // 报错Note that variables only represent file names one level deep。 不支持变量的值为“aa/bb”这种形式，只支持一个目录级别
+          // 文档https://github.com/vitejs/vite/blob/main/docs/guide/features.md
+          // route["component"] = () => import(`../views/${url}.vue`);
+          // @vite-ignore
           route["component"] = () => import("../views/" + url + ".vue");
         } catch (e) {}
       }

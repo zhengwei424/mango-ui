@@ -1,6 +1,6 @@
 import {defineStore} from "pinia";
-import {ITab} from "../../interface/tab.ts";
 import {ref} from "vue";
+import {ITab} from "../../interface/tab.ts";
 
 export const useTabStore = defineStore("tab", () => {
     // 主入口标签页
@@ -12,6 +12,11 @@ export const useTabStore = defineStore("tab", () => {
         mainTabs.value = [...mainTabs.value.filter(item => item.name !== tab.name), tab];
     }
 
+    function init() {
+        mainTabs.value = [];
+        mainTabsActiveName.value = "";
+    }
+
     function setMainTabsActiveName(name: string) {
         mainTabsActiveName.value = name;
     }
@@ -20,6 +25,7 @@ export const useTabStore = defineStore("tab", () => {
         mainTabs,
         mainTabsActiveName,
         setMainTabs,
+        init,
         setMainTabsActiveName,
     };
 });
